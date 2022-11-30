@@ -1,11 +1,6 @@
 # Compiled class file
 *.class
 
-# Dependency directories
-tui/
-controller/
-model/
-
 # Log file
 *.log
 
