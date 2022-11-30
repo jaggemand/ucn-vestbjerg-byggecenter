@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author Bruger
- *
- */
-module project {
-}
