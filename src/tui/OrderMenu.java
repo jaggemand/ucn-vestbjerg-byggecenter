@@ -1,6 +1,9 @@
 package tui;
 import java.util.Scanner;
 
+import controller.OrderController;
+import controller.ProductController;
+
 
 
 /**
@@ -11,6 +14,8 @@ import java.util.Scanner;
  */
 public class OrderMenu {
     // instance variables
+	OrderController orderController = new OrderController();
+	ProductController productController = new ProductController();
     
 
     /**
@@ -18,7 +23,6 @@ public class OrderMenu {
      */
     public OrderMenu() {
         // initialise instance variables
-        
        
     }
 
@@ -29,7 +33,7 @@ public class OrderMenu {
     private void orderMenu() {
         boolean running = true;
         while (running) {
-            int choice = writeLoanMenu();
+            int choice = writeOrderMenu();
             switch (choice) {
                 case 1:
                   System.out.println(" Dette er ikke implementeret endnu!");
@@ -44,12 +48,15 @@ public class OrderMenu {
         }
     }
     
-    private int writeLoanMenu() {
+    private int writeOrderMenu() {
         Scanner keyboard = new Scanner(System.in);
-        System.out.println("****** Udlånsmenu ******");
-        System.out.println(" (1) Opret lån");
+        System.out.println("****** Ordre menu ******");
+        System.out.println(" (1) Opret ordre");
+        System.out.println(" (2) Slet ordre");
+        System.out.println(" (3) Se ordre");
+        System.out.println(" (4) Pluk ordre");
         System.out.println(" (0) Tilbage");
-        System.out.print("\n Vælg:");
+        System.out.print("\n Vælg: ");
         int choice = getIntegerFromUser(keyboard);
         return choice;
     }
@@ -66,8 +73,10 @@ public class OrderMenu {
     	
     }
     
-    private void addProductToOrder(String barcode, int quantity) {
-    	
+    private boolean addProductToOrder(String search, int quantity) {
+        boolean success = false;
+    	success = orderController.addProduct(search, quantity);
+    	return success;
     }
     
     private void completeSale() {

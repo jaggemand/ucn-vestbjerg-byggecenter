@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Iterator; 
 
 public class OrderContainer {
 	private static OrderContainer instance;
@@ -28,17 +27,13 @@ public class OrderContainer {
 		return success;
 	}
 	
-	public boolean removeOrder(String orderNumber) {
-		boolean removed = false;
-		Iterator<Order> it = orders.iterator();
-		while (it.hasNext()) {
-			Order p = it.next();
-			if (p.getOrderNumber().equals(orderNumber)) {
-				it.remove();
-				removed = true;
-			}
+	public boolean removeOrder(Order o){
+		boolean success = false;
+		if (o != null && orders.contains(o)) {
+			success = true;
+			orders.remove(o);
 		}
-		return removed;
+		return success;
 	}
 	
 	public ArrayList<Order> getOrders() {

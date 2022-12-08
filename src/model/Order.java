@@ -1,6 +1,8 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter; 
 
@@ -12,17 +14,45 @@ public class Order {
 	private double totalPrice;
 	private String status;
 	private String pickup;
-	private ArrayList<OrderLine> orderLines;
+	private List<OrderLine> orderLines;
 	
 	//Order constructor does not take any parameters
 	public Order() {
 		orderLines = new ArrayList<OrderLine>();
-		this.date = setDate();
-		this.totalPrice = getTotalPrice();
+		date = setDate();
+	
 	}
 	
-	public void addProduct(Product p, int quantity) {
-		
+	public boolean removeProduct(String search) {
+		boolean removed = false;
+		Iterator<OrderLine> it = orderLines.iterator();
+		while (it.hasNext() && !removed) {
+			OrderLine ol = it.next();
+			if (ol.getProduct().getBarcode().equals(search)) {
+				orderLines.remove(ol);
+				removed = true;
+			}
+		}
+		return removed;
+	}
+	
+	public void addProduct(Product p, int quantity){
+		boolean alreadyExists = false;
+		Iterator<OrderLine> it = orderLines.iterator();
+		while(it.hasNext() && !alreadyExists){
+			OrderLine ol = it.next();
+			if(ol.getProduct().equals(p)){
+				ol.setQuantity(ol.getQuantity()+quantity);
+				alreadyExists = true;
+			}
+		}
+		if(!alreadyExists){
+			orderLines.add(new OrderLine(quantity, p));
+		}
+	}
+	
+	public ArrayList<OrderLine> getOrderLines(){
+		return new ArrayList<>(orderLines);
 	}
 	
 	//sets the date in the constructor
@@ -36,15 +66,15 @@ public class Order {
 	/**
 	 * @return the calculated total price of the order
 	 */
-	private double getTotalPrice() {	
-		double total = 0;
+	public double getTotalPrice() {	
+		totalPrice = 0;
 		//makes sure there is no nullpointer exception
 		if (orderLines.get(0) != null) {
 			for (OrderLine element: orderLines) {
-			total += (element.getProduct().getSalesPrice() * element.getQuantity());
+			totalPrice += (element.getProduct().getSalesPrice() * element.getQuantity());
 			}
 		}
-		return total;
+		return totalPrice;
 	}
 	
 	/**

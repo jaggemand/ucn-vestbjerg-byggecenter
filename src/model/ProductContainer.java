@@ -1,6 +1,5 @@
 package model;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class ProductContainer {
 	private static ProductContainer instance;
@@ -36,16 +35,13 @@ public class ProductContainer {
 	 * @param barcode of the product the user/system wants to remove from the container
 	 * @return true if product with corrosponding barcode was found, false if barcode was not found
 	 */
-	public boolean remove(String barcode) {
-		boolean removed = false;
-		Iterator<Product> it = products.iterator();
-		while (it.hasNext()) {
-			Product p = it.next();
-			if (p.getBarcode().equals(barcode)) {
-				it.remove();
-				removed = true;
-			}
+	public boolean removeProduct(Product p) {
+		boolean success = false;
+		
+		if (p != null && products.contains(p)) {
+			success = true;
+			products.remove(p);
 		}
-		return removed;
+		return success;
 	}
 }

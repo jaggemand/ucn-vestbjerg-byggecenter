@@ -1,6 +1,8 @@
 package tui;
 import java.util.Scanner;
 
+import controller.ProductController;
+
 /**
  * Write a description of class MainMenu here.
  *
@@ -9,7 +11,10 @@ import java.util.Scanner;
  */
 public class MainMenu {
     // instance variables 
-    private OrderMenu loanMenu;
+    private OrderMenu orderMenu;
+    private SaleMenu saleMenu;
+    private ProductMenu productMenu;
+
     
 
     /**
@@ -23,26 +28,32 @@ public class MainMenu {
     }
     
     public void start() {
-    	loanMenu = new OrderMenu();
+    	orderMenu = new OrderMenu();
+    	saleMenu = new SaleMenu();
+    	productMenu = new ProductMenu();
     	mainMenu();
     }
     
     private void mainMenu() {
         boolean running = true;
         while (running) {
+            clearTerminal();
             int choice = writeMainMenu();
             switch (choice) {
                 case 1:
-                  System.out.println("Denne er ikke implementeret endnu");
+                  saleMenu.start();
+                  waitAndClearTerminal();
                   break;
                 case 2:
-                  System.out.println("Denne er ikke implementeret endnu");
+                  orderMenu.start();
+                  waitAndClearTerminal();
                   break;
                 case 3:
-                  loanMenu.start();
+                  productMenu.start();
                   break;
                 case 9:
-                  System.out.println("Denne er ikke implementeret endnu");
+                  generateTestData();
+                  System.out.println("Test data er blevet genereret");
                   break;
                 case 0:
                   System.out.println("Tak for denne gang.");
@@ -50,20 +61,21 @@ public class MainMenu {
                   break;
                 default:
                   System.out.println("Der er sket en uforklarlig fejl, choice = "+choice);
+                  waitAndClearTerminal();
                   break;
             }
         }
     }
 
-    private int writeMainMenu() {
+    @SuppressWarnings("resource") private int writeMainMenu() {
         Scanner keyboard = new Scanner(System.in);
         System.out.println("****** Hovedmenu ******");
-        System.out.println(" (1) Lånermenu");
-        System.out.println(" (2) LP menu");
-        System.out.println(" (3) Udlånsmenu");
+        System.out.println(" (1) Salgsmenu");
+        System.out.println(" (2) Ordre menu");
+        System.out.println(" (3) Produkt menu");
         System.out.println(" (9) Generer testdata");// will generate testdata, delete in final version
         System.out.println(" (0) Afslut programmet");
-        System.out.print("\n Vælg:");
+        System.out.print("\n Vælg: ");
         
         while (!keyboard.hasNextInt()) {
             System.out.println("Input skal være et tal - prøv igen");
@@ -72,5 +84,25 @@ public class MainMenu {
         int choice = keyboard.nextInt();
         return choice;
     }
-   
+    @SuppressWarnings("resource")
+    private void waitAndClearTerminal() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Tryk enter for at fortsætte");
+        //System.out.print("\033[2J");
+        
+      }
+
+     private void clearTerminal() {
+    	  System.out.print("\033[2J");
+     }
+      
+     private void generateTestData(){
+       ProductController productController = new ProductController();
+       productController.addProduct(productController.createProduct("Søm", "1234", "En pakke søm", new String[] {"one","two"}, "29:12", "42:13", 10, 50));
+       productController.addProduct(productController.createProduct("Grillrist", "12345", "En grillrist Ø30", new String[] {"Grill","Have"}, "12:12", "11:30", 5, 3));
+       productController.addProduct(productController.createProduct("Vasketøjskurv", "63526", "Vasketøjskurv i plastik", new String[] {"Bad"}, "15:12", "4:12", 6, 10));
+       productController.addProduct(productController.createProduct("Lysepære", "1234567", "E27 pære", new String[] {"lys","elektronik"}, "29:12", "42:13", 4, 88));
+       productController.addProduct(productController.createProduct("Hammer", "12345678", "En gummi hammer", new String[] {"værktøj","byggemarked"}, "9:28", "11:67", 15, 24));
+       productController.addProduct(productController.createProduct("Skovl", "123456789", "En stor skovl", new String[] {"redskab","have"}, "11:5", "98:17", 5, 19));
+     }
 }

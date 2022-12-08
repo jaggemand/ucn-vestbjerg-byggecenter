@@ -1,12 +1,12 @@
 package model;
 
 public class Product {
-	private static String productID;
+	private String productID;
 	private static int tempProductNumber;
 	private String name;
 	private String barcode;
 	private String description;
-	private String category;
+	private String[] category;
 	private String storageLocation;
 	private String warehouseLocation;
 	private int storageAmount;
@@ -25,7 +25,7 @@ public class Product {
 	 * @param storageAmount
 	 * @param warehouseAmount
 	 */
-	public Product(String name, String barcode, String description, String category, String storageLocation,
+	public Product(String name, String barcode, String description, String[] category, String storageLocation,
 			String warehouseLocation, int storageAmount, int warehouseAmount) {
 					
 		this.name = name;
@@ -38,13 +38,16 @@ public class Product {
 		this.warehouseAmount = warehouseAmount;
 		
 		productID = "1000-" + tempProductNumber;
+		if(barcode.equals("")){
+			barcode = "bc-2000-" + tempProductNumber;
+		}
 		tempProductNumber++;
 	}
 
 	/**
 	 * @return the productNumber
 	 */
-	public static String getProductID() {
+	public String getProductID() {
 		return productID;
 	}
 		
@@ -93,14 +96,14 @@ public class Product {
 	/**
 	 * @return the category
 	 */
-	public String getCategory() {
+	public String[] getCategory() {
 		return category;
 	}
 
 	/**
 	 * @param category the category to set
 	 */
-	public void setCategory(String category) {
+	public void setCategory(String[] category) {
 		this.category = category;
 	}
 
@@ -200,5 +203,9 @@ public class Product {
 	 */
 	public void setSuggestedSalesPrice(double suggestedSalesPrice) {
 		this.suggestedSalesPrice = suggestedSalesPrice;
+	}
+	
+	public boolean containsBarcodeOrProuductID(String search) {
+		return productID.equals(search) || barcode.equals(search);
 	}
 }
