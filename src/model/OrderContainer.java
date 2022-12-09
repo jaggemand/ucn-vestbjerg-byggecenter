@@ -10,6 +10,11 @@ public class OrderContainer {
 		orders = new ArrayList<>();
 	}
 	
+	public void resetSingleton() {
+		instance = null;
+		orders.clear();
+	}
+	
 	public static OrderContainer getInstance() {
 		if (instance == null) {
 			instance = new OrderContainer();

@@ -10,6 +10,11 @@ public class ProductContainer {
 		products = new ArrayList<>();
 	}
 	
+	public void resetSingleton() {
+		instance = null;
+		products.clear();
+	}
+	
 	public static ProductContainer getInstance() {
 		if (instance == null) {
 			instance = new ProductContainer();
