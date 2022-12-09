@@ -26,7 +26,7 @@ public class ProductController {
 		
 		Product newProduct = new Product(name, barcode, description, category, storageLocation, 
 										warehouseLocation, storageAmount, warehouseAmount);
-		
+		addProduct(newProduct);
 		return newProduct;
 	}
 	
@@ -95,11 +95,14 @@ public class ProductController {
 	 * @param newBarcode the new barcode for a product
 	 * @param product the specific instance of a product
 	 */
-	public void changeProductBarcode(String newBarcode, Product product) {
-		
-		if (product != null) {
+	public boolean changeProductBarcode(String newBarcode, Product product) {
+		boolean success = false;
+		Product check = findProduct(newBarcode);
+		if (product != null && check == null && newBarcode.substring(0,7).equals("bc-2000-")) {
 			product.setBarcode(newBarcode);
+			success = true;
 		}
+		return success;
 	}
 	
 	/**

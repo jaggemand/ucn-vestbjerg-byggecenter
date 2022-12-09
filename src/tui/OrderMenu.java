@@ -42,7 +42,7 @@ public class OrderMenu {
                   running = false;
                   break;
                 default:
-                  System.out.println("En uforklarlig fejl er sket med choice = " + choice);
+                  System.out.println("En uforklarlig fejl er sket med valg = " + choice);
                   break;
             }
         }

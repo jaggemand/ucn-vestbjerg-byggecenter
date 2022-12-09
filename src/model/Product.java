@@ -39,7 +39,7 @@ public class Product {
 		
 		productID = "1000-" + tempProductNumber;
 		if(barcode.equals("")){
-			barcode = "bc-2000-" + tempProductNumber;
+			this.barcode = ("bc-2000-" + tempProductNumber);
 		}
 		tempProductNumber++;
 	}

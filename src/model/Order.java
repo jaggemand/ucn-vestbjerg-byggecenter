@@ -9,7 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Order {
 	//date needs to be a dateTime something
-	private static String orderNumber;
+	private static int tempOrderNumber;
+	private String orderNumber;
 	private String date;
 	private double totalPrice;
 	private String status;
@@ -20,6 +21,8 @@ public class Order {
 	public Order() {
 		orderLines = new ArrayList<OrderLine>();
 		date = setDate();
+		this.orderNumber = "352-" + tempOrderNumber;
+		tempOrderNumber++;
 	
 	}
 	
