@@ -23,7 +23,9 @@ public class OrderController {
 	 */
 	public boolean addOrder() {
 		boolean success = false;
-		success = OrderContainer.getInstance().addOrder(getCurrentOrder());
+		if(currentOrder != null) {
+			success = OrderContainer.getInstance().addOrder(getCurrentOrder());
+		}
 		return success;
 
 		// Method could be shorter.

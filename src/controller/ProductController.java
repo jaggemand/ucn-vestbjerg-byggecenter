@@ -50,7 +50,7 @@ public class ProductController {
 	}
 
 	/**
-	 * @param search
+	 * @param search barcode or product ID
 	 */
 	public Product findProduct(String search) {
 		Product outputProduct = null;
@@ -98,7 +98,7 @@ public class ProductController {
 	public boolean changeProductBarcode(String newBarcode, Product product) {
 		boolean success = false;
 		Product check = findProduct(newBarcode);
-		if (product != null && check == null && newBarcode.substring(0, 7).equals("bc-2000-")) {
+		if (product != null && check == null) {
 			product.setBarcode(newBarcode);
 			success = true;
 		}
