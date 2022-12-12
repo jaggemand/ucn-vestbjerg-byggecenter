@@ -9,6 +9,8 @@ import java.time.format.DateTimeFormatter;
 
 public class Order {
 	//date needs to be a dateTime something
+	//orderNumber needs to be set to a value or auto incremented?
+	private static String orderNumber;
 	private static int tempOrderNumber;
 	private String orderNumber;
 	private String date;
