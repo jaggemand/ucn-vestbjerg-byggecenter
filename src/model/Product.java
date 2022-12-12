@@ -14,7 +14,7 @@ public class Product {
 	private double salesPrice;
 	private double costPrice;
 	private double suggestedSalesPrice;
-	
+
 	/**
 	 * @param name
 	 * @param barcode
@@ -27,7 +27,7 @@ public class Product {
 	 */
 	public Product(String name, String barcode, String description, String[] category, String storageLocation,
 			String warehouseLocation, int storageAmount, int warehouseAmount) {
-					
+
 		this.name = name;
 		this.barcode = barcode;
 		this.description = description;
@@ -36,9 +36,12 @@ public class Product {
 		this.warehouseLocation = warehouseLocation;
 		this.storageAmount = storageAmount;
 		this.warehouseAmount = warehouseAmount;
-		
+		this.salesPrice = 0;
+		this.costPrice = 0;
+		this.suggestedSalesPrice = 0;
+
 		productID = "1000-" + tempProductNumber;
-		if(barcode.equals("")){
+		if (barcode.equals("")) {
 			this.barcode = ("bc-2000-" + tempProductNumber);
 		}
 		tempProductNumber++;
@@ -50,7 +53,7 @@ public class Product {
 	public String getProductID() {
 		return productID;
 	}
-		
+
 	/**
 	 * @return the name
 	 */
@@ -204,7 +207,7 @@ public class Product {
 	public void setSuggestedSalesPrice(double suggestedSalesPrice) {
 		this.suggestedSalesPrice = suggestedSalesPrice;
 	}
-	
+
 	public boolean containsBarcodeOrProuductID(String search) {
 		return productID.equals(search) || barcode.equals(search);
 	}
