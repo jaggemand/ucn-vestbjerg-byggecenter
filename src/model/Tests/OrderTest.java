@@ -1,9 +1,12 @@
 package model.Tests;
 
 import model.*;
+import model.Order.OrderStatus;
+
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,11 +60,6 @@ public class OrderTest {
 		assertEquals(42, testOrder.getOrderLines().get(0).getQuantity());
 	}
 	@Test
-	public void setDateTest() {
-		//TODO hard to implement
-		LocalDate timestamp = LocalDate.now();
-	}
-	@Test
 	public void getTotalPriceTest() {
 		//Create a new test product.
 		Product newTestProduct = new Product("Nyt Test produkt", "2345", "New Test Description", new String[] {"New Test 1","New Test 2"}	, "1", "2", 20, 50);
@@ -77,32 +75,71 @@ public class OrderTest {
 		
 		//Test the total price with two products in order
 		assertEquals(820, testOrder.getTotalPrice(),0);
-		
-		
 	}
+	
 	@Test
 	public void setStatusTest() {
 		//TODO - Attrribute will be converted to enum?
+		//Test that the status iis not FINISHED
+		assertNotEquals(Order.OrderStatus.FINISHED, testOrder.getStatus());
+		
+		//Change the status to FINISHED
+		testOrder.setStatus(OrderStatus.FINISHED);
+		//Test that the status is FINISHED
+		assertEquals(Order.OrderStatus.FINISHED, testOrder.getStatus());
 	}
 	@Test
 	public void setPickupTest() {
-		//TODO - Attrribute will be converted to enum?
+		//default deliverytime is 2 days
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		//testdate will be set to 10 days frrom now
+		String testDate = LocalDate.now().plusDays(10).format(dateTimeFormatter);
+		//test that pickupDate has not changed yet
+		assertNotEquals(testDate, testOrder.getPickup());
+		//Set the new date
+		testOrder.setPickup(testDate);
+		//test that the change has occured
+		assertEquals(testDate, testOrder.getPickup());
 	}
 	@Test
 	public void getStatusTest() {
-		//TODO - Attrribute will be converted to enum?
+		//Test the current status for instantiated status
+		assertEquals(Order.OrderStatus.CONFIRMATION, testOrder.getStatus());
 	}
+	
 	@Test
 	public void getPickupTest() {
 		//TODO - Attrribute will be converted to enum?
+		
+		//default deliverytime is 2 days
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		//testdate will be set to 10 days from now
+		String testDate = LocalDate.now().plusDays(2).format(dateTimeFormatter);
+	
+		//test that the change has occured
+		assertEquals(testDate, testOrder.getPickup());
 	}
+	
 	@Test
 	public void getDateTest() {
-		//TODO - hard to implement
+		//Setup for Localdate to be formatted to a String
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String testDate = LocalDate.now().format(dateTimeFormatter);
+		//Test that the order matches the expected date
+		assertEquals(testDate, testOrder.getDate());
 	}
 	@Test
 	public void getOrderNumberTest() {
-		//TODO - attribute is static but never incremented
+		//Due to the nature of the ordernumber system this test may have to be re-written
+		//All ordernumber has a prefix of "352-" which is 4 chars long
+		//in the constructor a progressivly increacing number is added
+		//ex: 352-1 OR 352-165894
+		//Both valid numbers have one thing iin common, they are larger than 4 chars long
+		
+		//Ordernumber is larger that 4 in length
+		assertEquals(true, testOrder.getOrderNumber().length() > 4);
+		//test prefix
+		assertEquals("352-", testOrder.getOrderNumber().substring(0, 4));
 	}
-
 }

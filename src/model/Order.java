@@ -21,7 +21,7 @@ public class Order {
 	private String pickupDate;
 	private List<OrderLine> orderLines;
 
-	private enum OrderStatus {
+	public enum OrderStatus {
 		CONFIRMATION, PACKING, FINISHED, ENROUTE, DELIVERED, SALE;
 	}
 
