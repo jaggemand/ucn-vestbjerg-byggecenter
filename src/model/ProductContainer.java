@@ -1,27 +1,28 @@
 package model;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductContainer {
 	private static ProductContainer instance;
-	private ArrayList<Product> products;
-	
-	
-	private ProductContainer() { 
+	private List<Product> products;
+
+	private ProductContainer() {
 		products = new ArrayList<>();
 	}
-	
+
 	public void resetSingleton() {
 		instance = null;
 		products.clear();
 	}
-	
+
 	public static ProductContainer getInstance() {
 		if (instance == null) {
 			instance = new ProductContainer();
 		}
 		return instance;
 	}
-	
+
 	public boolean addProduct(Product p) {
 		boolean success = false;
 
@@ -31,18 +32,20 @@ public class ProductContainer {
 		}
 		return success;
 	}
-	
+
 	public ArrayList<Product> getProducts() {
 		return new ArrayList<>(products);
 	}
-	
+
 	/**
-	 * @param barcode of the product the user/system wants to remove from the container
-	 * @return true if product with corrosponding barcode was found, false if barcode was not found
+	 * @param barcode of the product the user/system wants to remove from the
+	 *                container
+	 * @return true if product with corrosponding barcode was found, false if
+	 *         barcode was not found
 	 */
 	public boolean removeProduct(Product p) {
 		boolean success = false;
-		
+
 		if (p != null && products.contains(p)) {
 			success = true;
 			products.remove(p);
