@@ -1,5 +1,4 @@
 package tui;
-import java.util.Scanner;
 
 import controller.OrderController;
 import controller.ProductController;
@@ -38,48 +37,43 @@ public class SaleMenu {
                 case 1:
                   startSale();
                   break;
+                case 2:
+                  removeSale();
+                  break;
+                case 3:
+                  findSale();
+                  break;
                 case 0:
                   running = false;
                   break;
                 default:
-                  System.out.println("En uforklarlig fejl er sket med choice = " + choice);
+                  System.out.println("En uforklarlig fejl er sket med valg = " + choice);
                   break;
             }
         }
     }
     
     private int writeSaleMenu() {
-        Scanner keyboard = new Scanner(System.in);
         System.out.println("****** Salgsmenu ******");
         System.out.println(" (1) Opret salg");
         System.out.println(" (2) Slet salg");
         System.out.println(" (3) Se salg");
         System.out.println(" (0) Tilbage");
         System.out.print("\n Vælg: ");
-        int choice = getIntegerFromUser(keyboard);
+        int choice = UserInput.getIntegerFromUser();
         return choice;
     }
     
-    private int getIntegerFromUser(Scanner keyboard) {
-        while (!keyboard.hasNextInt()) {
-            System.out.println("Input skal være et tal - prøv igen");
-            keyboard.nextLine();
-        }
-        return keyboard.nextInt();
-    }
-    
     private void startSale() {
-    	createNewOrder();
+    	orderController.createOrder();
     	scanProducts();
     }
-    @SuppressWarnings("resource") private void scanProducts() {
+    private void scanProducts() {
         boolean running = true;
         while (running) {
-            Scanner keyboard = new Scanner(System.in);
-        	System.out.println("Scan stregkode eller indtast varenummer: ");
-            String search = keyboard.nextLine().toLowerCase();
+            String search = UserInput.inputScanner("Scan stregkode eller indtast varenummer: (Skriv 'færdig' for at afslutte)").toLowerCase();
             switch (search) {
-                case "done":
+                case "færdig":
                   running = false;
                   if (orderController.getCurrentOrder().getOrderLines().size() <= 0) {
                 	  System.out.println("Salget er annulleret, da den ikke indeholder nogle varer.");
@@ -87,10 +81,10 @@ public class SaleMenu {
                   completeSale();
                   break;
                 default:
-             	  System.out.println("Indtast antal af produktet: ");
-                  int quantity = keyboard.nextInt();
-                  Product foundProduct = productController.findProduct(search);
-                  if (foundProduct != null) {
+            	  Product foundProduct = productController.findProduct(search);
+            	  if (foundProduct != null) {
+            		  System.out.println("Indtast antal af produktet: ");
+                      int quantity = UserInput.getIntegerFromUser();
                 	  orderController.addProduct(search, quantity);
                   } else {
                 	  System.out.println("Fejl! Produktet kan ikke findes i systemet");
@@ -99,17 +93,7 @@ public class SaleMenu {
             }
         }
     }
-    
-    private void createNewOrder() {
-    	orderController.createOrder();
-    }
-    
-    private boolean addProductToOrder(String search, int quantity) {
-        boolean success = false;
-    	success = orderController.addProduct(search, quantity);
-    	return success;
-    }
-    
+     
     private void completeSale() {
         printInvoice(orderController.getCurrentOrder());
     	orderController.addOrder();
@@ -119,7 +103,7 @@ public class SaleMenu {
         int size =  o.getOrderLines().size();
         if(size != 0){
         System.out.println("Faktura for ordre: " + o.getOrderNumber());
-        System.out.println("Ordren indeholder: " + size + " antal produkter");
+        System.out.println("Ordren indeholder: " + size + " antal forskellige produkter");
         System.out.println("Varer: " + "\n");
         for(OrderLine e : o.getOrderLines()){
             String name = e.getProduct().getName();
@@ -128,13 +112,32 @@ public class SaleMenu {
             double total = (e.getProduct().getCostPrice()*e.getQuantity());
             String id = e.getProduct().getProductID();
             System.out.println("----------------------------------------");
-            System.out.println("Produkt navn : " + name + "\tProdukt antal: " + quantity);
-            System.out.printf("Produkt navn: %s \tProdukt antal: %d",name,quantity);
-            System.out.println("Produkt individuel pris : " + costPrice + 
-            " Total Pris for Produkt: " + total);
+            System.out.printf("\nProdukt navn: %s \tProdukt antal: %d",name,quantity);
+            System.out.println("\nProdukt individuel pris : " + costPrice + 
+            "\t Total: " + total);
             System.out.println("ProduktID: " + id + "\n");
         }
         System.out.println("Total pris: " + o.getTotalPrice());
+        }
+    }
+    
+    private void findSale() {
+        String input = UserInput.inputScanner("Hvad er ordre nummeret for ordren?");
+    	Order tempOrder = orderController.findOrder(input);
+    	if(tempOrder == null){
+            System.out.println("Der blev ikke fundet en ordre med ordrenummeret: " + input);
+        }else{
+            printInvoice(tempOrder);
+        }
+    }
+    
+    private void removeSale() {
+    	String input = UserInput.inputScanner("Hvad er ordre nummeret for ordren?");
+    	boolean toRemove = orderController.removeOrder(input);
+    	if(toRemove == false){
+            System.out.println("Ordren blev ikke fundet");
+        }else{
+            System.out.println("Ordren var successfuldt slettet!");
         }
     }
 }

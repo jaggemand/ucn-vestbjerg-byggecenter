@@ -1,4 +1,5 @@
 package tui;
+
 import java.util.Scanner;
 
 import controller.ProductController;
@@ -37,7 +38,7 @@ public class MainMenu {
     private void mainMenu() {
         boolean running = true;
         while (running) {
-            clearTerminal();
+        	clearTerminal();
             int choice = writeMainMenu();
             switch (choice) {
                 case 1:
@@ -60,7 +61,7 @@ public class MainMenu {
                   running = false;
                   break;
                 default:
-                  System.out.println("Der er sket en uforklarlig fejl, choice = "+choice);
+                  System.out.println("Der er sket en uforklarlig fejl, valg = "+choice);
                   waitAndClearTerminal();
                   break;
             }
@@ -68,7 +69,6 @@ public class MainMenu {
     }
 
     @SuppressWarnings("resource") private int writeMainMenu() {
-        Scanner keyboard = new Scanner(System.in);
         System.out.println("****** Hovedmenu ******");
         System.out.println(" (1) Salgsmenu");
         System.out.println(" (2) Ordre menu");
@@ -77,32 +77,30 @@ public class MainMenu {
         System.out.println(" (0) Afslut programmet");
         System.out.print("\n Vælg: ");
         
-        while (!keyboard.hasNextInt()) {
-            System.out.println("Input skal være et tal - prøv igen");
-            keyboard.nextLine();
-        }
-        int choice = keyboard.nextInt();
+        int choice = UserInput.getIntegerFromUser();
         return choice;
     }
     @SuppressWarnings("resource")
     private void waitAndClearTerminal() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Tryk enter for at fortsætte");
-        //System.out.print("\033[2J");
+        clearTerminal();
         
       }
 
      private void clearTerminal() {
-    	  System.out.print("\033[2J");
+    	  for(int i = 0; i < 22; i++) {
+    		  System.out.println(" ");
+    	  }
      }
       
      private void generateTestData(){
        ProductController productController = new ProductController();
-       productController.addProduct(productController.createProduct("Søm", "1234", "En pakke søm", new String[] {"one","two"}, "29:12", "42:13", 10, 50));
-       productController.addProduct(productController.createProduct("Grillrist", "12345", "En grillrist Ø30", new String[] {"Grill","Have"}, "12:12", "11:30", 5, 3));
-       productController.addProduct(productController.createProduct("Vasketøjskurv", "63526", "Vasketøjskurv i plastik", new String[] {"Bad"}, "15:12", "4:12", 6, 10));
-       productController.addProduct(productController.createProduct("Lysepære", "1234567", "E27 pære", new String[] {"lys","elektronik"}, "29:12", "42:13", 4, 88));
-       productController.addProduct(productController.createProduct("Hammer", "12345678", "En gummi hammer", new String[] {"værktøj","byggemarked"}, "9:28", "11:67", 15, 24));
-       productController.addProduct(productController.createProduct("Skovl", "123456789", "En stor skovl", new String[] {"redskab","have"}, "11:5", "98:17", 5, 19));
+       productController.createProduct("Søm", "", "En pakke søm", new String[] {"one","two"}, "29:12", "42:13", 10, 50);
+       productController.createProduct("Grillrist", "", "En grillrist Ø30", new String[] {"Grill","Have"}, "12:12", "11:30", 5, 3);
+       productController.createProduct("Vasketøjskurv", "", "Vasketøjskurv i plastik", new String[] {"Bad"}, "15:12", "4:12", 6, 10);
+       productController.createProduct("Lysepære", "", "E27 pære", new String[] {"lys","elektronik"}, "29:12", "42:13", 4, 88);
+       productController.createProduct("Hammer", "", "En gummi hammer", new String[] {"værktøj","byggemarked"}, "9:28", "11:67", 15, 24);
+       productController.createProduct("Skovl", "", "En stor skovl", new String[] {"redskab","have"}, "11:5", "98:17", 5, 19);
      }
 }
