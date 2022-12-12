@@ -1,5 +1,9 @@
 package tui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+
 import controller.OrderController;
 import controller.ProductController;
 import model.*;
@@ -53,10 +57,10 @@ public class SaleMenu {
 	}
 
 	private int writeSaleMenu() {
-		System.out.println("****** Salgsmenu ******");
-		System.out.println(" (1) Opret salg");
-		System.out.println(" (2) Slet salg");
-		System.out.println(" (3) Se salg");
+		System.out.println("****** Ordre/Salgsmenu ******");
+		System.out.println(" (1) Opret salg/ordre");
+		System.out.println(" (2) Slet salg/ordre");
+		System.out.println(" (3) Se salg/ordre");
 		System.out.println(" (0) Tilbage");
 		System.out.print("\n Vælg: ");
 		int choice = UserInput.getIntegerFromUser();
@@ -123,12 +127,43 @@ public class SaleMenu {
 	}
 
 	private void findSale() {
-		String input = UserInput.inputScanner("Hvad er ordre nummeret for salget du ønsker at finde?");
-		Order tempOrder = orderController.findOrder(input);
-		if (tempOrder == null) {
-			System.out.println("Der blev ikke fundet et salg med ordrenummeret: " + input);
+		System.out.println("****** Find ordre/salg ******");
+		System.out.println(" (1) Find ordrer");
+		System.out.println(" (2) Find salg");
+		System.out.println(" (0) Tilbage");
+		int choice = UserInput.getIntegerFromUser();
+		String dateStart = UserInput.inputScanner("Indtast start dato for søgningen (Format: dd-mm-yyy. Skriv 'i dag', for alle oprettet i dag)");
+		ArrayList<Order> orders = new ArrayList<>();
+		if (dateStart.toLowerCase().equals("i dag")) {
+			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			dateStart = LocalDate.now().format(dateTimeFormatter);
+			String dateEnd = dateStart;
+			orders = orderController.findOrdersWithinDate(dateStart, dateEnd);
 		} else {
-			printInvoice(tempOrder);
+			String dateEnd = UserInput.inputScanner("Indtast slut dato for søgningen (Format: dd-mm-yyy)");
+			orders = orderController.findOrdersWithinDate(dateStart, dateEnd);
+			
+		}
+		if (orders.isEmpty()) {
+			System.out.println("Din søgning var tom.");
+		} else {
+			for (Order element : orders) {
+				System.out.println();
+				System.out.println(element.getOrderNumber());
+				System.out.println(element.getDate());
+			}
+		}
+		
+		switch (choice) {
+			case 1:
+				//implement
+				break;
+			case 2:
+				//TODO
+				break;
+			default:
+				System.out.println("En uforklarlig fejl er sket med valg = " + choice);
+				break;	
 		}
 	}
 

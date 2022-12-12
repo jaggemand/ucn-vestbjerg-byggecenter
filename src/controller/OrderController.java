@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import model.*;
 
 public class OrderController {
@@ -103,6 +105,26 @@ public class OrderController {
 		}
 
 		return outputOrder;
+	}
+	
+	public ArrayList<Order> findOrdersWithinDate(String startDate, String endDate){
+		ArrayList<Order> orders = OrderContainer.getInstance().getOrders();
+		ArrayList<Order> ordersWithinDate = new ArrayList<>();
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate start = LocalDate.parse(startDate, dateTimeFormatter).minusDays(1);
+		LocalDate end = LocalDate.parse(endDate, dateTimeFormatter).plusDays(1);
+		
+		boolean notWithinDate = false;
+		for (int i = 0; i < orders.size() && !notWithinDate; i++) {
+			LocalDate orderDate = LocalDate.parse(orders.get(i).getDate(), dateTimeFormatter);
+			if (orderDate.isAfter(start) && orderDate.isBefore(end)) {
+				ordersWithinDate.add(orders.get(i));
+			} else {
+				notWithinDate = true;
+			}
+		}
+		
+		return ordersWithinDate;
 	}
 
 	public boolean removeOrder(String orderNumber) {

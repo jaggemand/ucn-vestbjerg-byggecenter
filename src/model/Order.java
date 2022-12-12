@@ -22,7 +22,7 @@ public class Order {
 	private List<OrderLine> orderLines;
 
 	private enum OrderStatus {
-		CONFIRMATION, PACKING, FINISHED, ENROUTE, DELIVERED
+		CONFIRMATION, PACKING, FINISHED, ENROUTE, DELIVERED, SALE;
 	}
 
 	// Order constructor does not take any parameters
