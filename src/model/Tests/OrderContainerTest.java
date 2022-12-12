@@ -2,9 +2,12 @@ package model.Tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.internal.requests.OrderingRequest;
 
 import model.Order;
 import model.OrderContainer;
@@ -35,8 +38,15 @@ public class OrderContainerTest {
 
 	@Test
 	public void resetSingletonTest() {
-		//TODO - hard to implement
+		//Check that our container contains 1 instance
+		assertEquals(1, OrderContainer.getInstance().getOrders().size());
+		
+		//Resets our container instance
+		OrderContainer.getInstance().resetSingleton();
+		//Checks our reset for orderContainer was a success
+		assertEquals(0, OrderContainer.getInstance().getOrders().size());
 	}
+	
 	@Test
 	public void getInstanceTest() {
 		OrderContainer testContainer = OrderContainer.getInstance();
@@ -71,7 +81,14 @@ public class OrderContainerTest {
 	}
 	@Test
 	public void getOrdersTest() {
-		//TODO
+		//Create a new empty list
+		ArrayList<Order> methodList = new ArrayList<>();
+		//Test that the list is empty
+		assertEquals(0, methodList.size());
+		//get the list from the container and assign it to the local list
+		methodList = OrderContainer.getInstance().getOrders();
+		//test that the list is as expected
+		assertEquals(1, methodList.size());
 	}
 
 }
