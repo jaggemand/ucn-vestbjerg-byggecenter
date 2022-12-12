@@ -3,10 +3,10 @@ package model;
 public class OrderLine {
 	private int quantity;
 	private Product product;
-	
+
 	/**
 	 * @param quantity the amount of the specific product, i.e. 10 screws
-	 * @param product the specific instance of a product
+	 * @param product  the specific instance of a product
 	 */
 	public OrderLine(int quantity, Product product) {
 		this.quantity = quantity;
@@ -37,7 +37,7 @@ public class OrderLine {
 	/**
 	 * @param product the product to set
 	 */
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProduct(Product p) {
+		this.product = p;
 	}
 }
