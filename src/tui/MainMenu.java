@@ -17,7 +17,6 @@ public class MainMenu {
     private ProductMenu productMenu;
 
     
-
     /**
      * Constructor for objects of class MainMenu
      */

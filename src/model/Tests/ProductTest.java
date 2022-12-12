@@ -19,7 +19,6 @@ public class ProductTest {
 		testProduct.setCostPrice(10);
 		testProduct.setSalesPrice(30);
 		testProduct.setSuggestedSalesPrice(60);
-		testProduct.containsBarcodeOrProuductID("true");
 		
 	}
 
@@ -169,57 +168,62 @@ public class ProductTest {
 	@Test
 	public void getSalesPriceTest() {
 		//Test getSalesPrice returns actual value
-		assertEquals(30, testProduct.getSalesPrice());
+		assertEquals(30.0, testProduct.getSalesPrice(), 0);
 	}
 	
 	@Test
 	public void setSalesPriceTest() {
 		//Test change value is NOT the same as current
-		assertNotEquals(25, testProduct.getSalesPrice());
+		assertNotEquals(25.0, testProduct.getSalesPrice(), 0);
 		//Test new value is set to attribute
-		testProduct.setSalesPrice(25);
+		testProduct.setSalesPrice(25.0);
 		//Test new value assgined is a success
-		assertEquals(25, testProduct.getSalesPrice());
+		assertEquals(25.0, testProduct.getSalesPrice(), 0);
+		
 	}
 	
 	@Test
 	public void getCostPriceTest() {
 		//Test getCostPrice returns actual value
-		assertEquals(10, testProduct.getCostPrice());
+		assertEquals(10.0, testProduct.getCostPrice(), 0);
 	}
 	
 	@Test
 	public void setCostPriceTest() {
-		
 		//Test change value is NOT the same as current
-		assertNotEquals(15, testProduct.getCostPrice());
+		assertNotEquals(15.0, testProduct.getCostPrice(), 0);
 		//Test new value is set to attribute
-		testProduct.setCostPrice(15);
+		testProduct.setCostPrice(15.0);
 		//Test new value assgined is a success
-		assertEquals(15, testProduct.getCostPrice());
+		assertEquals(15.0, testProduct.getCostPrice(), 0);
 		
 	}
 	@Test
 	public void getSuggestedSalesPriceTest() {
 		//Test getSuggestedSalesPrice returns actual value
-		assertEquals(75, testProduct.getSuggestedSalesPrice());
-		
+		assertEquals(60.0, testProduct.getSuggestedSalesPrice(), 0);
 	}
 	
 	@Test
 	public void setSuggestedSalesPriceTest() {
-
 		//Test change value is NOT the same as current
-		assertNotEquals(75, testProduct.getSuggestedSalesPrice());
+		assertNotEquals(75.0, testProduct.getSuggestedSalesPrice(), 0);
 		//Test new value is set to attribute
-		testProduct.setSuggestedSalesPrice(75);
-		//Test new value assigned is a success
-		assertEquals(75, testProduct.getSuggestedSalesPrice());
-		
+		testProduct.setSuggestedSalesPrice(75.0);
+		//Test new value assgined is a success
+		assertEquals(75.0, testProduct.getSuggestedSalesPrice(), 0);
 	}
+	
 	@Test
 	public void containsBarcodeOrProuductIDTest() {
-		//Test containsBarcodeOrProuductID returns actual value
-		assertEquals("true", testProduct.containsBarcodeOrProuductID(null));
+		String testID = testProduct.getProductID();
+		//Test containsBarcodeOrProuductID returns actual value of String barcode
+		assertEquals(true, testProduct.containsBarcodeOrProuductID("1234"));
+		//Test containsBarcodeOrProuductID returns actual value of String productID
+		assertEquals(true, testProduct.containsBarcodeOrProuductID(testID));
+		//Test that barcode value is NOT equal to actual value
+		assertNotEquals(true, testProduct.containsBarcodeOrProuductID("4321"));
+		//Test that productID value is NOT equal to actual value
+		assertNotEquals(false, testProduct.containsBarcodeOrProuductID(testID));
 	}
 }
