@@ -3,6 +3,8 @@ package model.Tests;
 import model.*;
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +59,7 @@ public class OrderTest {
 	@Test
 	public void setDateTest() {
 		//TODO hard to implement
+		LocalDate timestamp = LocalDate.now();
 	}
 	@Test
 	public void getTotalPriceTest() {

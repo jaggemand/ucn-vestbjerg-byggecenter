@@ -67,7 +67,6 @@ public class OrderControllerTest {
 		assertNotEquals(null, oController.getCurrentOrder());
 	}
 	
-	//not finished
 	@Test
 	public void addProductTest() {
 		oController.createOrder();

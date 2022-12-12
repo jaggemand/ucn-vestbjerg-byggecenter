@@ -28,7 +28,15 @@ public class ProductContainerTest {
 
 	@Test
 	public void resetSingletonTest() {
-		//TODO - hard to implement
+		
+		//Check if ProductContainer contains 1 instance
+		assertEquals(1, ProductContainer.getInstance().getProducts().size());
+		
+		//Resets ProductContainer to zero
+		ProductContainer.getInstance().resetSingleton();
+		//Checks the reset was a success
+		assertEquals(0, ProductContainer.getInstance().getProducts().size());
+		
 	}
 	@Test
 	public void getInstanceTest() {
@@ -46,13 +54,15 @@ public class ProductContainerTest {
 		assertEquals(true, ProductContainer.getInstance().addProduct(newTestProduct));
 		//verify arraysize after adding another product
 		assertEquals(2, ProductContainer.getInstance().getProducts().size());
-				
 	}
+	
 	@Test
+	
 	public void getProductsTest() {
 		//test to see if the methods returns the list of products
 		assertEquals("Test produkt", ProductContainer.getInstance().getProducts().get(0).getName());
 	}
+	
 	@Test
 	public void removeProductTest() {
 
@@ -62,7 +72,5 @@ public class ProductContainerTest {
 		assertEquals(true, ProductContainer.getInstance().removeProduct(testProduct));
 		//verify arraysize after removing the product
 		assertEquals(0, ProductContainer.getInstance().getProducts().size());
-				
 	}
-
 }
