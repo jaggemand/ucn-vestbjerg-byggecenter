@@ -1,7 +1,9 @@
 package tui;
 
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 import controller.OrderController;
@@ -132,38 +134,52 @@ public class SaleMenu {
 		System.out.println(" (2) Find salg");
 		System.out.println(" (0) Tilbage");
 		int choice = UserInput.getIntegerFromUser();
-		String dateStart = UserInput.inputScanner("Indtast start dato for søgningen (Format: dd-mm-yyy. Skriv 'i dag', for alle oprettet i dag)");
-		ArrayList<Order> orders = new ArrayList<>();
-		if (dateStart.toLowerCase().equals("i dag")) {
-			DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-			dateStart = LocalDate.now().format(dateTimeFormatter);
-			String dateEnd = dateStart;
-			orders = orderController.findOrdersWithinDate(dateStart, dateEnd);
-		} else {
-			String dateEnd = UserInput.inputScanner("Indtast slut dato for søgningen (Format: dd-mm-yyy)");
-			orders = orderController.findOrdersWithinDate(dateStart, dateEnd);
-			
+		switch (choice) {
+		case 1:
+			// TODO
+			// search parameter is != SALE
+			// print after
+			break;
+		case 2:
+			// TODO
+			// search parameter is = SALE
+			// print after
+			break;
+		default:
+			System.out.println("En uforklarlig fejl er sket med valg = " + choice);
+			break;
 		}
+		String dateStart = UserInput.inputScanner(
+				"Indtast start dato for søgningen (Format: dd/mm/yyy. Skriv 'i dag', for alle oprettet i dag)");
+		ArrayList<Order> orders = new ArrayList<>();
+
+		try {
+			if (dateStart.toLowerCase().equals("i dag")) {
+				DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				dateStart = LocalDate.now().format(dateTimeFormatter);
+				String dateEnd = dateStart;
+				orders = orderController.findOrdersWithinDate(dateStart, dateEnd);
+			} else {
+				String dateEnd = UserInput.inputScanner("Indtast slut dato for søgningen (Format: dd/mm/yyyy)");
+				orders = orderController.findOrdersWithinDate(dateStart, dateEnd);
+			}
+		} catch (DateTimeParseException e) {
+			System.out.println(
+					"Fejl! En fejl opstod at konvertere datoen til det korrekte format. Husk at bruge det korrekte format.");
+		}
+
 		if (orders.isEmpty()) {
 			System.out.println("Din søgning var tom.");
 		} else {
 			for (Order element : orders) {
-				System.out.println();
-				System.out.println(element.getOrderNumber());
-				System.out.println(element.getDate());
+				System.out.println("***** Orde/salgsinformation *****");
+				System.out.println("Orde/salgsnummer: " + element.getOrderNumber());
+				System.out.println("Orde/salgsdato: " + element.getDate());
+				System.out.println("Afhentningsdato: " + element.getPickup());
+				System.out.println("Total pris: " + element.getTotalPrice());
+				System.out.println("Orde/salgsstatus: " + element.getStatus());
+				System.out.println(" ");
 			}
-		}
-		
-		switch (choice) {
-			case 1:
-				//implement
-				break;
-			case 2:
-				//TODO
-				break;
-			default:
-				System.out.println("En uforklarlig fejl er sket med valg = " + choice);
-				break;	
 		}
 	}
 
