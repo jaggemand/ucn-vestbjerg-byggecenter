@@ -1,13 +1,11 @@
 package model;
 
 import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import junit.framework.Test;
-
 import java.util.Iterator;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class Order {
 	//date needs to be a dateTime something
@@ -15,23 +13,27 @@ public class Order {
 
 	private static int tempOrderNumber;
 	private String orderNumber;
-	private String date;
+	private LocalDate date;
 	private double totalPrice;
 	private OrderStatus status;
-	private String pickupDate;
+	private LocalDate pickupDate;
 	private List<OrderLine> orderLines;
 
-	private enum OrderStatus {
+	public enum OrderStatus {
 		CONFIRMATION, PACKING, FINISHED, ENROUTE, DELIVERED, SALE;
 	}
 
 	// Order constructor does not take any parameters
-	public Order() {
+	public Order(boolean saleStatus) {
 		orderLines = new ArrayList<OrderLine>();
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		date = LocalDate.now().format(dateTimeFormatter);
-		this.status = OrderStatus.CONFIRMATION;
-		this.pickupDate = LocalDate.now().plusDays(2).format(dateTimeFormatter); // Default 2 day deliverytime value
+		date = LocalDate.now();
+		if (saleStatus) {
+			this.status = OrderStatus.SALE;
+		} else {
+			this.status = OrderStatus.CONFIRMATION;
+		}
+		this.pickupDate = LocalDate.now().plusDays(2); // Default 2 day deliverytime value
 
 		this.orderNumber = "352-" + tempOrderNumber;
 		tempOrderNumber++;
@@ -94,7 +96,7 @@ public class Order {
 	/**
 	 * @param the pickup type the user/system which the order to have
 	 */
-	public void setPickup(String pickup) {
+	public void setPickup(LocalDate pickup) {
 		this.pickupDate = pickup;
 	}
 
@@ -108,15 +110,19 @@ public class Order {
 	/**
 	 * @return returns the type of pickup
 	 */
-	public String getPickup() {
+	public LocalDate getPickup() {
 		return pickupDate;
 	}
 
 	/**
 	 * @return return the date at which the order was instantiated
 	 */
-	public String getDate() {
+	public LocalDate getDate() {
 		return date;
+	}
+	
+	public void setDate(long days){
+		date = LocalDate.now().minusDays(days);
 	}
 
 	public String getOrderNumber() {
