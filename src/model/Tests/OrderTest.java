@@ -79,7 +79,6 @@ public class OrderTest {
 	
 	@Test
 	public void setStatusTest() {
-		//TODO - Attrribute will be converted to enum?
 		//Test that the status iis not FINISHED
 		assertNotEquals(Order.OrderStatus.FINISHED, testOrder.getStatus());
 		
@@ -109,8 +108,6 @@ public class OrderTest {
 	
 	@Test
 	public void getPickupTest() {
-		//TODO - Attrribute will be converted to enum?
-		
 		//default deliverytime is 2 days
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
