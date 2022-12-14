@@ -111,28 +111,29 @@ public class OrderController {
 	public ArrayList<Order> findOrdersWithinDate(String startDate, String endDate, boolean saleStatus){
 		ArrayList<Order> orders = OrderContainer.getInstance().getOrders();
 		ArrayList<Order> ordersWithinDate = new ArrayList<>();
+		Iterator<Order> it = orders.iterator();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		LocalDate start = LocalDate.parse(startDate, formatter).minusDays(1);
 		LocalDate end = LocalDate.parse(endDate, formatter).plusDays(1);
-		
 		boolean notWithinDate = false;
 		boolean check;
-		for (int i = 0; i < orders.size() && !notWithinDate; i++) {
+		
+		while (!notWithinDate && it.hasNext()) {
+			Order temp = it.next();
 			if (saleStatus) {
-				check = orders.get(i).getStatus() == OrderStatus.SALE;
+				check = temp.getStatus() == OrderStatus.SALE;
 			} else {
-				check = orders.get(i).getStatus() != OrderStatus.SALE;
+				check = temp.getStatus() != OrderStatus.SALE;
 			}
-			LocalDate orderDate = LocalDate.parse(orders.get(i).getDate().format(formatter),formatter);
+			LocalDate orderDate = LocalDate.parse(temp.getDate().format(formatter),formatter);
 			if (orderDate.isAfter(start) && orderDate.isBefore(end)) {
 				if (check) {
-					ordersWithinDate.add(orders.get(i));
+					ordersWithinDate.add(temp);
 				} else if (orderDate.isAfter(end)) {
 					notWithinDate = true;
 				}
 			}
 		}
-		
 		return ordersWithinDate;
 	}
 
