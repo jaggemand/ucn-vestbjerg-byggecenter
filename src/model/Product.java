@@ -1,5 +1,7 @@
 package model;
 
+import java.text.DecimalFormat;
+
 public class Product {
 	private String productID;
 	private static int tempProductNumber;
@@ -185,6 +187,26 @@ public class Product {
 	 */
 	public double getCostPrice() {
 		return costPrice;
+	}
+	
+	
+	public String getCostPriceFormatted(){
+		
+		DecimalFormat df = new DecimalFormat("0.00");
+		
+		return df.format(costPrice) + " DKK";
+	}
+	public String getSalesPriceFormatted(){
+		
+		DecimalFormat df = new DecimalFormat("0.00");
+		
+		return df.format(salesPrice) + " DKK";
+	}
+	public String getSuggestedSalesPriceFormatted(){
+		
+		DecimalFormat df = new DecimalFormat("0.00");
+		
+		return df.format(suggestedSalesPrice) + " DKK";
 	}
 
 	/**

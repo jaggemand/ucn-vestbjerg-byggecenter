@@ -7,22 +7,18 @@ import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.requests.OrderingRequest;
 
 import model.Order;
 import model.OrderContainer;
-import model.OrderLine;
 import model.Product;
-import model.ProductContainer;
 
 public class OrderContainerTest {
 	private Order testOrder;
-	private OrderLine testOrderLine;
 	private Product testProduct;
 
 	@Before
 	public void setUp() throws Exception {
-		testOrder = new Order();
+		testOrder = new Order(true);
 		testProduct = new Product("Test produkt", "1234", "Test Description", new String[] {"Test 1","Test 2"}	, "1", "2", 20, 50);
 		testProduct.setSalesPrice(10);
 		testOrder.addProduct(testProduct, 42);
@@ -56,7 +52,7 @@ public class OrderContainerTest {
 	public void addOrderTest() {
 		//Create a new test order.
 		Product newTestProduct = new Product("Nyt Test produkt", "2345", "New Test Description", new String[] {"New Test 1","New Test 2"}	, "1", "2", 20, 50);
-		Order newTestOrder = new Order();
+		Order newTestOrder = new Order(true);
 		//add new test product to new test order
 		newTestOrder.addProduct(newTestProduct, 69);
 		

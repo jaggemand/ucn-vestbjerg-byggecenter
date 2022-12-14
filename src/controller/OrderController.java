@@ -109,32 +109,52 @@ public class OrderController {
 	}
 	
 	public ArrayList<Order> findOrdersWithinDate(String startDate, String endDate, boolean saleStatus){
+		
+		//Array Lists and Iterators
 		ArrayList<Order> orders = OrderContainer.getInstance().getOrders();
 		ArrayList<Order> ordersWithinDate = new ArrayList<>();
 		Iterator<Order> it = orders.iterator();
+		
+		//Date search parameters parsed from String to LocalDate
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		//It searches for days after and before, but not the given date, so the start and end date has one extra day added
 		LocalDate start = LocalDate.parse(startDate, formatter).minusDays(1);
 		LocalDate end = LocalDate.parse(endDate, formatter).plusDays(1);
-		boolean notWithinDate = false;
-		boolean check;
 		
+		
+		boolean notWithinDate = false; //Stops loop if a order isn't within date
+		boolean check; //Boolean to Check if its a Sale
+		
+		
+		//Itrator loop to check for orders within Date
 		while (!notWithinDate && it.hasNext()) {
+			
+			//The order to check
 			Order temp = it.next();
+			
+			//Check if its a Sale
 			if (saleStatus) {
 				check = temp.getStatus() == OrderStatus.SALE;
 			} else {
 				check = temp.getStatus() != OrderStatus.SALE;
 			}
+			
+			//Get the creation date of the order
 			LocalDate orderDate = LocalDate.parse(temp.getDate().format(formatter),formatter);
+			
+			//Check if its within the searched date and added if true
+			//The loop ends if a order isn't within date considering orders are added in chronological order
+			//Meaning if one is no longer within date, every order that came after can't be either
 			if (orderDate.isAfter(start) && orderDate.isBefore(end)) {
 				if (check) {
-					ordersWithinDate.add(temp);
+					ordersWithinDate.add(temp);//Adds the current order to list of orders within date
 				} else if (orderDate.isAfter(end)) {
-					notWithinDate = true;
+					notWithinDate = true; //Ends the loop
 				}
 			}
 		}
-		return ordersWithinDate;
+		return ordersWithinDate; //List of Orders within date
 	}
 
 	public boolean removeOrder(String orderNumber) {

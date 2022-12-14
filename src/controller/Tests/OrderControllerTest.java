@@ -21,7 +21,7 @@ public class OrderControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		oController = new OrderController();
-		testOrder = new Order();
+		testOrder = new Order(true);
 		testProduct = new Product("Test produkt", "1234", "Test Description", new String[] {"Test 1","Test 2"}	, "1", "2", 20, 50);
 		testProduct.setSalesPrice(10);
 		testOrder.addProduct(testProduct, 42);
@@ -41,7 +41,7 @@ public class OrderControllerTest {
 		//test to see if the specified order already exits in orderContainer
 		assertNotEquals(2, OrderContainer.getInstance().getOrders().size());
 		//adds new order to orderContainer through OrderController
-		oController.createOrder();
+		oController.createOrder(true);
 		oController.addOrder();
 		//test to see if the orders list in orderContainer has increased in size
 		assertEquals(2, OrderContainer.getInstance().getOrders().size());
@@ -52,7 +52,7 @@ public class OrderControllerTest {
 		//Test if currentOrder is set
 		assertEquals(null, oController.getCurrentOrder());
 		//Instantiate the currentOrder variable
-		oController.createOrder();
+		oController.createOrder(true);
 		//Test if currentOrder is set
 		assertEquals(false, oController.getCurrentOrder().equals(null));
 	}
@@ -62,14 +62,14 @@ public class OrderControllerTest {
 		//test to see if the OrderController already has an instance of order in its attributes
 		assertEquals(null, oController.getCurrentOrder());
 		//adds an order to current order in OrderController
-		oController.createOrder();
+		oController.createOrder(true);
 		//test to see if the currentOrder attribute is not null after insertion of order in previous call
 		assertNotEquals(null, oController.getCurrentOrder());
 	}
 	
 	@Test
 	public void addProductTest() {
-		oController.createOrder();
+		oController.createOrder(true);
 		//test to see if add order results in false
 		assertEquals(false, oController.removeProduct("1234"));
 		//add order to OrderController attribute
@@ -81,7 +81,7 @@ public class OrderControllerTest {
 	@Test
 	public void removeProductTest() {
 		//creates order in attributes to avoid nullpointer
-		oController.createOrder();
+		oController.createOrder(true);
 		//Tests to see if it is possible to remove a product from current order 
 		assertEquals(false, oController.removeProduct("1234"));
 		//adds product to current order
@@ -100,7 +100,7 @@ public class OrderControllerTest {
 	@Test
 	public void removeOrderTest() {
 		//adds order to attributes, and adds order to OrderContainer
-		oController.createOrder();
+		oController.createOrder(true);
 		oController.addOrder();
 		//Stores orderNumber
 		int containerSize = OrderContainer.getInstance().getOrders().size();

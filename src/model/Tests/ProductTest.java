@@ -6,7 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import model.OrderLine;
 import model.Product;
 
 public class ProductTest {

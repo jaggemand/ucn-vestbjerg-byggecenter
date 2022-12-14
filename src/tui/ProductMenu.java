@@ -1,5 +1,4 @@
 package tui;
-
 import java.util.Arrays;
 
 import controller.ProductController;
@@ -22,30 +21,44 @@ public class ProductMenu {
 		// initialise instance variables
 
 	}
+	
+	//TODO - Documentation
 
 	public void start() {
 		productMenu();
 	}
+	
+	//TODO - Documentation
 
 	private void productMenu() {
 		boolean running = true;
+		UserInput.clearTerminal();
 		while (running) {
 			int choice = writeProductMenu();
 			switch (choice) {
 			case 1:
 				createProduct();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 2:
 				deleteProduct();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 3:
 				updateProduct();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 4:
 				findProduct();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 5:
 				changePrices();
+				UserInput.waitAndClearTerminal();
+				break;
+			case 6:
+				printAllProducts();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 0:
 				running = false;
@@ -56,57 +69,99 @@ public class ProductMenu {
 			}
 		}
 	}
+	
+	//TODO - Documentation
 
 	private int writeProductMenu() {
+		UserInput.clearTerminal();
 		System.out.println("****** Produktmenu ******");
 		System.out.println(" (1) Opret produkt");
 		System.out.println(" (2) Slet produkt");
 		System.out.println(" (3) Ændre produkt");
 		System.out.println(" (4) Find produkt");
 		System.out.println(" (5) Ændre priser");
+		System.out.println(" (6) Vis alle produkter");
 		System.out.println(" (0) Tilbage");
 		System.out.print("\n Vælg: ");
 		int choice = UserInput.getIntegerFromUser();
 		return choice;
 	}
+	
+	//TODO - Documentation
 
 	private void createProduct() {
+		//The terminal will be cleared
+		UserInput.clearTerminal();
+		//Creates String-objects that will be filled by the user, via the terminal
 		String name = UserInput.inputScanner("Indtast navnet på det nye produkt");
 		String description = UserInput.inputScanner("Indtast beskrivelsen på det nye produkt");
+		
+		//A String-array is created and the user is asked to provide a comma-separated string, and using the split-method
+		//in the String class an array is created, containing the categories
 		String[] category = UserInput
-				.inputScanner(
-						"Indtast kategori(er) for det nye produkt(separeret med komma, eksempel: 'Have,Køkken,Søm')")
+				.inputScanner("Indtast kategori(er) for det nye produkt(separeret med komma, eksempel: 'Have,Køkken,Søm')")
 				.split(",");
+				
+		//The user is asked to provide an aisle and placement of a product in the store
+		// the aisle and placement is concatenated with a semicolon as separator
 		String storageLocation1 = UserInput
-				.inputScanner("Indtast gang nummeret i butikslokationen for det nye produkt");
+				.inputScanner("Indtast gang nummeret på butikslokationen for det nye produkt");
 		String storageLocation2 = UserInput.inputScanner(
-				"Indtast hylde String description = inputScanner(\"Indtast beskrivelsen på det nye produkt\");nummeret i butikslokationen for det nye produkt");
+				"Indtast hylde nummeret på butikslokationen for det nye produkt");
 		String storageLocation = storageLocation1 + ":" + storageLocation2;
-		String warehouseLocation1 = UserInput.inputScanner("Indtast gang nummeret på lageret for det nye produkt");
-		String warehouseLocation2 = UserInput.inputScanner("Indtast hylde nummeret på lageret for det nye produkt");
+		
+		//The user is asked to provide an aisle and placement of a product in the warehouse
+		// the aisle and placement is concatenated with a semicolon as separator
+		String warehouseLocation1 = UserInput
+				.inputScanner("Indtast gang nummeret på lageret for det nye produkt");
+		String warehouseLocation2 = UserInput
+				.inputScanner("Indtast hylde nummeret på lageret for det nye produkt");
 		String warehouseLocation = warehouseLocation1 + ":" + warehouseLocation2;
-		int storageAmount = UserInput.inputScannerNumber("Indtast butiksbeholdningen for det nye produktt");
-		int warehouseAmount = UserInput.inputScannerNumber("Indtast lagerbeholdningen for det nye produkt");
+		
+		//The user is asked for the amount of the product they have. both in the store and in the warehouse.
+		int storageAmount = UserInput
+				.inputScannerNumber("Indtast butiksbeholdningen for det nye produktt");
+		int warehouseAmount = UserInput
+				.inputScannerNumber("Indtast lagerbeholdningen for det nye produkt");
+				
+		//The productcontroller is tasked with the creation of the product, using the data gathered above
 		productController.createProduct(name, "", description, category, storageLocation, warehouseLocation,
 				storageAmount, warehouseAmount);
+				
+		//A message is displayed to the user via the terminal
 		System.out.println("Produktet er oprettet, og tilføjet til databasen!");
 	}
+	
+	//TODO - Documentation
 
 	private void findProduct() {
-		String search = UserInput.inputScanner("Indtast produkt ID eller stregkode for produktet du ønsker at finde");
+		//The terminal will be cleared
+		UserInput.clearTerminal();
+		
+		//The user is asked to provide a barcode or the product ID
+		String search = UserInput
+				.inputScanner("Indtast produkt ID eller stregkode for produktet du ønsker at finde");
+		
+		//The productcontroller is tasked to find a product by using the provided String-object
 		Product p = productController.findProduct(search);
+		
+		//Checks if the product is not found 
+		//if true: a message will be shown in the terminal
+		//if false: the product will be shown in the terminal
 		if (p == null) {
 			System.out.println("Fejl! Produktet eksisterer ikke med det givne produkt ID eller stregkode");
 		} else {
 			printProductInformation(p);
 		}
 	}
-
+	
+	//TODO - Documentation
+	
 	private void printProductInformation(Product p) {
 		System.out.println("----------------" + p.getName() + "----------------");
 		System.out.println("Produktet's ID: " + p.getProductID());
-		System.out.println("Produktet's pris: " + p.getSalesPrice() + "\t Indkøbspris: " + p.getCostPrice()
-				+ "\t Vejledende pris: " + p.getSuggestedSalesPrice());
+		System.out.println("Produktet's pris: " + p.getSalesPriceFormatted() + "\t Indkøbspris: "
+				+ p.getCostPriceFormatted() + "\t Vejledende pris: " + p.getSuggestedSalesPriceFormatted());
 		System.out.println("Beskrivelse: " + p.getDescription());
 		System.out.println("Kategorier for produktet: " + Arrays.toString(p.getCategory()));
 		System.out
@@ -115,9 +170,14 @@ public class ProductMenu {
 				.println("Butiksbeholdning: " + p.getStorageAmount() + "\t Lagerbeholdning: " + p.getWarehouseAmount());
 		System.out.println("Stregkode: " + p.getBarcode());
 		System.out.println("----------------" + p.getName() + "----------------");
+		System.out.println();
 	}
+	
+	//TODO - Documentation
 
 	private void deleteProduct() {
+		//The terminal will be cleared
+		UserInput.clearTerminal();
 		boolean success = false;
 		String search = UserInput.inputScanner("Indtast produkt ID eller stregkode for produktet du ønsker at slette");
 		success = productController.removeProduct(search);
@@ -128,7 +188,10 @@ public class ProductMenu {
 		}
 	}
 
+	//TODO - Documentation
+
 	private void changePrices() {
+		UserInput.clearTerminal();
 		String search = UserInput
 				.inputScanner("Indtast produkt ID eller stregkode for produktet du ønsker at ændre priserne på");
 		Product productToChange = productController.findProduct(search);
@@ -187,6 +250,7 @@ public class ProductMenu {
 	}
 
 	private void updateProduct() {
+		UserInput.clearTerminal();
 		String search = UserInput.inputScanner("Indtast produkt ID eller stregkode for produktet du ønsker at slette");
 		Product productToChange = productController.findProduct(search);
 		if (productToChange != null) {
@@ -263,5 +327,10 @@ public class ProductMenu {
 		} else {
 			System.out.println("Fejl! Produktet eksisterer ikke med det givne produkt ID eller stregkode");
 		}
+	}
+
+	private void printAllProducts() {
+		UserInput.clearTerminal();
+		productController.getAllProducts().forEach((e -> printProductInformation(e)));
 	}
 }

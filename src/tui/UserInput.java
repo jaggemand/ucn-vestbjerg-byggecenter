@@ -7,6 +7,7 @@ public class UserInput {
           
      }
      
+     @SuppressWarnings("resource")
 	 public static int getIntegerFromUser() {
 		Scanner keyboard = new Scanner(System.in);
         while (!keyboard.hasNextInt()) {
@@ -16,12 +17,14 @@ public class UserInput {
         return keyboard.nextInt();
     }
     
+    @SuppressWarnings("resource")
     public static String inputScanner(String question) {
     	System.out.println( question+": ");
     	Scanner console = new Scanner(System.in);
     	return console.nextLine();
     }
     
+    @SuppressWarnings("resource")
     public static int inputScannerNumber(String question) {   
         Scanner console = new Scanner(System.in);
         int number = 0;

@@ -1,9 +1,7 @@
 package model;
 
 import java.util.ArrayList;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import junit.framework.Test;
 import java.util.Iterator;
 import java.time.LocalDate;
 
@@ -26,7 +24,6 @@ public class Order {
 	// Order constructor does not take any parameters
 	public Order(boolean saleStatus) {
 		orderLines = new ArrayList<OrderLine>();
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		date = LocalDate.now();
 		if (saleStatus) {
 			this.status = OrderStatus.SALE;
@@ -105,6 +102,34 @@ public class Order {
 	 */
 	public OrderStatus getStatus() {
 		return status;
+	}
+	
+	public String getStatusAsString() {
+		String statusString = "";
+		switch (status) {
+			case CONFIRMATION:
+				statusString = "Bekræftet";
+				break;
+			case PACKING:
+				statusString = "Pakkes";
+				break;
+			case FINISHED:
+				statusString = "Klar til afsending";
+				break;
+			case ENROUTE:
+				statusString = "På vej";
+				break;
+			case DELIVERED:
+				statusString = "Leveret";
+				break;
+			case SALE:
+				statusString = "Salg";
+				break;
+			default:
+				statusString = "Fejl! Status kunne ikke findes";
+				break;
+		}
+		return statusString;
 	}
 
 	/**

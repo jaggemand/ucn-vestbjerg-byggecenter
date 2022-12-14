@@ -69,6 +69,9 @@ public class ProductController {
 		return outputProduct;
 	}
 
+	public ArrayList<Product> getAllProducts(){
+		return ProductContainer.getInstance().getProducts();
+	}
 	/**
 	 * @param newName the new name of the product
 	 * @param product the specific instance of a product

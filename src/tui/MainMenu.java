@@ -1,8 +1,5 @@
 package tui;
 
-import java.util.Scanner;
-
-import controller.OrderController;
 import controller.ProductController;
 import model.Order;
 import model.OrderContainer;
@@ -38,23 +35,23 @@ public class MainMenu {
 	private void mainMenu() {
 		boolean running = true;
 		while (running) {
-			clearTerminal();
+			UserInput.clearTerminal();
 			int choice = writeMainMenu();
 			switch (choice) {
 			case 1:
 				saleMenu.start();
-				waitAndClearTerminal();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 2:
 				productMenu.start();
-				waitAndClearTerminal();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 9:
 				if (debug) {
 					generateTestData();
 					System.out.println("Test data er blevet genereret");
 				}
-				waitAndClearTerminal();
+				UserInput.waitAndClearTerminal();
 				break;
 			case 0:
 				System.out.println("Tak for denne gang.");
@@ -62,13 +59,12 @@ public class MainMenu {
 				break;
 			default:
 				System.out.println("Der er sket en uforklarlig fejl, valg = " + choice);
-				waitAndClearTerminal();
+				UserInput.waitAndClearTerminal();
 				break;
 			}
 		}
 	}
 
-	@SuppressWarnings("resource")
 	private int writeMainMenu() {
 		System.out.println("****** Hovedmenu ******");
 		System.out.println(" (1) Salgsmenu/ordre");
@@ -81,20 +77,6 @@ public class MainMenu {
 
 		int choice = UserInput.getIntegerFromUser();
 		return choice;
-	}
-
-	@SuppressWarnings("resource")
-	private void waitAndClearTerminal() {
-		System.out.println("Tryk enter for at fortsætte");
-		Scanner sc = new Scanner(System.in);
-		sc.nextLine();
-		clearTerminal();
-	}
-
-	private void clearTerminal() {
-		for (int i = 0; i < 22; i++) {
-			System.out.println(" ");
-		}
 	}
 
 	private void generateTestData() {

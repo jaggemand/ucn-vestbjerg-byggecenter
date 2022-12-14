@@ -6,7 +6,6 @@ import model.Order.OrderStatus;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import org.junit.After;
 import org.junit.Before;
@@ -15,12 +14,11 @@ import org.junit.Test;
 public class OrderTest {
 	
 	private Order testOrder;
-	private OrderLine testOrderLine;
 	private Product testProduct;
 
 	@Before
 	public void setUp() throws Exception {
-		testOrder = new Order();
+		testOrder = new Order(true);
 		testProduct = new Product("Test produkt", "1234", "Test Description", new String[] {"Test 1","Test 2"}	, "1", "2", 20, 50);
 		testProduct.setSalesPrice(10);
 		testOrder.addProduct(testProduct, 42);
@@ -79,7 +77,7 @@ public class OrderTest {
 	
 	@Test
 	public void setStatusTest() {
-		//Test that the status iis not FINISHED
+		//Test that the status is not FINISHED
 		assertNotEquals(Order.OrderStatus.FINISHED, testOrder.getStatus());
 		
 		//Change the status to FINISHED
@@ -89,10 +87,8 @@ public class OrderTest {
 	}
 	@Test
 	public void setPickupTest() {
-		//default deliverytime is 2 days
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		//testdate will be set to 10 days frrom now
-		String testDate = LocalDate.now().plusDays(10).format(dateTimeFormatter);
+		//testdate will be set to 10 days from now
+		LocalDate testDate = LocalDate.now().plusDays(10);
 		//test that pickupDate has not changed yet
 		assertNotEquals(testDate, testOrder.getPickup());
 		//Set the new date
@@ -103,28 +99,30 @@ public class OrderTest {
 	@Test
 	public void getStatusTest() {
 		//Test the current status for instantiated status
-		assertEquals(Order.OrderStatus.CONFIRMATION, testOrder.getStatus());
+		assertEquals(Order.OrderStatus.SALE, testOrder.getStatus());
 	}
 	
 	@Test
 	public void getPickupTest() {
-		//default deliverytime is 2 days
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		
 		//testdate will be set to 10 days from now
-		String testDate = LocalDate.now().plusDays(2).format(dateTimeFormatter);
+		LocalDate testDate = LocalDate.now().plusDays(2);
 	
 		//test that the change has occured
-		assertEquals(testDate, testOrder.getPickup());
+		assertEquals(testDate.getDayOfYear(), testOrder.getPickup().getDayOfYear());
 	}
 	
 	@Test
 	public void getDateTest() {
-		//Setup for Localdate to be formatted to a String
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		String testDate = LocalDate.now().format(dateTimeFormatter);
-		//Test that the order matches the expected date
-		assertEquals(testDate, testOrder.getDate());
+		//In the constructor the date of the testOrder is a snapshot
+		//for that reason the seconds/millisecond might be off
+		//so this test will try to mitigate that
+		
+		//Take a timestamp
+		LocalDate testDate = LocalDate.now();
+		//Test that the order matches the expected day, month and year
+		assertEquals(testDate.getDayOfMonth(), testOrder.getDate().getDayOfMonth());
+		assertEquals(testDate.getMonth(), testOrder.getDate().getMonth());
+		assertEquals(testDate.getYear(), testOrder.getDate().getYear());
 	}
 	@Test
 	public void getOrderNumberTest() {

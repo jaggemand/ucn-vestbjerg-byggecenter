@@ -1,12 +1,9 @@
 package tui;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import controller.OrderController;
 import controller.ProductController;
 import model.*;
@@ -35,33 +32,11 @@ public class SaleMenu {
 		saleMenu();
 	}
 
-	private void saleMenu() {
-		boolean running = true;
-		while (running) {
-			int choice = writeSaleMenu();
-			switch (choice) {
-			case 1:
-				startSale();
-				UserInput.waitAndClearTerminal();
-				break;
-			case 2:
-				removeSale();
-				UserInput.waitAndClearTerminal();
-				break;
-			case 3:
-				findSale();
-				UserInput.waitAndClearTerminal();
-				break;
-			case 0:
-				running = false;
-				break;
-			default:
-				System.out.println("En uforklarlig fejl er sket med valg = " + choice);
-				break;
-			}
-		}
-	}
-
+	/**
+	 * It prints a menu to the terminal and returns the user's choice
+	 * 
+	 * @return The method returns the choice of the user.
+	 */
 	private int writeSaleMenu() {
 		UserInput.clearTerminal();
 		System.out.println("****** Ordre/Salgsmenu ******");
@@ -74,28 +49,64 @@ public class SaleMenu {
 		return choice;
 	}
 
+	private void saleMenu() {
+		boolean running = true;
+		UserInput.clearTerminal();
+		while (running) {
+			int choice = writeSaleMenu();
+			switch (choice) {
+				case 1:
+					startSale();
+					UserInput.waitAndClearTerminal();
+					break;
+				case 2:
+					removeSale();
+					UserInput.waitAndClearTerminal();
+					break;
+				case 3:
+					findSale();
+					UserInput.waitAndClearTerminal();
+					break;
+				case 0:
+					running = false;
+					break;
+				default:
+					System.out.println("En uforklarlig fejl er sket med valg = " + choice);
+					break;
+			}
+		}
+	}
+
 	private void startSale() {
 		UserInput.clearTerminal();
-		System.out.println("****** Ordre eller salg ******");
-		System.out.println(" (1) Opret salg");
-		System.out.println(" (2) Opret ordre");
-		System.out.println(" (0) Tilbage");
-		System.out.print("\n Vælg: ");
-		int choice = UserInput.getIntegerFromUser();
-		boolean saleStatus = false;
-		switch (choice) {
-			case 1:
-				saleStatus = true;
-				break;
-			case 2:
-				saleStatus = false;
-				break;
-			default:
-				System.out.println("En uforklarlig fejl er sket med valg = " + choice);
-				break;
+		boolean running = true;
+		while (running) {
+			System.out.println("****** Ordre eller salg ******");
+			System.out.println(" (1) Opret salg");
+			System.out.println(" (2) Opret ordre");
+			System.out.println(" (0) Tilbage");
+			System.out.print("\n Vælg: ");
+			int choice = UserInput.getIntegerFromUser();
+			boolean saleStatus = false;
+			switch (choice) {
+				case 1:
+					saleStatus = true;
+					orderController.createOrder(saleStatus);
+					scanProducts();
+					break;
+				case 2:
+					saleStatus = false;
+					orderController.createOrder(saleStatus);
+					scanProducts();
+					break;
+				case 0:
+					running = false;
+					break;
+				default:
+					System.out.println("En uforklarlig fejl er sket med valg = " + choice);
+					break;
+			}
 		}
-		orderController.createOrder(saleStatus);
-		scanProducts();
 	}
 
 	private void scanProducts() {
@@ -106,24 +117,24 @@ public class SaleMenu {
 					.inputScanner("Scan stregkode eller indtast varenummer: (Skriv 'færdig' for at afslutte)")
 					.toLowerCase();
 			switch (search) {
-			case "færdig":
-				running = false;
-				if (orderController.getCurrentOrder().getOrderLines().size() <= 0) {
-					System.out.println("Salget/ordren er annulleret, da den ikke indeholder nogle varer.");
-				} else {
-					completeSale();
-				}
-				break;
-			default:
-				Product foundProduct = productController.findProduct(search);
-				if (foundProduct != null) {
-					System.out.println("Indtast antal af produktet: ");
-					int quantity = UserInput.getIntegerFromUser();
-					orderController.addProduct(search, quantity);
-				} else {
-					System.out.println("Fejl! Produktet kan ikke findes i systemet");
-				}
-				break;
+				case "færdig":
+					running = false;
+					if (orderController.getCurrentOrder().getOrderLines().size() <= 0) {
+						System.out.println("Salget/ordren er annulleret, da den ikke indeholder nogle varer.");
+					} else {
+						completeSale();
+					}
+					break;
+				default:
+					Product foundProduct = productController.findProduct(search);
+					if (foundProduct != null) {
+						System.out.println("Indtast antal af produktet: ");
+						int quantity = UserInput.getIntegerFromUser();
+						orderController.addProduct(search, quantity);
+					} else {
+						System.out.println("Fejl! Produktet kan ikke findes i systemet");
+					}
+					break;
 			}
 		}
 	}
@@ -157,23 +168,35 @@ public class SaleMenu {
 
 	private void findSale() {
 		UserInput.clearTerminal();
-		System.out.println("****** Find ordre/salg ******");
-		System.out.println(" (1) Find salg");
-		System.out.println(" (2) Find ordrer");
-		System.out.println(" (0) Tilbage");
-		int choice = UserInput.getIntegerFromUser();
-		boolean saleStatus = false;
-		switch (choice) {
-		case 1:
-			saleStatus = true;
-			break;
-		case 2:
-			saleStatus = false;
-			break;
-		default:
-			System.out.println("En uforklarlig fejl er sket med valg = " + choice);
-			break;
+		boolean running = true;
+		while (running) {
+			System.out.println("****** Find ordre/salg ******");
+			System.out.println(" (1) Find salg");
+			System.out.println(" (2) Find ordrer");
+			System.out.println(" (0) Tilbage");
+			int choice = UserInput.getIntegerFromUser();
+			boolean saleStatus = false;
+			switch (choice) {
+				case 1:
+					saleStatus = true;
+					callFindSale(saleStatus);
+					break;
+				case 2:
+					saleStatus = false;
+					callFindSale(saleStatus);
+					break;
+				case 0:
+					running = false;
+					break;
+				default:
+					System.out.println("En uforklarlig fejl er sket med valg = " + choice);
+					break;
+			}
 		}
+	}
+
+	private void callFindSale(boolean saleStatus) {
+		UserInput.clearTerminal();
 		String dateStart = UserInput.inputScanner(
 				"Indtast start dato for søgningen (Format: dd/mm/yyy. Skriv 'i dag', for alle oprettet i dag)");
 		ArrayList<Order> orders = new ArrayList<>();
@@ -189,11 +212,12 @@ public class SaleMenu {
 				orders = orderController.findOrdersWithinDate(dateStart, dateEnd, saleStatus);
 			}
 		} catch (DateTimeParseException e) {
+			UserInput.clearTerminal();
 			System.out.println(
 					"Fejl! En fejl opstod at konvertere datoen til det korrekte format. Husk at bruge det korrekte format.");
 			System.out.println(e.getMessage());
 		}
-
+		UserInput.clearTerminal();
 		if (orders.isEmpty()) {
 			System.out.println("Din søgning var tom.");
 		} else {
@@ -202,8 +226,8 @@ public class SaleMenu {
 				System.out.println("Ordre/salgsnummer: " + element.getOrderNumber());
 				System.out.println("Ordre/salgsdato: " + element.getDate());
 				System.out.println("Afhentningsdato: " + element.getPickup());
-				System.out.println("Total pris: " + element.getTotalPrice() + " DKK");
-				System.out.println("Ordre/salgsstatus: " + element.getStatus());
+				System.out.println("Total pris: " + String.format("%.2f", element.getTotalPrice()) + " DKK");
+				System.out.println("Ordre/salgsstatus: " + element.getStatusAsString());
 				System.out.println(" ");
 			}
 		}
