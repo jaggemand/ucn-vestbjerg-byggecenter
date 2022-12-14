@@ -1,16 +1,14 @@
 package model;
 
 import java.util.ArrayList;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import junit.framework.Test;
 import java.util.Iterator;
 import java.time.LocalDate;
 
+/**
+ * It's a class that represents an order.
+ */
 public class Order {
-	//date needs to be a dateTime something
-	//orderNumber needs to be set to a value or auto incremented?
-
 	private static int tempOrderNumber;
 	private String orderNumber;
 	private LocalDate date;
@@ -19,14 +17,14 @@ public class Order {
 	private LocalDate pickupDate;
 	private List<OrderLine> orderLines;
 
+	// An enum that is used to set the status of an order.
 	public enum OrderStatus {
 		CONFIRMATION, PACKING, FINISHED, ENROUTE, DELIVERED, SALE;
 	}
 
-	// Order constructor does not take any parameters
+	// The constructor for the Order class.
 	public Order(boolean saleStatus) {
 		orderLines = new ArrayList<OrderLine>();
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		date = LocalDate.now();
 		if (saleStatus) {
 			this.status = OrderStatus.SALE;
@@ -40,6 +38,12 @@ public class Order {
 
 	}
 
+	/**
+	 * This function removes a product from the orderLines list
+	 * 
+	 * @param search The barcode of the product to be removed.
+	 * @return The method returns a boolean value.
+	 */
 	public boolean removeProduct(String search) {
 		boolean removed = false;
 		Iterator<OrderLine> it = orderLines.iterator();
@@ -53,6 +57,13 @@ public class Order {
 		return removed;
 	}
 
+	/**
+	 * If the product is already in the order, increase the quantity. Otherwise, add
+	 * a new orderline
+	 * 
+	 * @param p        Product to add to the order
+	 * @param quantity the number of products to be added
+	 */
 	public void addProduct(Product p, int quantity) {
 		boolean alreadyExists = false;
 		Iterator<OrderLine> it = orderLines.iterator();
@@ -68,12 +79,20 @@ public class Order {
 		}
 	}
 
+	/**
+	 * This function returns a copy of the orderLines ArrayList.
+	 * 
+	 * @return A copy of the orderLines ArrayList.
+	 */
 	public ArrayList<OrderLine> getOrderLines() {
 		return new ArrayList<>(orderLines);
 	}
 
 	/**
-	 * @return the calculated total price of the order
+	 * It calculates the total price of the order by adding the price of each
+	 * orderline to the total price
+	 * 
+	 * @return The total price of the order.
 	 */
 	public double getTotalPrice() {
 		totalPrice = 0;
@@ -87,44 +106,100 @@ public class Order {
 	}
 
 	/**
-	 * @param the new status the user/system wishes the order to have
+	 * This function sets the status of the order
+	 * 
+	 * @param status The status of the order.
 	 */
 	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
 
 	/**
-	 * @param the pickup type the user/system which the order to have
+	 * This function sets the pickup date of the order
+	 * 
+	 * @param pickup The date the order is to be delivered
 	 */
 	public void setPickup(LocalDate pickup) {
 		this.pickupDate = pickup;
 	}
 
 	/**
-	 * @return returns the status of the order
+	 * This function returns the status of the order
+	 * 
+	 * @return The status of the order.
 	 */
 	public OrderStatus getStatus() {
 		return status;
 	}
 
 	/**
-	 * @return returns the type of pickup
+	 * It takes the status of the order and returns a string with the status in
+	 * plain text
+	 * 
+	 * @return A string with the status of the order.
+	 */
+	public String getStatusAsString() {
+		String statusString = "";
+		switch (status) {
+			case CONFIRMATION:
+				statusString = "Bekræftet";
+				break;
+			case PACKING:
+				statusString = "Pakkes";
+				break;
+			case FINISHED:
+				statusString = "Klar til afsending";
+				break;
+			case ENROUTE:
+				statusString = "På vej";
+				break;
+			case DELIVERED:
+				statusString = "Leveret";
+				break;
+			case SALE:
+				statusString = "Salg";
+				break;
+			default:
+				statusString = "Fejl! Status kunne ikke findes";
+				break;
+		}
+		return statusString;
+	}
+
+	/**
+	 * This function returns the pickup date
+	 * 
+	 * @return The pickup date.
 	 */
 	public LocalDate getPickup() {
 		return pickupDate;
 	}
 
 	/**
-	 * @return return the date at which the order was instantiated
+	 * This function returns the date the order was created
+	 * 
+	 * @return The date the order was created.
 	 */
 	public LocalDate getDate() {
 		return date;
 	}
-	
-	public void setDate(long days){
+
+	/**
+	 * !FOR TESTING PURPOSES ONLY!
+	 * This function sets the date to the current date minus the number of days
+	 * passed in
+	 * 
+	 * @param days The number of days to subtract from the current date.
+	 */
+	public void setDate(long days) {
 		date = LocalDate.now().minusDays(days);
 	}
 
+	/**
+	 * This function returns the order number
+	 * 
+	 * @return The orderNumber is being returned.
+	 */
 	public String getOrderNumber() {
 		return orderNumber;
 	}

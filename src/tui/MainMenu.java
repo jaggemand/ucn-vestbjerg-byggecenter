@@ -1,18 +1,15 @@
 package tui;
 
-import java.util.Scanner;
-
-import controller.OrderController;
 import controller.ProductController;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
 
 /**
- * Write a description of class MainMenu here.
+ * It's the main menu of the program
  *
  * @author Mogens Holm Iversen
- * @version 0.1.0 Initial draft version
+ * @version 2.0ja.0 version
  */
 public class MainMenu {
 	// instance variables
@@ -21,7 +18,9 @@ public class MainMenu {
 	private ProductMenu productMenu;
 
 	/**
-	 * Constructor for objects of class MainMenu
+	 * The main function is the entry point of the program. It creates an instance
+	 * of the MainMenu class
+	 * and calls the start function
 	 */
 	public static void main(String[] args) {
 		// initialise instance variables
@@ -29,46 +28,59 @@ public class MainMenu {
 		mm.start();
 	}
 
+	/**
+	 * The start function creates a new SaleMenu and ProductMenu object, then calls
+	 * the mainMenu function
+	 */
 	public void start() {
 		saleMenu = new SaleMenu();
 		productMenu = new ProductMenu();
 		mainMenu();
 	}
 
+	/**
+	 * The function is a while loop that runs until the user enters 0. The user is
+	 * presented with a menu
+	 * and depending on the choice, the user is sent to another menu
+	 */
 	private void mainMenu() {
 		boolean running = true;
 		while (running) {
-			clearTerminal();
+			UserInput.clearTerminal();
 			int choice = writeMainMenu();
 			switch (choice) {
-			case 1:
-				saleMenu.start();
-				waitAndClearTerminal();
-				break;
-			case 2:
-				productMenu.start();
-				waitAndClearTerminal();
-				break;
-			case 9:
-				if (debug) {
-					generateTestData();
-					System.out.println("Test data er blevet genereret");
-				}
-				waitAndClearTerminal();
-				break;
-			case 0:
-				System.out.println("Tak for denne gang.");
-				running = false;
-				break;
-			default:
-				System.out.println("Der er sket en uforklarlig fejl, valg = " + choice);
-				waitAndClearTerminal();
-				break;
+				case 1:
+					saleMenu.start();
+					UserInput.waitAndClearTerminal();
+					break;
+				case 2:
+					productMenu.start();
+					UserInput.waitAndClearTerminal();
+					break;
+				case 9:
+					if (debug) {
+						generateTestData();
+						System.out.println("Test data er blevet genereret");
+					}
+					UserInput.waitAndClearTerminal();
+					break;
+				case 0:
+					System.out.println("Tak for denne gang.");
+					running = false;
+					break;
+				default:
+					System.out.println("Der er sket en uforklarlig fejl, valg = " + choice);
+					UserInput.waitAndClearTerminal();
+					break;
 			}
 		}
 	}
 
-	@SuppressWarnings("resource")
+	/**
+	 * It prints a menu to the console and returns the user's choice
+	 * 
+	 * @return The method returns the choice the user made.
+	 */
 	private int writeMainMenu() {
 		System.out.println("****** Hovedmenu ******");
 		System.out.println(" (1) Salgsmenu/ordre");
@@ -83,20 +95,9 @@ public class MainMenu {
 		return choice;
 	}
 
-	@SuppressWarnings("resource")
-	private void waitAndClearTerminal() {
-		System.out.println("Tryk enter for at fortsætte");
-		Scanner sc = new Scanner(System.in);
-		sc.nextLine();
-		clearTerminal();
-	}
-
-	private void clearTerminal() {
-		for (int i = 0; i < 22; i++) {
-			System.out.println(" ");
-		}
-	}
-
+	/**
+	 * It creates a bunch of products and orders and adds them to the containers
+	 */
 	private void generateTestData() {
 		ProductController productController = new ProductController();
 		Product prod1 = productController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
