@@ -28,8 +28,12 @@ public class ProductTest {
 
 	@Test
 	public void getProductIDTest() {
-		//assertEquals("1000-0", testProduct.getProductID());
-		//TODO hard to implement
+		//Due to the nature of how this variable is implemented
+		//The tests for this method will be different from the other test cases
+		//All product numbers will be a composite of a static prefix and an increasing number combined
+		//ex: "1000-1" OR "1000-526356"
+		//All numbers are at least 5 chars long: "1000-"
+		assertEquals(true, testProduct.getProductID().length() > 5);
 	}
 	@Test
 	public void getNameTest() {
