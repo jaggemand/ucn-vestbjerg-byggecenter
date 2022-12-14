@@ -9,31 +9,31 @@ import controller.ProductController;
 import model.*;
 
 /**
- * Write a description of class LoanMenu here.
+ * It's a menu for the sale/order part of the program
  *
  * @author Mogens Holm Iversen
- * @version 0.1.0 Initial draft version
+ * @version 2.0.0 version
  */
-
 public class SaleMenu {
 	// instance variables
 	OrderController orderController = new OrderController();
 	ProductController productController = new ProductController();
 
-	/**
-	 * Constructor for objects of class LoanMenu
-	 */
+	// A constructor.
 	public SaleMenu() {
 		// initialise instance variables
-
 	}
 
+	/**
+	 * This function is called when the program starts. It calls the saleMenu()
+	 * function.
+	 */
 	public void start() {
 		saleMenu();
 	}
 
 	/**
-	 * It prints a menu to the terminal and returns the user's choice
+	 * It prints a menu to the console and returns the user's choice
 	 * 
 	 * @return The method returns the choice of the user.
 	 */
@@ -49,6 +49,9 @@ public class SaleMenu {
 		return choice;
 	}
 
+	/**
+	 * It's a menu for the sale/order part of the program
+	 */
 	private void saleMenu() {
 		boolean running = true;
 		UserInput.clearTerminal();
@@ -77,6 +80,9 @@ public class SaleMenu {
 		}
 	}
 
+	/**
+	 * It creates a sale/order and then scans products
+	 */
 	private void startSale() {
 		UserInput.clearTerminal();
 		boolean running = true;
@@ -109,6 +115,9 @@ public class SaleMenu {
 		}
 	}
 
+	/**
+	 * The function scans products and adds them to the current order
+	 */
 	private void scanProducts() {
 		UserInput.clearTerminal();
 		boolean running = true;
@@ -139,11 +148,21 @@ public class SaleMenu {
 		}
 	}
 
+	/**
+	 * This function prints the invoice for the current order and then adds the
+	 * order to the list of
+	 * orders.
+	 */
 	private void completeSale() {
 		printInvoice(orderController.getCurrentOrder());
 		orderController.addOrder();
 	}
 
+	/**
+	 * This function prints out an invoice for a given order
+	 * 
+	 * @param o The Order to print the invoice of
+	 */
 	private void printInvoice(Order o) {
 		UserInput.clearTerminal();
 		int size = o.getOrderLines().size();
@@ -166,6 +185,9 @@ public class SaleMenu {
 		}
 	}
 
+	/**
+	 * It's a menu that lets the user choose between finding a sale or an order
+	 */
 	private void findSale() {
 		UserInput.clearTerminal();
 		boolean running = true;
@@ -195,6 +217,13 @@ public class SaleMenu {
 		}
 	}
 
+	/**
+	 * It takes a boolean as an argument, and then asks the user for a start and end
+	 * date, and then it
+	 * searches for orders within that date range
+	 * 
+	 * @param saleStatus A boolean to decide if it is a sale or an order
+	 */
 	private void callFindSale(boolean saleStatus) {
 		UserInput.clearTerminal();
 		String dateStart = UserInput.inputScanner(
@@ -233,6 +262,9 @@ public class SaleMenu {
 		}
 	}
 
+	/**
+	 * The function removes an order from the database
+	 */
 	private void removeSale() {
 		UserInput.clearTerminal();
 		String input = UserInput.inputScanner("Hvad er ordre nummeret for salget/ordren du ønsker at slette?");

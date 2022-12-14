@@ -4,22 +4,27 @@ import model.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * It's a controller class for the Product class
+ */
 public class ProductController {
 
-	// no parameters
+	// A constructor.
 	public ProductController() {
 	}
 
 	/**
-	 * @param name              of the product
-	 * @param barcode           of the product
-	 * @param description       of the product
-	 * @param category          of the product
-	 * @param storageLocation   of the product
-	 * @param warehouseLocation of the product
-	 * @param storageAmount     of the product
-	 * @param warehouseAmount   of the product
-	 * @return the product
+	 * This function creates a new product and adds it to the database
+	 * 
+	 * @param name              The name of the product
+	 * @param barcode           String of the product
+	 * @param description       String of the product
+	 * @param category          String[] of the product
+	 * @param storageLocation   The location of the product in the storage.
+	 * @param warehouseLocation The location of the product in the warehouse.
+	 * @param storageAmount     The quantity of the product in the storage
+	 * @param warehouseAmount   The quantity of the product in the warehouse
+	 * @return The method returns the new product.
 	 */
 	public Product createProduct(String name, String barcode, String description, String[] category,
 			String storageLocation, String warehouseLocation, int storageAmount, int warehouseAmount) {
@@ -31,7 +36,10 @@ public class ProductController {
 	}
 
 	/**
-	 * @param search finding product to be removed
+	 * This function removes a product from the product container
+	 * 
+	 * @param search The barcode/ProductID of the product to be removed.
+	 * @return A boolean value. True if successful
 	 */
 	public boolean removeProduct(String search) {
 		boolean success = false;
@@ -41,7 +49,10 @@ public class ProductController {
 	}
 
 	/**
-	 * @param product to be added
+	 * This function adds a product to the product container
+	 * 
+	 * @param product The product to be added to the container.
+	 * @return A boolean value true if succesful
 	 */
 	public boolean addProduct(Product product) {
 		boolean success = false;
@@ -50,7 +61,12 @@ public class ProductController {
 	}
 
 	/**
-	 * @param search barcode or product ID
+	 * It searches through a list of products and returns the first product that
+	 * matches the search
+	 * criteria
+	 * 
+	 * @param search The barcode or product ID of the product to be found.
+	 * @return The product that is found.
 	 */
 	public Product findProduct(String search) {
 		Product outputProduct = null;
@@ -69,12 +85,21 @@ public class ProductController {
 		return outputProduct;
 	}
 
-	public ArrayList<Product> getAllProducts(){
+	/**
+	 * This function returns an ArrayList of all the products in the
+	 * ProductContainer.
+	 * 
+	 * @return An ArrayList of all Product objects in container.
+	 */
+	public ArrayList<Product> getAllProducts() {
 		return ProductContainer.getInstance().getProducts();
 	}
+
 	/**
-	 * @param newName the new name of the product
-	 * @param product the specific instance of a product
+	 * If the product is not null, change its name to the new name.
+	 * 
+	 * @param newName The new name of the product.
+	 * @param product The product to change the name of.
 	 */
 	public void changeProductName(String newName, Product product) {
 
@@ -84,8 +109,10 @@ public class ProductController {
 	}
 
 	/**
-	 * @param newDescription the new description for a product
-	 * @param product        the specific instance of a product
+	 * If the product is not null, change its description.
+	 * 
+	 * @param newDescription The new description of the product.
+	 * @param product        The product to be updated.
 	 */
 	public void changeProductDescription(String newDescription, Product product) {
 
@@ -95,8 +122,14 @@ public class ProductController {
 	}
 
 	/**
-	 * @param newBarcode the new barcode for a product
-	 * @param product    the specific instance of a product
+	 * This function changes the barcode of a product if the new barcode is not
+	 * already in use
+	 * And product is not null
+	 *
+	 * @param newBarcode The new barcode that the user wants to change the product's
+	 *                   barcode to.
+	 * @param product    The product to change the barcode of.
+	 * @return A boolean value. true if successful
 	 */
 	public boolean changeProductBarcode(String newBarcode, Product product) {
 		boolean success = false;
@@ -109,8 +142,13 @@ public class ProductController {
 	}
 
 	/**
-	 * @param newCategory the new category for a product
-	 * @param product     the specific instance of a product
+	 * This function changes the category of a product
+	 * Each Category is devided by a comma, example [Example,Example,Example]
+	 * And the product is not null
+	 *
+	 * @param newCategory The new category that the product will be assigned to.
+	 * @param product     The product object that you want to change the category
+	 *                    for.
 	 */
 	public void changeProductCategory(String[] newCategory, Product product) {
 
@@ -120,8 +158,11 @@ public class ProductController {
 	}
 
 	/**
-	 * @param newStorageLocation the new storage location to be stored
-	 * @param product            the specific instance of a product
+	 * This function changes the storage location of a product
+	 * And the product is not null
+	 *
+	 * @param newStorageLocation The new storage location for the product.
+	 * @param product            The product to be updated
 	 */
 	public void changeProductStorageLocation(String newStorageLocation, Product product) {
 
@@ -131,8 +172,11 @@ public class ProductController {
 	}
 
 	/**
-	 * @param newWarehouseLocation the new warehouse location to be stored
-	 * @param product              the specific instance of a product
+	 * This function changes the warehouse location of a product
+	 * And the product is not null
+	 *
+	 * @param newWarehouseLocation The new warehouse location for the product.
+	 * @param product              The product to be updated
 	 */
 	public void changeProductWarehouseLocation(String newWarehouseLocation, Product product) {
 
@@ -142,8 +186,12 @@ public class ProductController {
 	}
 
 	/**
-	 * @param newStorageAmount the amount to be changed in Storage
-	 * @param product          the specific instance of a product
+	 * This function changes the storage amount of a product
+	 * And the product is not null
+	 *
+	 * @param newStorageAmount The new storage amount of the product.
+	 * @param product          The product that you want to change the storage
+	 *                         amount of.
 	 */
 	public void changeProductStorageAmount(int newStorageAmount, Product product) {
 
@@ -153,8 +201,12 @@ public class ProductController {
 	}
 
 	/**
-	 * @param newWarehouseAmount the amount to be changed in the Warehouse
-	 * @param product            the specific instance of a product
+	 * It changes the warehouse amount of a product
+	 * And the product is not null
+	 *
+	 * @param newWarehouseAmount the new quantity of the product in the warehouse
+	 * @param product            The quantity that you want to change the warehouse
+	 *                           amount of.
 	 */
 	public void changeProductWarehouseAmount(int newWarehouseAmount, Product product) {
 
@@ -163,6 +215,14 @@ public class ProductController {
 		}
 	}
 
+	/**
+	 * This function changes the cost price of a product
+	 * And the product is not null
+	 *
+	 * @param costPrice The new cost price of the product.
+	 * @param product   The product object that you want to change the cost price
+	 *                  of.
+	 */
 	public void changeCostPrice(double costPrice, Product product) {
 
 		if (product != null) {
@@ -170,6 +230,14 @@ public class ProductController {
 		}
 	}
 
+	/**
+	 * If the product is not null, set the sales price
+	 * And the product is not null
+	 *
+	 * @param salesPrice The new sales price of the product.
+	 * @param product    The product object that you want to change the sales price
+	 *                   of.
+	 */
 	public void changeSalesPrice(double salesPrice, Product product) {
 
 		if (product != null) {
@@ -177,6 +245,13 @@ public class ProductController {
 		}
 	}
 
+	/**
+	 * This function changes the suggested price of a product
+	 * 
+	 * @param suggestedPrice The new suggested price for the product.
+	 * @param product        The product that you want to change the suggested price
+	 *                       for.
+	 */
 	public void changeSuggestedPrice(double suggestedPrice, Product product) {
 
 		if (product != null) {
