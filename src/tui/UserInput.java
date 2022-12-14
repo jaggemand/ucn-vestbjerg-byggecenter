@@ -21,6 +21,7 @@ public class UserInput {
     	Scanner console = new Scanner(System.in);
     	return console.nextLine();
     }
+    
     public static int inputScannerNumber(String question) {   
         Scanner console = new Scanner(System.in);
         int number = 0;
@@ -33,4 +34,18 @@ public class UserInput {
         number = console.nextInt();
         return number;
     }
+    
+    @SuppressWarnings("resource")
+	public static void waitAndClearTerminal() {
+		System.out.println("Tryk enter for at fortsætte");
+		Scanner sc = new Scanner(System.in);
+		sc.nextLine();
+		clearTerminal();
+	}
+
+	public static void clearTerminal() {
+		for (int i = 0; i < 22; i++) {
+			System.out.println(" ");
+		}
+	}
 }

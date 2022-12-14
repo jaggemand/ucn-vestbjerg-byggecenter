@@ -142,18 +142,6 @@ public class ProductMenu {
 			int choice = UserInput.getIntegerFromUser();
 			switch (choice) {
 			case 1:
-				String costPrice = UserInput.inputScanner("Indtast den nye indkøbspris");
-				double newCostPrice = 0;
-				try {
-					newCostPrice = Double.parseDouble(costPrice);
-				} catch (Exception e) {
-					System.out.println("Fejl! En fejl opstod, prøv med punktum i stedet for komma som separator.");
-					return;
-				}
-				productController.changeSalesPrice(newCostPrice, productToChange);
-				System.out.println("Success! Indkøbsprisen er blevet ændret.");
-				break;
-			case 2:
 				String salesPrice = UserInput.inputScanner("Indtast den nye salgspris");
 				double newSalesPrice = 0;
 				try {
@@ -162,11 +150,23 @@ public class ProductMenu {
 					System.out.println("Fejl! En fejl opstod, prøv med punktum i stedet for komma som separator.");
 					return;
 				}
-				productController.changeCostPrice(newSalesPrice, productToChange);
+				productController.changeSalesPrice(newSalesPrice, productToChange);
+				System.out.println("Success! Salgsprisen er blevet ændret.");
+				break;
+			case 2:
+				String costPrice = UserInput.inputScanner("Indtast den nye indkøbspris");
+				double newCostPrice = 0;
+				try {
+					newCostPrice = Double.parseDouble(costPrice);
+				} catch (Exception e) {
+					System.out.println("Fejl! En fejl opstod, prøv med punktum i stedet for komma som separator.");
+					return;
+				}
+				productController.changeCostPrice(newCostPrice, productToChange);
 				System.out.println("Success! Indkøbsprisen er blevet ændret.");
 				break;
 			case 3:
-				String suggestedPrice = UserInput.inputScanner("Indtast den nye anbefalet pris");
+				String suggestedPrice = UserInput.inputScanner("Indtast den nye anbefalede pris");
 				double newSuggestedPrice = 0;
 				try {
 					newSuggestedPrice = Double.parseDouble(suggestedPrice);
@@ -175,7 +175,7 @@ public class ProductMenu {
 					return;
 				}
 				productController.changeSuggestedPrice(newSuggestedPrice, productToChange);
-				System.out.println("Success! Indkøbsprisen er blevet ændret.");
+				System.out.println("Success! Den anbefalede pris er blevet ændret.");
 				break;
 			default:
 				System.out.println("En uforklarlig fejl er sket med valg = " + choice);

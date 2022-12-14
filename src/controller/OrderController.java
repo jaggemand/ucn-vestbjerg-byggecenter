@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import model.*;
+import model.Order.OrderStatus;
 
 public class OrderController {
 	private Order currentOrder;
@@ -38,8 +39,8 @@ public class OrderController {
 	 * This method creates a new order in the currentOrder attribute
 	 * 
 	 */
-	public void createOrder() {
-		currentOrder = new Order();
+	public void createOrder(boolean saleStatus) {
+		currentOrder = new Order(saleStatus);
 	}
 
 	/*
@@ -107,23 +108,32 @@ public class OrderController {
 		return outputOrder;
 	}
 	
-	public ArrayList<Order> findOrdersWithinDate(String startDate, String endDate){
+	public ArrayList<Order> findOrdersWithinDate(String startDate, String endDate, boolean saleStatus){
 		ArrayList<Order> orders = OrderContainer.getInstance().getOrders();
 		ArrayList<Order> ordersWithinDate = new ArrayList<>();
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		LocalDate start = LocalDate.parse(startDate, dateTimeFormatter).minusDays(1);
-		LocalDate end = LocalDate.parse(endDate, dateTimeFormatter).plusDays(1);
-		
+		Iterator<Order> it = orders.iterator();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		LocalDate start = LocalDate.parse(startDate, formatter).minusDays(1);
+		LocalDate end = LocalDate.parse(endDate, formatter).plusDays(1);
 		boolean notWithinDate = false;
-		for (int i = 0; i < orders.size() && !notWithinDate; i++) {
-			LocalDate orderDate = LocalDate.parse(orders.get(i).getDate(), dateTimeFormatter);
-			if (orderDate.isAfter(start) && orderDate.isBefore(end)) {
-				ordersWithinDate.add(orders.get(i));
+		boolean check;
+		
+		while (!notWithinDate && it.hasNext()) {
+			Order temp = it.next();
+			if (saleStatus) {
+				check = temp.getStatus() == OrderStatus.SALE;
 			} else {
-				notWithinDate = true;
+				check = temp.getStatus() != OrderStatus.SALE;
+			}
+			LocalDate orderDate = LocalDate.parse(temp.getDate().format(formatter),formatter);
+			if (orderDate.isAfter(start) && orderDate.isBefore(end)) {
+				if (check) {
+					ordersWithinDate.add(temp);
+				} else if (orderDate.isAfter(end)) {
+					notWithinDate = true;
+				}
 			}
 		}
-		
 		return ordersWithinDate;
 	}
 
