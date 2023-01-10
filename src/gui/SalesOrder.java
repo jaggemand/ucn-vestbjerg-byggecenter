@@ -6,10 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class ProductOverview extends JFrame {
+public class SalesOrder extends JFrame {
 
 	private JPanel contentPane;
-	private static ProductOverview frame;
 
 	/**
 	 * Launch the application.
@@ -18,7 +17,7 @@ public class ProductOverview extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frame = new ProductOverview();
+					SalesOrder frame = new SalesOrder();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,7 +29,7 @@ public class ProductOverview extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProductOverview() {
+	public SalesOrder() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();

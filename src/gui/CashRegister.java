@@ -6,10 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class SaleSubMenu extends JFrame {
+public class CashRegister extends JFrame {
 
 	private JPanel contentPane;
-
+	private static CashRegister frame;
 	/**
 	 * Launch the application.
 	 */
@@ -17,7 +17,7 @@ public class SaleSubMenu extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SaleSubMenu frame = new SaleSubMenu();
+					frame = new CashRegister();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -29,8 +29,8 @@ public class SaleSubMenu extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SaleSubMenu() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public CashRegister() {
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
