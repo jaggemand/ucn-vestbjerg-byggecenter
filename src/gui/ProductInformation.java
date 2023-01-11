@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.BorderLayout;
@@ -18,6 +19,7 @@ import java.awt.Frame;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -45,6 +47,8 @@ public class ProductInformation extends JFrame {
 	private JTextField txtBarcode;
 	private JTextField txtProductID;
 	private JTextArea txtProductDescription;
+	private JList categoryList;
+	private static Product product;
 
 	/**
 	 * Launch the application.
@@ -53,7 +57,7 @@ public class ProductInformation extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProductInformation frame = new ProductInformation();
+					ProductInformation frame = new ProductInformation(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,7 +69,8 @@ public class ProductInformation extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProductInformation() {
+	public ProductInformation(Product product) {
+		setTitle("Produkt");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 450);
 		contentPane = new JPanel();
@@ -401,10 +406,16 @@ public class ProductInformation extends JFrame {
 		gbc_scrollPane.gridy = 2;
 		panel_2.add(scrollPane, gbc_scrollPane);
 
-		JList list = new JList();
-		scrollPane.setViewportView(list);
+		categoryList = new JList();
+		categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(categoryList);
 
 		JButton btnCategoryAdd = new JButton("Tilføj");
+		btnCategoryAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addCategory();
+			}
+		});
 		GridBagConstraints gbc_btnCategoryAdd = new GridBagConstraints();
 		gbc_btnCategoryAdd.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCategoryAdd.gridx = 3;
@@ -446,6 +457,33 @@ public class ProductInformation extends JFrame {
 		txtCostPrice.setEnabled(false);
 		txtSalesPrice.setEnabled(false);
 		txtSuggestedSalesPrice.setEnabled(false);
+		this.product = product;
+		init();
+	}
+	
+	public void init() {
+		System.out.println(product);
+		if(product == null) {
+			DefaultListModel listModel = new DefaultListModel();
+			categoryList.setModel(listModel);
+		} else {
+			DefaultListModel listModel = new DefaultListModel();
+			for(String element : product.getCategory()) {
+				listModel.addElement(element);
+			}
+			categoryList.setModel(listModel);
+			txtProductName.setText(product.getName());
+			txtProductID.setText(product.getProductID());
+			txtProductDescription.setText(product.getDescription());
+			txtBarcode.setText(product.getBarcode());
+			txtCostPrice.setText(product.getCostPriceFormatted());
+			txtSuggestedSalesPrice.setText(product.getSuggestedSalesPriceFormatted());
+			txtSalesPrice.setText(product.getSalesPriceFormatted());
+			txtStoreLocation.setText(product.getStorageLocation());
+			//txtStoreAmount.setText(product.getStorageAmount());
+			txtWarehouseLocation.setText(product.getWarehouseLocation());
+			//txtWarehouseAmount.setText(product.getWarehouseAmount());
+		}
 	}
 
 	public void saveProduct() {
@@ -486,6 +524,11 @@ public class ProductInformation extends JFrame {
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+	
+	public void addCategory( ) {
+		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd();
+		dialogCategoryAdd.setVisible(true);
 	}
 
 	public void closeWindow() {

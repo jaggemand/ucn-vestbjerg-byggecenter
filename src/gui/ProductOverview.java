@@ -24,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
 import java.awt.event.ActionListener;
@@ -199,6 +200,14 @@ public class ProductOverview extends JFrame {
 		panel_1.setLayout(gbl_panel_1);
 		
 		JButton btnAdd = new JButton("Tilføj");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ProductController productController = new ProductController();
+				Product product = productController.findProduct("1000-1");
+			ProductInformation PI = new ProductInformation(product);
+			PI.setVisible(true);
+			}
+		});
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
