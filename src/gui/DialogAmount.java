@@ -7,6 +7,13 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class DialogAmount extends JDialog {
 
@@ -29,11 +36,43 @@ public class DialogAmount extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogAmount() {
+		setTitle("Vælg total antal");
+		setResizable(false);
+		setModal(true);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new BorderLayout(0, 0));
+		{
+			JPanel panel = new JPanel();
+			contentPanel.add(panel, BorderLayout.CENTER);
+			GridBagLayout gbl_panel = new GridBagLayout();
+			gbl_panel.columnWidths = new int[]{0, 0, 75, 0, 0};
+			gbl_panel.rowHeights = new int[]{0, 0, 0, 0};
+			gbl_panel.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+			gbl_panel.rowWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
+			panel.setLayout(gbl_panel);
+			{
+				JLabel lblNewLabel = new JLabel("Antal:");
+				GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+				gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
+				gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+				gbc_lblNewLabel.gridx = 1;
+				gbc_lblNewLabel.gridy = 1;
+				panel.add(lblNewLabel, gbc_lblNewLabel);
+			}
+			{
+				JSpinner spinner = new JSpinner();
+				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+				GridBagConstraints gbc_spinner = new GridBagConstraints();
+				gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
+				gbc_spinner.insets = new Insets(0, 0, 5, 5);
+				gbc_spinner.gridx = 2;
+				gbc_spinner.gridy = 1;
+				panel.add(spinner, gbc_spinner);
+			}
+		}
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -45,7 +84,7 @@ public class DialogAmount extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Afbryd");
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
