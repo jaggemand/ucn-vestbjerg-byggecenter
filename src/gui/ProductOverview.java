@@ -83,19 +83,7 @@ public class ProductOverview extends JFrame {
 			data[i][4] = Integer.toString(current.getWarehouseAmount());
 			data[i][5] = current.getWarehouseLocation();
 		}
-		DefaultTableModel tabelmodel = new DefaultTableModel(data, columns);
-		table = new JTable(tabelmodel) {
-		    public Component prepareRenderer(
-		            TableCellRenderer renderer, int row, int column)
-		        {
-		            Component c = super.prepareRenderer(renderer, row, column);
-		            if (!isRowSelected(row))
-		                c.setBackground(row % 2 == 0 ? getBackground() : Color.LIGHT_GRAY);
-
-		            return c;
-		        }
-		};
-		table.setDefaultEditor(Object.class, null);
+		table = new DefaultTable(data, columns);
 		scrollPane.setViewportView(table);
 		JPanel panel = new JPanel();
 		panel.setLayout(getLayout());
