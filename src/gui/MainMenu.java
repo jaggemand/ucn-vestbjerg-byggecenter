@@ -37,6 +37,7 @@ public class MainMenu extends JFrame {
 			public void run() {
 				try {
 					frame = new MainMenu();
+					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
