@@ -4,11 +4,16 @@ import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 public class DefaultTable extends JTable {
 	private DefaultTableModel tabelModel;
+	private int[] rows;
+	
 	/**
 	 * Create the panel.
 	 */
@@ -16,6 +21,15 @@ public class DefaultTable extends JTable {
 		tabelModel = new DefaultTableModel(data, columns);
 		setModel(tabelModel);
 		setDefaultEditor(Object.class, null);
+		rows = new int[0];
+		
+		getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				rows = getSelectedRows();
+			}
+		});
 	}
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		Component c = super.prepareRenderer(renderer, row, column);
@@ -34,15 +48,16 @@ public class DefaultTable extends JTable {
 		}
 	}
 	public void deleteData() {
-		int[] rows = this.getSelectedRows();
+		System.out.println(rows[0]);
 		if(rows.length != 0) {
 			for(int i = rows.length-1; i>= 0;i--) {
-				tabelModel.removeRow(i);
+				tabelModel.removeRow(rows[i]);
 			}
 		}
 	}
 	public int findElement() {
 		return this.getSelectedRows()[0];
 	}
+	
 	
 }
