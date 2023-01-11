@@ -106,6 +106,7 @@ public class ProductOverview extends JFrame {
 		panel.add(lblFilter, gbc_lblFilter);
 		
 		JCheckBox jrbStoreLocation = new JCheckBox("Butik");
+		jrbStoreLocation.setSelected(true);
 		GridBagConstraints gbc_jrbStoreLocation = new GridBagConstraints();
 		gbc_jrbStoreLocation.anchor = GridBagConstraints.NORTHWEST;
 		gbc_jrbStoreLocation.insets = new Insets(0, 0, 5, 5);
@@ -114,6 +115,7 @@ public class ProductOverview extends JFrame {
 		panel.add(jrbStoreLocation, gbc_jrbStoreLocation);
 		
 		JLabel lblMinPrice = new JLabel("Min Pris");
+		lblMinPrice.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		GridBagConstraints gbc_lblMinPrice = new GridBagConstraints();
 		gbc_lblMinPrice.anchor = GridBagConstraints.WEST;
 		gbc_lblMinPrice.insets = new Insets(0, 0, 5, 5);
@@ -155,6 +157,7 @@ public class ProductOverview extends JFrame {
 		jcbCategories.addItem("Kategorier");
 		
 		JCheckBox jrbWarehouseLocation = new JCheckBox("Lager");
+		jrbWarehouseLocation.setSelected(true);
 		GridBagConstraints gbc_jrbWarehouseLocation = new GridBagConstraints();
 		gbc_jrbWarehouseLocation.anchor = GridBagConstraints.NORTHWEST;
 		gbc_jrbWarehouseLocation.insets = new Insets(0, 0, 0, 5);
@@ -199,6 +202,12 @@ public class ProductOverview extends JFrame {
 		panel_1.setLayout(gbl_panel_1);
 		
 		JButton btnAdd = new JButton("Tilføj");
+		btnAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
