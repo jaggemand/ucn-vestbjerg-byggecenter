@@ -33,10 +33,10 @@ public class ProductOverview extends JFrame {
 
 	private JPanel contentPane;
 	private static ProductOverview frame;
-	private JTable table;
-	private JTextField txtNavn;
-	private JTextField txtPris;
-	private JTextField textField_2;
+	private DefaultTable table;
+	private JTextField txtProductName;
+	private JTextField txtMaxPrice;
+	private JTextField txtMinPrice;
 
 	/**
 	 * Launch the application.
@@ -59,7 +59,7 @@ public class ProductOverview extends JFrame {
 	 */
 	public ProductOverview() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 850, 600);
+		setBounds(100, 100, 923, 644);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -74,7 +74,7 @@ public class ProductOverview extends JFrame {
 		int size = ProductContainer.getInstance().getProducts().size();
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = new String[size][6];
-		for(int i = 0; i < size;i++) {
+		for(int i = 0; i < size; i++) {
 			Product current = dataArrayList.get(i);
 			data[i][0] = current.getProductID();
 			data[i][1] = current.getName();
@@ -83,19 +83,8 @@ public class ProductOverview extends JFrame {
 			data[i][4] = Integer.toString(current.getWarehouseAmount());
 			data[i][5] = current.getWarehouseLocation();
 		}
-		DefaultTableModel tabelmodel = new DefaultTableModel(data, columns);
-		table = new JTable(tabelmodel) {
-		    public Component prepareRenderer(
-		            TableCellRenderer renderer, int row, int column)
-		        {
-		            Component c = super.prepareRenderer(renderer, row, column);
-		            if (!isRowSelected(row))
-		                c.setBackground(row % 2 == 0 ? getBackground() : Color.LIGHT_GRAY);
-
-		            return c;
-		        }
-		};
-		table.setDefaultEditor(Object.class, null);
+		
+		table = new DefaultTable(data, columns);
 		scrollPane.setViewportView(table);
 		JPanel panel = new JPanel();
 		panel.setLayout(getLayout());
@@ -107,102 +96,98 @@ public class ProductOverview extends JFrame {
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		JLabel lblHeader = new JLabel("Filtre");
-		lblHeader.setFont(new Font("Tahoma", Font.BOLD, 20));
-		GridBagConstraints gbc_lblHeader = new GridBagConstraints();
-		gbc_lblHeader.anchor = GridBagConstraints.WEST;
-		gbc_lblHeader.insets = new Insets(0, 0, 5, 5);
-		gbc_lblHeader.gridx = 1;
-		gbc_lblHeader.gridy = 0;
-		panel.add(lblHeader, gbc_lblHeader);
+		JLabel lblFilter = new JLabel("Filtre");
+		lblFilter.setFont(new Font("Tahoma", Font.BOLD, 20));
+		GridBagConstraints gbc_lblFilter = new GridBagConstraints();
+		gbc_lblFilter.anchor = GridBagConstraints.WEST;
+		gbc_lblFilter.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFilter.gridx = 1;
+		gbc_lblFilter.gridy = 0;
+		panel.add(lblFilter, gbc_lblFilter);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Butik");
-		GridBagConstraints gbc_chckbxNewCheckBox = new GridBagConstraints();
-		gbc_chckbxNewCheckBox.anchor = GridBagConstraints.NORTHWEST;
-		gbc_chckbxNewCheckBox.insets = new Insets(0, 0, 5, 5);
-		gbc_chckbxNewCheckBox.gridx = 2;
-		gbc_chckbxNewCheckBox.gridy = 1;
-		panel.add(chckbxNewCheckBox, gbc_chckbxNewCheckBox);
+		JCheckBox jrbStoreLocation = new JCheckBox("Butik");
+		GridBagConstraints gbc_jrbStoreLocation = new GridBagConstraints();
+		gbc_jrbStoreLocation.anchor = GridBagConstraints.NORTHWEST;
+		gbc_jrbStoreLocation.insets = new Insets(0, 0, 5, 5);
+		gbc_jrbStoreLocation.gridx = 2;
+		gbc_jrbStoreLocation.gridy = 1;
+		panel.add(jrbStoreLocation, gbc_jrbStoreLocation);
 		
-		JLabel lblNewLabel_2 = new JLabel("Min Pris");
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_2.gridx = 3;
-		gbc_lblNewLabel_2.gridy = 1;
-		panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		JLabel lblMinPrice = new JLabel("Min Pris");
+		GridBagConstraints gbc_lblMinPrice = new GridBagConstraints();
+		gbc_lblMinPrice.anchor = GridBagConstraints.WEST;
+		gbc_lblMinPrice.insets = new Insets(0, 0, 5, 5);
+		gbc_lblMinPrice.gridx = 3;
+		gbc_lblMinPrice.gridy = 1;
+		panel.add(lblMinPrice, gbc_lblMinPrice);
 		
-		JLabel lblNewLabel_1 = new JLabel("Max Pris");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 4;
-		gbc_lblNewLabel_1.gridy = 1;
-		panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		JLabel lblMaxPrice = new JLabel("Max Pris");
+		GridBagConstraints gbc_lblMaxPrice = new GridBagConstraints();
+		gbc_lblMaxPrice.anchor = GridBagConstraints.WEST;
+		gbc_lblMaxPrice.insets = new Insets(0, 0, 5, 5);
+		gbc_lblMaxPrice.gridx = 4;
+		gbc_lblMaxPrice.gridy = 1;
+		panel.add(lblMaxPrice, gbc_lblMaxPrice);
 		
-		JLabel lblNewLabel = new JLabel("Produkt Navn");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
-		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel.gridx = 6;
-		gbc_lblNewLabel.gridy = 1;
-		panel.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel lblProductName = new JLabel("Produkt Navn");
+		GridBagConstraints gbc_lblProductName = new GridBagConstraints();
+		gbc_lblProductName.anchor = GridBagConstraints.WEST;
+		gbc_lblProductName.insets = new Insets(0, 0, 5, 5);
+		gbc_lblProductName.gridx = 6;
+		gbc_lblProductName.gridy = 1;
+		panel.add(lblProductName, gbc_lblProductName);
 		
-		JButton btnNewButton_1 = new JButton("Søg");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_1.fill = GridBagConstraints.BOTH;
-		gbc_btnNewButton_1.gridx = 11;
-		gbc_btnNewButton_1.gridy = 1;
-		panel.add(btnNewButton_1, gbc_btnNewButton_1);
+		JButton btnSearch = new JButton("Søg");
+		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
+		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSearch.fill = GridBagConstraints.BOTH;
+		gbc_btnSearch.gridx = 11;
+		gbc_btnSearch.gridy = 1;
+		panel.add(btnSearch, gbc_btnSearch);
 		
-		JComboBox comboBox = new JComboBox();
-		GridBagConstraints gbc_comboBox = new GridBagConstraints();
-		gbc_comboBox.anchor = GridBagConstraints.NORTHWEST;
-		gbc_comboBox.insets = new Insets(0, 0, 0, 5);
-		gbc_comboBox.gridx = 1;
-		gbc_comboBox.gridy = 2;
-		panel.add(comboBox, gbc_comboBox);
-		comboBox.addItem("Kategorier");
+		JComboBox jcbCategories = new JComboBox();
+		GridBagConstraints gbc_jcbCategories = new GridBagConstraints();
+		gbc_jcbCategories.anchor = GridBagConstraints.NORTHWEST;
+		gbc_jcbCategories.insets = new Insets(0, 0, 0, 5);
+		gbc_jcbCategories.gridx = 1;
+		gbc_jcbCategories.gridy = 2;
+		panel.add(jcbCategories, gbc_jcbCategories);
+		jcbCategories.addItem("Kategorier");
 		
-		JCheckBox chckbxNewCheckBox_1 = new JCheckBox("Lager");
-		GridBagConstraints gbc_chckbxNewCheckBox_1 = new GridBagConstraints();
-		gbc_chckbxNewCheckBox_1.anchor = GridBagConstraints.NORTHWEST;
-		gbc_chckbxNewCheckBox_1.insets = new Insets(0, 0, 0, 5);
-		gbc_chckbxNewCheckBox_1.gridx = 2;
-		gbc_chckbxNewCheckBox_1.gridy = 2;
-		panel.add(chckbxNewCheckBox_1, gbc_chckbxNewCheckBox_1);
+		JCheckBox jrbWarehouseLocation = new JCheckBox("Lager");
+		GridBagConstraints gbc_jrbWarehouseLocation = new GridBagConstraints();
+		gbc_jrbWarehouseLocation.anchor = GridBagConstraints.NORTHWEST;
+		gbc_jrbWarehouseLocation.insets = new Insets(0, 0, 0, 5);
+		gbc_jrbWarehouseLocation.gridx = 2;
+		gbc_jrbWarehouseLocation.gridy = 2;
+		panel.add(jrbWarehouseLocation, gbc_jrbWarehouseLocation);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_2.anchor = GridBagConstraints.WEST;
-		gbc_textField_2.gridx = 3;
-		gbc_textField_2.gridy = 2;
-		panel.add(textField_2, gbc_textField_2);
+		txtMinPrice = new JTextField();
+		txtMinPrice.setColumns(10);
+		GridBagConstraints gbc_txtMinPrice = new GridBagConstraints();
+		gbc_txtMinPrice.insets = new Insets(0, 0, 0, 5);
+		gbc_txtMinPrice.anchor = GridBagConstraints.WEST;
+		gbc_txtMinPrice.gridx = 3;
+		gbc_txtMinPrice.gridy = 2;
+		panel.add(txtMinPrice, gbc_txtMinPrice);
 		
-		txtPris = new JTextField();
-		txtPris.setColumns(10);
-		GridBagConstraints gbc_txtPris = new GridBagConstraints();
-		gbc_txtPris.anchor = GridBagConstraints.WEST;
-		gbc_txtPris.insets = new Insets(0, 0, 0, 5);
-		gbc_txtPris.gridx = 4;
-		gbc_txtPris.gridy = 2;
-		panel.add(txtPris, gbc_txtPris);
+		txtMaxPrice = new JTextField();
+		txtMaxPrice.setColumns(10);
+		GridBagConstraints gbc_txtMaxPrice = new GridBagConstraints();
+		gbc_txtMaxPrice.anchor = GridBagConstraints.WEST;
+		gbc_txtMaxPrice.insets = new Insets(0, 0, 0, 5);
+		gbc_txtMaxPrice.gridx = 4;
+		gbc_txtMaxPrice.gridy = 2;
+		panel.add(txtMaxPrice, gbc_txtMaxPrice);
 		
-		txtNavn = new JTextField();
-		txtNavn.setColumns(10);
-		GridBagConstraints gbc_txtNavn = new GridBagConstraints();
-		gbc_txtNavn.insets = new Insets(0, 0, 0, 5);
-		gbc_txtNavn.anchor = GridBagConstraints.WEST;
-		gbc_txtNavn.gridx = 6;
-		gbc_txtNavn.gridy = 2;
-		panel.add(txtNavn, gbc_txtNavn);
+		txtProductName = new JTextField();
+		txtProductName.setColumns(10);
+		GridBagConstraints gbc_txtProductName = new GridBagConstraints();
+		gbc_txtProductName.insets = new Insets(0, 0, 0, 5);
+		gbc_txtProductName.anchor = GridBagConstraints.WEST;
+		gbc_txtProductName.gridx = 6;
+		gbc_txtProductName.gridy = 2;
+		panel.add(txtProductName, gbc_txtProductName);
 		
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.EAST);
@@ -213,43 +198,47 @@ public class ProductOverview extends JFrame {
 		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
-		JButton btnNewButton_2 = new JButton("Tilføj");
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_2.gridx = 0;
-		gbc_btnNewButton_2.gridy = 1;
-		panel_1.add(btnNewButton_2, gbc_btnNewButton_2);
+		JButton btnAdd = new JButton("Tilføj");
+		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
+		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
+		gbc_btnAdd.gridx = 0;
+		gbc_btnAdd.gridy = 1;
+		panel_1.add(btnAdd, gbc_btnAdd);
 		
-		JButton btnNewButton_3 = new JButton("Rediger");
-		GridBagConstraints gbc_btnNewButton_3 = new GridBagConstraints();
-		gbc_btnNewButton_3.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_3.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_3.gridx = 0;
-		gbc_btnNewButton_3.gridy = 2;
-		panel_1.add(btnNewButton_3, gbc_btnNewButton_3);
+		JButton btnEdit = new JButton("Rediger");
+		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
+		gbc_btnEdit.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnEdit.insets = new Insets(0, 0, 5, 0);
+		gbc_btnEdit.gridx = 0;
+		gbc_btnEdit.gridy = 2;
+		panel_1.add(btnEdit, gbc_btnEdit);
 		
-		JButton btnNewButton_4 = new JButton("Detaljer");
-		GridBagConstraints gbc_btnNewButton_4 = new GridBagConstraints();
-		gbc_btnNewButton_4.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_4.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton_4.gridx = 0;
-		gbc_btnNewButton_4.gridy = 3;
-		panel_1.add(btnNewButton_4, gbc_btnNewButton_4);
+		JButton btnDetails = new JButton("Detaljer");
+		GridBagConstraints gbc_btnDetails = new GridBagConstraints();
+		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
+		gbc_btnDetails.gridx = 0;
+		gbc_btnDetails.gridy = 3;
+		panel_1.add(btnDetails, gbc_btnDetails);
 		
-		JButton btnNewButton_5 = new JButton("Slet");
-		GridBagConstraints gbc_btnNewButton_5 = new GridBagConstraints();
-		gbc_btnNewButton_5.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_5.gridx = 0;
-		gbc_btnNewButton_5.gridy = 4;
-		panel_1.add(btnNewButton_5, gbc_btnNewButton_5);
+		JButton btnDelete = new JButton("Slet");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				table.deleteData();
+			}
+		});
+		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDelete.gridx = 0;
+		gbc_btnDelete.gridy = 4;
+		panel_1.add(btnDelete, gbc_btnDelete);
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
 		panel_2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
-		JButton btnNewButton = new JButton("Afslut");
-		panel_2.add(btnNewButton);
+		JButton btnClose = new JButton("Afslut");
+		panel_2.add(btnClose);
 	}
-
 }
