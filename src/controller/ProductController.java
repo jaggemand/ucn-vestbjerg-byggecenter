@@ -258,4 +258,12 @@ public class ProductController {
 			product.setSuggestedSalesPrice(suggestedPrice);
 		}
 	}
+	
+	public void loadFile() {
+		ProductContainer.getInstance().loadFile();
+	}
+	
+	public void saveFile() {
+		ProductContainer.getInstance().saveFile();
+	}
 }

@@ -21,10 +21,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.ProductController;
+
 public class MainMenu extends JFrame {
 
 	private JPanel contentPane;
 	private static MainMenu frame;
+	private ProductController pController;
 
 	/**
 	 * Launch the application.
@@ -46,6 +49,8 @@ public class MainMenu extends JFrame {
 	 * Create the frame.
 	 */
 	public MainMenu() {
+		pController = new ProductController();
+		pController.loadFile();
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //TODO JFrame.DO_NOTHING_ON_CLOSE
 		this.addWindowListener(new WindowAdapter() {
@@ -169,6 +174,7 @@ public class MainMenu extends JFrame {
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				new Object[] { "Ja", "Nej" }, JOptionPane.YES_OPTION);
 		if(input == 0) {
+			pController.saveFile();
 			frame.dispose();
 			System.exit(0);
 		}

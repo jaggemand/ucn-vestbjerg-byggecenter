@@ -1,4 +1,3 @@
-/tui/
-/controller/
-/model/
 /gui/
+/model/
+/tui/

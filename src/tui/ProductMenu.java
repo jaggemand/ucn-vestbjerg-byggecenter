@@ -105,6 +105,8 @@ public class ProductMenu {
 		// Creates String-objects that will be filled by the user, via the terminal
 		String name = UserInput.inputScanner("Indtast navnet på det nye produkt");
 		String description = UserInput.inputScanner("Indtast beskrivelsen på det nye produkt");
+		
+		String barcode = UserInput.inputScanner("Indtast stregkoden på det nye produkt (Kan undlades)");
 
 		// A String-array is created and the user is asked to provide a comma-separated
 		// string, and using the split-method
@@ -140,7 +142,7 @@ public class ProductMenu {
 
 		// The productcontroller is tasked with the creation of the product, using the
 		// data gathered above
-		productController.createProduct(name, "", description, category, storageLocation, warehouseLocation,
+		productController.createProduct(name, barcode, description, category, storageLocation, warehouseLocation,
 				storageAmount, warehouseAmount);
 
 		// A message is displayed to the user via the terminal

@@ -16,6 +16,7 @@ public class MainMenu {
 	private boolean debug = true;
 	private SaleMenu saleMenu;
 	private ProductMenu productMenu;
+	private ProductController pController = new ProductController();
 
 	/**
 	 * The main function is the entry point of the program. It creates an instance
@@ -33,6 +34,7 @@ public class MainMenu {
 	 * the mainMenu function
 	 */
 	public void start() {
+		pController.loadFile();
 		saleMenu = new SaleMenu();
 		productMenu = new ProductMenu();
 		mainMenu();
@@ -65,6 +67,7 @@ public class MainMenu {
 					UserInput.waitAndClearTerminal();
 					break;
 				case 0:
+					pController.saveFile();
 					System.out.println("Tak for denne gang.");
 					running = false;
 					break;

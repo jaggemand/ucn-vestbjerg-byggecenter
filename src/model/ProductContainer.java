@@ -1,7 +1,12 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * This class is a singleton class that holds a list of products
@@ -76,5 +81,100 @@ public class ProductContainer {
 			products.remove(p);
 		}
 		return success;
+	}
+	
+	public void loadFile() {
+		try {
+		      File myObj = new File("products.txt");
+		      if (myObj.createNewFile()) {
+		        System.out.println("File created: " + myObj.getName());
+		      } else {
+		        System.out.println("File already exists.");
+		        importFromFile(myObj);
+		      }
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
+	public void saveFile() {
+		try {
+		      File myObj = new File("products.txt");
+		      if (myObj.createNewFile()) {
+		        System.out.println("File created: " + myObj.getName());
+		        exportToFile(myObj);
+		      } else {
+		        System.out.println("File already exists.");
+		        myObj.delete();
+		        saveFile();
+		        
+		      }
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
+	
+	private void importFromFile(File input) {
+		int count = 0;
+		try {
+		      Scanner myReader = new Scanner(input);
+		      myReader.nextLine(); // DISCARD top line
+		      while (myReader.hasNextLine()) {
+		    	//Reads next line of the file and splits it using ; as separator
+		        String[] data = myReader.nextLine().split(";");
+		        //Raw data goes to the constructor
+		        Product newProduct = new Product(data[0], data[1], data[2], data[3].split(","), data[4], data[5], Integer.parseInt(data[6]), Integer.parseInt(data[7]));
+
+				newProduct.setSalesPrice(Double.parseDouble(data[8]));
+				newProduct.setCostPrice(Double.parseDouble(data[9]));
+				newProduct.setSuggestedSalesPrice(Double.parseDouble(data[10]));
+		        
+		        
+		        products.add(newProduct);
+		        count++;
+		      }
+		      System.out.println("Imported products to container: " + count);
+		      myReader.close();
+		    } catch (FileNotFoundException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
+	
+	private void exportToFile(File output) {
+		int count = 0;
+		try {
+		      FileWriter myWriter = new FileWriter("products.txt");
+		      myWriter.write("//NAME;BARCODE;DESCRIPTION;CATEGORY(,);STORAGELOCATION;WAREHOUSELOCATION;STORAGEAMOUNT;WAREHOUSEAMOUNT;SALESPRICE;COSTPRICE;SUGGESTEDSALESPRICE\n");
+		      for(Product e : products) {
+		    	  String categories = "";
+		    	  for(int i = 0;i<e.getCategory().length;i++) {
+		    		  if(i == 0) {
+		    			  categories += e.getCategory()[i];
+		    		  }
+		    		  else {
+		    			  categories += "," + e.getCategory()[i];
+		    		  }
+		    	  }
+		    	  myWriter.write(
+		    			  e.getName() + ";" +
+		    			  e.getBarcode() + ";" +
+		    			  e.getDescription() + ";" + 
+		    			  categories + ";" +
+		    			  e.getStorageLocation() + ";" +
+		    			  e.getWarehouseLocation() + ";" +
+		    			  e.getStorageAmount() + ";" +
+		    			  e.getWarehouseAmount() + ";" +
+		    			  e.getSalesPrice() + ";" +
+		    			  e.getCostPrice() + ";" +
+		    			  e.getSuggestedSalesPrice() + "\n");
+		      }
+		      myWriter.close();
+		      System.out.println("Successfully wrote to the file.");
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
 	}
 }
