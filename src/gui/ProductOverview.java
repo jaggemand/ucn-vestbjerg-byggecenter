@@ -10,7 +10,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.Vector;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -21,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListDataListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -37,6 +41,7 @@ public class ProductOverview extends JFrame {
 	private JTextField txtProductName;
 	private JTextField txtMaxPrice;
 	private JTextField txtMinPrice;
+	private JComboBox<String> jcbCategories;
 
 	/**
 	 * Launch the application.
@@ -147,7 +152,7 @@ public class ProductOverview extends JFrame {
 		gbc_btnSearch.gridy = 1;
 		panel.add(btnSearch, gbc_btnSearch);
 		
-		JComboBox jcbCategories = new JComboBox();
+		jcbCategories = new JComboBox();
 		GridBagConstraints gbc_jcbCategories = new GridBagConstraints();
 		gbc_jcbCategories.anchor = GridBagConstraints.NORTHWEST;
 		gbc_jcbCategories.insets = new Insets(0, 0, 0, 5);
@@ -249,5 +254,15 @@ public class ProductOverview extends JFrame {
 		
 		JButton btnClose = new JButton("Afslut");
 		panel_2.add(btnClose);
+		
+		//Initialize window
+		initializeWindow();
+	}
+
+	private void initializeWindow() {
+		//Fill categories into the combobox
+		for(String e : ProductContainer.getInstance().getCategories()) {
+			jcbCategories.addItem(e);
+		}
 	}
 }
