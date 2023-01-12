@@ -59,5 +59,9 @@ public class DefaultTable extends JTable {
 		return this.getSelectedRows()[0];
 	}
 	
+	public void addRow(String[] data) {
+		tabelModel.addRow(data);
+	}
+	
 	
 }
