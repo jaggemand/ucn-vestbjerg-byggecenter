@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DialogAmount extends JDialog {
 
@@ -79,6 +81,13 @@ public class DialogAmount extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonOKPressed();
+					}
+
+					
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
@@ -89,6 +98,14 @@ public class DialogAmount extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	//TODO: Docs
+	//Stores the value in the spinnerbox
+	
+	private void buttonOKPressed() {
+		
+		
 	}
 
 }
