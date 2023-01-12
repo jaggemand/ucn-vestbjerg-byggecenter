@@ -86,9 +86,9 @@ public class ProductOverview extends JFrame {
 		contentPane.add(panel, BorderLayout.NORTH);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 56, 30, 97, 0, 0, 217, 0, 0, 0, 0, 76, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 23, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowHeights = new int[]{0, 0, 23, 0, 0, 0};
+		gbl_panel.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblFilter = new JLabel("Filtre");
@@ -99,6 +99,20 @@ public class ProductOverview extends JFrame {
 		gbc_lblFilter.gridx = 1;
 		gbc_lblFilter.gridy = 0;
 		panel.add(lblFilter, gbc_lblFilter);
+		
+		JButton btnSearch = new JButton("Søg");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				search();
+			}
+		});
+		
+		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
+		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSearch.fill = GridBagConstraints.BOTH;
+		gbc_btnSearch.gridx = 11;
+		gbc_btnSearch.gridy = 0;
+		panel.add(btnSearch, gbc_btnSearch);
 		
 		jrbStoreLocation = new JCheckBox("Butik");
 		jrbStoreLocation.setSelected(true);
@@ -136,24 +150,24 @@ public class ProductOverview extends JFrame {
 		gbc_lblProductName.gridy = 1;
 		panel.add(lblProductName, gbc_lblProductName);
 		
-		JButton btnSearch = new JButton("Søg");
-		btnSearch.addActionListener(new ActionListener() {
+		JButton btnUpdate = new JButton("Vis alt");
+		btnUpdate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				search();
+				String[][] data = convertToStringArray(ProductContainer.getInstance().getProducts());
+				table.setNewData(data);
 			}
 		});
-		
-		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
-		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
-		gbc_btnSearch.fill = GridBagConstraints.BOTH;
-		gbc_btnSearch.gridx = 11;
-		gbc_btnSearch.gridy = 1;
-		panel.add(btnSearch, gbc_btnSearch);
+		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
+		gbc_btnUpdate.insets = new Insets(0, 0, 5, 0);
+		gbc_btnUpdate.fill = GridBagConstraints.BOTH;
+		gbc_btnUpdate.gridx = 11;
+		gbc_btnUpdate.gridy = 1;
+		panel.add(btnUpdate, gbc_btnUpdate);
 		
 		jcbCategories = new JComboBox();
 		GridBagConstraints gbc_jcbCategories = new GridBagConstraints();
 		gbc_jcbCategories.anchor = GridBagConstraints.NORTHWEST;
-		gbc_jcbCategories.insets = new Insets(0, 0, 0, 5);
+		gbc_jcbCategories.insets = new Insets(0, 0, 5, 5);
 		gbc_jcbCategories.gridx = 1;
 		gbc_jcbCategories.gridy = 2;
 		panel.add(jcbCategories, gbc_jcbCategories);
@@ -163,7 +177,7 @@ public class ProductOverview extends JFrame {
 		jrbWarehouseLocation.setSelected(true);
 		GridBagConstraints gbc_jrbWarehouseLocation = new GridBagConstraints();
 		gbc_jrbWarehouseLocation.anchor = GridBagConstraints.NORTHWEST;
-		gbc_jrbWarehouseLocation.insets = new Insets(0, 0, 0, 5);
+		gbc_jrbWarehouseLocation.insets = new Insets(0, 0, 5, 5);
 		gbc_jrbWarehouseLocation.gridx = 2;
 		gbc_jrbWarehouseLocation.gridy = 2;
 		panel.add(jrbWarehouseLocation, gbc_jrbWarehouseLocation);
@@ -171,7 +185,7 @@ public class ProductOverview extends JFrame {
 		txtMinPrice = new JTextField();
 		txtMinPrice.setColumns(10);
 		GridBagConstraints gbc_txtMinPrice = new GridBagConstraints();
-		gbc_txtMinPrice.insets = new Insets(0, 0, 0, 5);
+		gbc_txtMinPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_txtMinPrice.anchor = GridBagConstraints.WEST;
 		gbc_txtMinPrice.gridx = 3;
 		gbc_txtMinPrice.gridy = 2;
@@ -181,7 +195,7 @@ public class ProductOverview extends JFrame {
 		txtMaxPrice.setColumns(10);
 		GridBagConstraints gbc_txtMaxPrice = new GridBagConstraints();
 		gbc_txtMaxPrice.anchor = GridBagConstraints.WEST;
-		gbc_txtMaxPrice.insets = new Insets(0, 0, 0, 5);
+		gbc_txtMaxPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_txtMaxPrice.gridx = 4;
 		gbc_txtMaxPrice.gridy = 2;
 		panel.add(txtMaxPrice, gbc_txtMaxPrice);
@@ -189,7 +203,7 @@ public class ProductOverview extends JFrame {
 		txtProductName = new JTextField();
 		txtProductName.setColumns(10);
 		GridBagConstraints gbc_txtProductName = new GridBagConstraints();
-		gbc_txtProductName.insets = new Insets(0, 0, 0, 5);
+		gbc_txtProductName.insets = new Insets(0, 0, 5, 5);
 		gbc_txtProductName.anchor = GridBagConstraints.WEST;
 		gbc_txtProductName.gridx = 6;
 		gbc_txtProductName.gridy = 2;
@@ -250,6 +264,7 @@ public class ProductOverview extends JFrame {
 		JButton btnDelete = new JButton("Slet");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				table.selectedProductID();
 				table.deleteData();
 			}
 		});
