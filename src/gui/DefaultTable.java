@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.nio.file.FileSystemNotFoundException;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,6 +20,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+
+import controller.ProductController;
+import model.ProductContainer;
 
 public class DefaultTable extends JTable {
 	private DefaultTableModel tabelModel;
@@ -58,10 +63,15 @@ public class DefaultTable extends JTable {
 	}
 	public void deleteData() {
 		if(rows.length != 0) {
+			
+			ProductController pC = new ProductController();
+			ArrayList<String> data = selectedProductID();
+			
 			boolean check = deleteItems(rows.length);
 			if(check == true) {
 				for(int i = rows.length-1; i>= 0;i--) {
 					tabelModel.removeRow(rows[i]);
+					pC.removeProduct(data.get(i));
 				}
 			}
 		}
@@ -90,7 +100,7 @@ public class DefaultTable extends JTable {
 		scrollPane.setPreferredSize(new Dimension(350, 150));
 		
 		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Afslut program",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
 					new Object[] { "Ja", "Nej" }, JOptionPane.YES_OPTION);
 		
 		return input == 0;
@@ -105,6 +115,7 @@ public class DefaultTable extends JTable {
 		}
 		
 	}
+	
 	public void addRow(String[] data) {
 		tabelModel.addRow(data);
 	}
@@ -112,5 +123,17 @@ public class DefaultTable extends JTable {
 		tabelModel.setRowCount(0);
 	}
 	
+	public ArrayList<String> selectedProductID() {
+		String returnString = "";
+		ArrayList<String> returnArr = new ArrayList<>();
+		int amountQty = rows.length; 
+		
+		for(int i = 0; i < amountQty; i++) {
+			returnString = (String) tabelModel.getValueAt(rows[i],0);
+			returnArr.add(returnString);
+			System.out.println(returnArr.get(i));
+		}
+		return returnArr;
+	}
 	
 }
