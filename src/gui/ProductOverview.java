@@ -212,7 +212,7 @@ public class ProductOverview extends JFrame {
 		JButton btnAdd = new JButton("Tilføj");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProductInformation productInformation = new ProductInformation();
+				ProductInformation productInformation = new ProductInformation(null, true);
 				productInformation.setVisible(true);
 			}
 			
@@ -227,7 +227,7 @@ public class ProductOverview extends JFrame {
 		JButton btnEdit = new JButton("Rediger");
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				productInformation();
+				editProduct();
 			}
 		});
 		
@@ -241,7 +241,7 @@ public class ProductOverview extends JFrame {
 		JButton btnDetails = new JButton("Detaljer");
 		btnDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				productInformation();
+				detailsProduct();
 			}
 		});
 		
@@ -290,17 +290,25 @@ public class ProductOverview extends JFrame {
 
 	private void initializeWindow() {
 		//Fill categories into the combobox
+		//TODO cant access model layer directly???!!
 		for(String e : ProductContainer.getInstance().getCategories()) {
 			jcbCategories.addItem(e);
 		}
 	}
 	
-	private void productInformation() {
+	private void editProduct() {
 		int index = table.findElement();
 		Product product = ProductContainer.getInstance().getProducts().get(index);
 		
-		ProductInformation productInformation = new ProductInformation();
-		productInformation.insertData(product);
+		ProductInformation productInformation = new ProductInformation(product, true);
+		productInformation.setVisible(true);
+	}
+	
+	private void detailsProduct() {
+		int index = table.findElement();
+		Product product = ProductContainer.getInstance().getProducts().get(index);
+		
+		ProductInformation productInformation = new ProductInformation(product, false);
 		productInformation.setVisible(true);
 	}
 	

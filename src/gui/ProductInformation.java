@@ -31,6 +31,7 @@ import controller.ProductController;
 import model.Product;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class ProductInformation extends JFrame {
@@ -417,7 +418,7 @@ public class ProductInformation extends JFrame {
 		btnCategoryAdd = new JButton("Tilføj");
 		btnCategoryAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				addCategory();
+				addCategoryWindow();
 			}
 		});
 		GridBagConstraints gbc_btnCategoryAdd = new GridBagConstraints();
@@ -468,11 +469,10 @@ public class ProductInformation extends JFrame {
 	}
 
 	public void init() {
+		DefaultListModel listModel = new DefaultListModel();
 		if (product == null) {
-			DefaultListModel listModel = new DefaultListModel();
 			categoryList.setModel(listModel);
 		} else {
-			DefaultListModel listModel = new DefaultListModel();
 			for (String element : product.getCategory()) {
 				listModel.addElement(element);
 			}
@@ -554,7 +554,9 @@ public class ProductInformation extends JFrame {
 			closeWindow();
 		} else {
 			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null) {
-				Product newProduct = productController.createProduct(productName, barcode, productDescription, null,
+				ArrayList<String> categories = DialogCategoryAdd.newCategoryList();
+				String[] newCategories = categories.toArray(new String[categories.size()]);
+				Product newProduct = productController.createProduct(productName, barcode, productDescription, newCategories,
 						storeLocation, warehouseLocation, storeAmount, warehouseAmount);
 				// TODO add categories to product instead of null
 				if (productController.getAllProducts().contains(newProduct)) {
@@ -576,13 +578,13 @@ public class ProductInformation extends JFrame {
 		try {
 			amount = Integer.parseInt(input); // Store amount
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, location+" var ikke indtastet og er sat til 0.",
-					"Information!", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, location + " var ikke indtastet og er sat til 0.", "Information!",
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 		return amount;
 	}
 
-	public void addCategory() {
+	public void addCategoryWindow() {
 		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd();
 		dialogCategoryAdd.setVisible(true);
 	}
@@ -591,19 +593,4 @@ public class ProductInformation extends JFrame {
 		this.dispose();
 		this.setVisible(false);
 	}
-	
-	public void insertData(Product p) {
-		txtWarehouseAmount.setText(String.valueOf(p.getWarehouseAmount()));
-		txtStoreAmount.setText(String.valueOf(p.getStorageAmount()));;
-		txtWarehouseLocation.setText(p.getWarehouseLocation());
-		txtStoreLocation.setText(p.getStorageLocation());;
-		txtCostPrice.setText(String.valueOf(p.getCostPrice()));;
-		txtSuggestedSalesPrice.setText(String.valueOf(p.getSuggestedSalesPrice()));;
-		txtSalesPrice.setText(String.valueOf(p.getSalesPrice()));;
-		txtProductName.setText(p.getName());;
-		txtBarcode.setText(p.getBarcode());;
-		txtProductID.setText(p.getProductID());;
-		
-	}
-
 }
