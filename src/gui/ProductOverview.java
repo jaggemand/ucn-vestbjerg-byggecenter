@@ -1,19 +1,19 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -21,17 +21,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListDataListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 import model.Product;
 import model.ProductContainer;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ProductOverview extends JFrame {
 
@@ -120,15 +114,16 @@ public class ProductOverview extends JFrame {
 		panel.add(jrbStoreLocation, gbc_jrbStoreLocation);
 		
 		JLabel lblMinPrice = new JLabel("Min Pris");
-		lblMinPrice.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		lblMinPrice.setFont(new Font("Tahoma", Font.BOLD, 10));
 		GridBagConstraints gbc_lblMinPrice = new GridBagConstraints();
-		gbc_lblMinPrice.anchor = GridBagConstraints.WEST;
+		gbc_lblMinPrice.fill = GridBagConstraints.HORIZONTAL;
 		gbc_lblMinPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_lblMinPrice.gridx = 3;
 		gbc_lblMinPrice.gridy = 1;
 		panel.add(lblMinPrice, gbc_lblMinPrice);
 		
 		JLabel lblMaxPrice = new JLabel("Max Pris");
+		lblMaxPrice.setFont(new Font("Tahoma", Font.BOLD, 10));
 		GridBagConstraints gbc_lblMaxPrice = new GridBagConstraints();
 		gbc_lblMaxPrice.anchor = GridBagConstraints.WEST;
 		gbc_lblMaxPrice.insets = new Insets(0, 0, 5, 5);
@@ -137,6 +132,7 @@ public class ProductOverview extends JFrame {
 		panel.add(lblMaxPrice, gbc_lblMaxPrice);
 		
 		JLabel lblProductName = new JLabel("Produkt Navn");
+		lblProductName.setFont(new Font("Tahoma", Font.BOLD, 10));
 		GridBagConstraints gbc_lblProductName = new GridBagConstraints();
 		gbc_lblProductName.anchor = GridBagConstraints.WEST;
 		gbc_lblProductName.insets = new Insets(0, 0, 5, 5);
@@ -145,6 +141,12 @@ public class ProductOverview extends JFrame {
 		panel.add(lblProductName, gbc_lblProductName);
 		
 		JButton btnSearch = new JButton("Søg");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				search();
+			}
+		});
+		
 		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
 		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSearch.fill = GridBagConstraints.BOTH;
@@ -209,9 +211,10 @@ public class ProductOverview extends JFrame {
 		JButton btnAdd = new JButton("Tilføj");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
+				ProductInformation productInformation = new ProductInformation();
+				productInformation.setVisible(true);
 			}
+			
 		});
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
@@ -221,6 +224,12 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnAdd, gbc_btnAdd);
 		
 		JButton btnEdit = new JButton("Rediger");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				productInformation();
+			}
+		});
+		
 		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
 		gbc_btnEdit.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEdit.insets = new Insets(0, 0, 5, 0);
@@ -229,6 +238,12 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnEdit, gbc_btnEdit);
 		
 		JButton btnDetails = new JButton("Detaljer");
+		btnDetails.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				productInformation();
+			}
+		});
+		
 		GridBagConstraints gbc_btnDetails = new GridBagConstraints();
 		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
@@ -242,6 +257,7 @@ public class ProductOverview extends JFrame {
 				table.deleteData();
 			}
 		});
+		
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
 		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDelete.gridx = 0;
@@ -253,16 +269,65 @@ public class ProductOverview extends JFrame {
 		panel_2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		JButton btnClose = new JButton("Afslut");
+		btnClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeWindow();
+			}
+		});
+		
 		panel_2.add(btnClose);
 		
 		//Initialize window
 		initializeWindow();
+		
+	}
+	private void closeWindow() {
+		this.dispose();
+		this.setVisible(false);
+		
 	}
 
 	private void initializeWindow() {
 		//Fill categories into the combobox
 		for(String e : ProductContainer.getInstance().getCategories()) {
 			jcbCategories.addItem(e);
+		}
+	}
+	
+	private void productInformation() {
+		int index = table.findElement();
+		Product product = ProductContainer.getInstance().getProducts().get(index);
+		
+		ProductInformation productInformation = new ProductInformation();
+		productInformation.insertData(product);
+		productInformation.setVisible(true);
+	}
+	
+	private void search() {
+		
+		ArrayList<Product> products = ProductContainer.getInstance().getProducts();
+		int size = products.size();
+		ArrayList<Product> productResult = new ArrayList<>();
+		
+		if (txtMinPrice.getText().length() != 0) {
+			double minPrice = Double.parseDouble(txtMinPrice.getText());
+		}
+		if (txtMaxPrice.getText().length() != 0) {
+			double maxPrice = Double.parseDouble(txtMaxPrice.getText());
+		}
+		
+		Iterator<Product> it = products.iterator();
+		
+		while(it.hasNext()) {
+			Product p = it.next();
+			
+		List<String> categories = Arrays.asList(p.getCategory());
+			
+			if (p.equals(txtProductName.getText()) && p.getSalesPrice() >= minPrice && p.getSalesPrice() <= maxPrice
+					&& categories.contains(jcbCategories.getSelectedItem())){
+				productResult.add(p);
+				System.out.println("succes");
+			}
 		}
 	}
 }

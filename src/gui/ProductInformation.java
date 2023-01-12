@@ -66,7 +66,7 @@ public class ProductInformation extends JFrame {
 	 * Create the frame.
 	 */
 	public ProductInformation() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -491,6 +491,20 @@ public class ProductInformation extends JFrame {
 	public void closeWindow() {
 		this.dispose();
 		this.setVisible(false);
+	}
+	
+	public void insertData(Product p) {
+		txtWarehouseAmount.setText(String.valueOf(p.getWarehouseAmount()));
+		txtStoreAmount.setText(String.valueOf(p.getStorageAmount()));;
+		txtWarehouseLocation.setText(p.getWarehouseLocation());
+		txtStoreLocation.setText(p.getStorageLocation());;
+		txtCostPrice.setText(String.valueOf(p.getCostPrice()));;
+		txtSuggestedSalesPrice.setText(String.valueOf(p.getSuggestedSalesPrice()));;
+		txtSalesPrice.setText(String.valueOf(p.getSalesPrice()));;
+		txtProductName.setText(p.getName());;
+		txtBarcode.setText(p.getBarcode());;
+		txtProductID.setText(p.getProductID());;
+		
 	}
 
 }
