@@ -27,7 +27,9 @@ public class DialogItemAdd extends JDialog {
 	private JTextField textFieldProductName;
 	private JButton btnOK;
 	private Product newProduct;
+	private int amount;
 	private ProductController pController;
+	private JSpinner spinner;
 
 	/**
 	 * Launch the application.
@@ -48,6 +50,7 @@ public class DialogItemAdd extends JDialog {
 	public DialogItemAdd() {
 		
 		pController = new ProductController();
+		amount = 0;
 		
 		setResizable(false);
 		setTitle("Tilføj produkt");
@@ -155,7 +158,7 @@ public class DialogItemAdd extends JDialog {
 				panel.add(lblNewLabel_2, gbc_lblNewLabel_2);
 			}
 			{
-				JSpinner spinner = new JSpinner();
+				spinner = new JSpinner();
 				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(0), null, Integer.valueOf(1)));
 				GridBagConstraints gbc_spinner = new GridBagConstraints();
 				gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
@@ -178,6 +181,7 @@ public class DialogItemAdd extends JDialog {
 		}
 	}
 	private void buttonAddPressed() {
+		amount = (int) spinner.getModel().getValue();
 		this.dispose();
 	}
 	private void buttonCancelPressed() {
@@ -187,6 +191,9 @@ public class DialogItemAdd extends JDialog {
 	
 	public Product getNewProduct() {
 		return newProduct;
+	}
+	public int getAmount() {
+		return amount;
 	}
 
 }

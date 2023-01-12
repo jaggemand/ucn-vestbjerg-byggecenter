@@ -5,9 +5,11 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Color;
@@ -112,9 +114,13 @@ public class DialogAmount extends JDialog {
 	//Stores the value in the spinnerbox
 	
 	private void buttonOKPressed() {
+		try {
+			newAmount = Integer.parseInt((String) spinner.getModel().getValue());
+			this.dispose();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(new JFrame(),"Antal skal være et helt tal");
+		}
 		
-		newAmount = (int) spinner.getModel().getValue();
-		this.dispose();
 		
 	}
 	private void buttonCancelPressed() {

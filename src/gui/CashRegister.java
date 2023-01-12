@@ -98,21 +98,7 @@ public class CashRegister extends JFrame {
 		JButton btnAmount = new JButton("Antal");
 		btnAmount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int rowIndex = table.findElement();
-				String newItemAmount = JOptionPane.showInputDialog("Indtast Stregkode eller produkt id","");
-				try {
-					Integer.parseInt(newItemAmount);
-					table.getModel().setValueAt(newItemAmount, rowIndex , 2);
-					String updatedItem = (String) table.getModel().getValueAt(table.getSelectedRow(), 1);
-					System.out.println(updatedItem);
-					lblStatus.setText(updatedItem + "s antal er blevet ændret til " + newItemAmount);
-					table.getModel().setValueAt(changeItemPriceTotal( (String) table.getModel().getValueAt(table.getSelectedRow(), 0), Integer.parseInt(newItemAmount)), table.getSelectedRow(), 3);
-				}
-				
-				catch (Exception exc) {
-					lblStatus.setBackground(Color.red);
-					lblStatus.setText(newItemAmount + " er ikke et gyldigt antal");
-				}
+				buttonAmountPressed();
 			}
 		});
 		GridBagConstraints gbc_btnAmount = new GridBagConstraints();
@@ -125,24 +111,7 @@ public class CashRegister extends JFrame {
 		JButton btnAdd = new JButton("Tilføj");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				boolean productFound = false;
-				boolean cancled = false;
-				//displays an error message if the product inserted does not exist
-				String itemBarcodeID = JOptionPane.showInputDialog("Indtast Stregkode eller produkt id","");
-			    ProductController pc = new ProductController();
-			    currentProduct = pc.findProduct(itemBarcodeID);
-				if (currentProduct == null) {
-					lblStatus.setForeground(Color.red);
-					lblStatus.setText("Stregkode eller ID eksistere ikke");
-				}
-				else {
-					String[] metaData = new String[4];
-					metaData[0] = currentProduct.getName();
-					metaData[1] = currentProduct.getDescription();
-					metaData[2] = "1";
-					metaData[3] = currentProduct.getSalesPriceFormatted();
-					table.addRow(metaData);
-				}
+				buttonAddPressed();
 			}
 		});
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
@@ -223,10 +192,6 @@ public class CashRegister extends JFrame {
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
 		scrollPane.setViewportView(table);
-		//test
-		Product p = new Product("4444", "4444", "testProduct", new String[] {"test", "test 3"}, "testLoc", "testLoc2" , 1, 1);
-		p.setSalesPrice(10);
-		ProductContainer.getInstance().addProduct(p);
 	}
 	
 	private void updateCartTable(String[] data) {
@@ -260,4 +225,41 @@ public class CashRegister extends JFrame {
 		return o;
 	}
 
+	private void buttonAddPressed() {
+		//displays an error message if the product inserted does not exist
+		DialogItemAdd newItem = new DialogItemAdd();
+		newItem.setVisible(true);
+		
+		if (newItem.getNewProduct() == null) {
+			lblStatus.setForeground(Color.red);
+			lblStatus.setText("Tilføj afbrudt");
+		}
+		else {
+			String[] metaData = new String[4];
+			metaData[0] = newItem.getNewProduct().getName();
+			metaData[1] = newItem.getNewProduct().getDescription();
+			metaData[2] = "" + newItem.getAmount();
+			metaData[3] = newItem.getNewProduct().getSalesPriceFormatted();
+			table.addRow(metaData);
+		}
+	}
+	private void buttonAmountPressed() {
+		int rowIndex = table.findElement();
+		int newItemAmount = 0;
+		DialogAmount newAmountDialog = new DialogAmount();
+		newAmountDialog.setVisible(true);
+		newItemAmount = newAmountDialog.getNewAmount();
+		try {
+			table.getModel().setValueAt(newItemAmount, rowIndex , 2);
+			String updatedItem = (String) table.getModel().getValueAt(table.getSelectedRow(), 1);
+			System.out.println(updatedItem);
+			lblStatus.setText(updatedItem + "s antal er blevet ændret til " + newItemAmount);
+			table.getModel().setValueAt(changeItemPriceTotal( (String) table.getModel().getValueAt(table.getSelectedRow(), 0), newItemAmount), table.getSelectedRow(), 3);
+		}
+		
+		catch (Exception exc) {
+			lblStatus.setBackground(Color.red);
+			lblStatus.setText(newItemAmount + " er ikke et gyldigt antal");
+		}
+	}
 }
