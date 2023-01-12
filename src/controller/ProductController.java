@@ -277,9 +277,11 @@ public class ProductController {
 	
 	public void loadFile() {
 		ProductContainer.getInstance().loadFile();
+		ProductContainer.getInstance().loadCategoryFile();
 	}
 	
 	public void saveFile() {
 		ProductContainer.getInstance().saveFile();
+		ProductContainer.getInstance().saveCategoryFile();
 	}
 }

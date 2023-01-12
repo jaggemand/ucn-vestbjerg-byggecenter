@@ -176,6 +176,7 @@ public class MainMenu extends JFrame {
 				new Object[] { "Ja", "Nej" }, JOptionPane.YES_OPTION);
 		if(input == 0) {
 			pController.saveFile();
+			
 			frame.dispose();
 			System.exit(0);
 		}

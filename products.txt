@@ -67,4 +67,3 @@ Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H
 4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
 4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
 4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
-4444;4444;testProduct;test,test 3;testLoc;testLoc2;0;0;10.0;0.0;0.0

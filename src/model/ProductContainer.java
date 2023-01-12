@@ -21,19 +21,11 @@ public class ProductContainer {
 	private static ProductContainer instance;
 	private List<Product> products;
 	private Set<String> categories;
-	private String[] items = {"Køkken", "Rør", "VVS", "Bolig", "Opbevaring", "Rengøring", "Sikkerhed", "Batterier",
-            "Lamper", "Elektronik", "Pærer", "Fiskeri", "Camping", "Båd", "Bil", "Gulve", "Fliser", "Tæpper",
-            "Grill", "Haveredskaber", "Havemøbler", "Maling", "Havemaskiner", "Værktøj", "Radiatorer",
-            "Indeklima", "Byggeplader", "Konstruktion", "Lister", "Loft", "Vinduer", "Døre", "Arbejdstøj",
-            "Søm", "Skruer", "Beslag", "Diverse" };
 
 	// A constructor.
 	private ProductContainer() {
 		products = new ArrayList<>();
 		categories = new HashSet<String>();
-		for(String e : items) {
-			categories.add(e);
-		}
 	}
 
 	/**
@@ -143,6 +135,37 @@ public class ProductContainer {
 		      e.printStackTrace();
 		    }
 	}
+	public void loadCategoryFile() {
+		try {
+		      File myObj = new File("categories.txt");
+		      if (myObj.createNewFile()) {
+		        System.out.println("File created: " + myObj.getName());
+		      } else {
+		        System.out.println("File already exists.");
+		        importToCategoryFile();
+		      }
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
+	public void saveCategoryFile() {
+		try {
+		      File myObj = new File("categories.txt");
+		      if (myObj.createNewFile()) {
+		        System.out.println("File created: " + myObj.getName());
+		        exportToCategoryFile();
+		      } else {
+		        System.out.println("File already exists.");
+		        myObj.delete();
+		        saveCategoryFile();
+		        
+		      }
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
 	
 	private void importFromFile(File input) {
 		int count = 0;
@@ -202,6 +225,34 @@ public class ProductContainer {
 		      }
 		      myWriter.close();
 		      System.out.println("Successfully wrote to the file.");
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
+	private void importToCategoryFile() {
+		try {
+		      Scanner myReader = new Scanner(new File("categories.txt"));
+		      myReader.nextLine(); // DISCARD top line
+		      while (myReader.hasNextLine()) {
+		    	categories.add(myReader.nextLine());
+		      }
+		      myReader.close();
+		    } catch (FileNotFoundException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	}
+	private void exportToCategoryFile() {
+		try {
+		      FileWriter myWriter = new FileWriter("categories.txt");
+		      
+		      myWriter.write("Kategorier: én per linje" + "\n");
+		      
+		      for(String e : categories) {
+		    	  myWriter.write(e+"\n");
+		      }
+		      myWriter.close();
 		    } catch (IOException e) {
 		      System.out.println("An error occurred.");
 		      e.printStackTrace();
