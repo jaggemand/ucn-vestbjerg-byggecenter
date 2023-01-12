@@ -144,7 +144,7 @@ public class ProductController {
 
 	/**
 	 * This function changes the category of a product
-	 * Each Category is devided by a comma, example [Example,Example,Example]
+	 * Each Category is divided by a comma, example [Example,Example,Example]
 	 * And the product is not null
 	 *
 	 * @param newCategory The new category that the product will be assigned to.

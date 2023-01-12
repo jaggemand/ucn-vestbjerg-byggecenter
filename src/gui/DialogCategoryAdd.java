@@ -7,13 +7,22 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.ProductController;
+import model.Product;
+import model.ProductContainer;
+
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.awt.event.ActionEvent;
 
 public class DialogCategoryAdd extends JDialog {
@@ -22,6 +31,8 @@ public class DialogCategoryAdd extends JDialog {
 	private JTextField txtNewCategory;
 	private JButton btnAddCategory;
 	private JComboBox comboBox;
+	private static ArrayList<String> categoriesToAdd = new ArrayList<>();
+	private Product product;
 
 	/**
 	 * Launch the application.
@@ -63,12 +74,7 @@ public class DialogCategoryAdd extends JDialog {
 			contentPanel.add(lblNewLabel, gbc_lblNewLabel);
 		}
 		{
-			String[] items = { "", "Køkken", "Rør", "VVS", "Bolig", "Opbevaring", "Rengøring", "Sikkerhed", "Batterier",
-					"Lamper", "Elektronik", "Pærer", "Fiskeri", "Camping", "Båd", "Bil", "Gulve", "Fliser", "Tæpper",
-					"Grill", "Haveredskaber", "Havemøbler", "Maling", "Havemaskiner", "Værktøj", "Radiatorer",
-					"Indeklima", "Byggeplader", "Konstruktion", "Lister", "Loft", "Vinduer", "Døre", "Arbejdstøj",
-					"Søm", "Skruer", "Beslag", "Diverse" };
-			comboBox = new JComboBox(items);
+			comboBox = new JComboBox();
 			GridBagConstraints gbc_comboBox = new GridBagConstraints();
 			gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 			gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -114,9 +120,12 @@ public class DialogCategoryAdd extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnOk = new JButton("OK");
-				btnOk.setActionCommand("OK");
+				btnOk.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						newCategoryList();
+					}
+				});
 				buttonPane.add(btnOk);
-				getRootPane().setDefaultButton(btnOk);
 			}
 			{
 				JButton btnCancel = new JButton("Afbryd");
@@ -125,14 +134,29 @@ public class DialogCategoryAdd extends JDialog {
 						closeWindow();
 					}
 				});
-				btnCancel.setActionCommand("Cancel");
 				buttonPane.add(btnCancel);
 			}
+			this.product = product;
+			init();
+		}
+	}
+	public void init() {
+		ProductController productController = new ProductController();
+		HashSet<String> categories = productController.getCategoies();
+		for(String element : categories) {
+			comboBox.addItem(element);
 		}
 	}
 	
 	public void addCategory() {
-		System.out.println(comboBox.getSelectedItem());
+		String selectedCategory = comboBox.getSelectedItem().toString();
+		categoriesToAdd.add(selectedCategory);
+		JOptionPane.showMessageDialog(null, "Kategori "+selectedCategory+" tilføjet", "Success!",
+				JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public static ArrayList<String> newCategoryList() {
+		return categoriesToAdd;
 	}
 	
 	public void closeWindow() {
