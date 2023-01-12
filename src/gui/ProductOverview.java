@@ -204,7 +204,7 @@ public class ProductOverview extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				ProductController productController = new ProductController();
 				Product product = productController.findProduct("1000-1");
-			ProductInformation PI = new ProductInformation(product);
+			ProductInformation PI = new ProductInformation(product, true);
 			PI.setVisible(true);
 			}
 		});
