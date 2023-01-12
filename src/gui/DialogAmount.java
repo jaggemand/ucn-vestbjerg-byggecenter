@@ -20,6 +20,8 @@ import java.awt.event.ActionEvent;
 public class DialogAmount extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private int newAmount;
+	private JSpinner spinner;
 
 	/**
 	 * Launch the application.
@@ -38,6 +40,7 @@ public class DialogAmount extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogAmount() {
+		newAmount = 0;
 		setTitle("Vælg total antal");
 		setResizable(false);
 		setModal(true);
@@ -65,7 +68,7 @@ public class DialogAmount extends JDialog {
 				panel.add(lblNewLabel, gbc_lblNewLabel);
 			}
 			{
-				JSpinner spinner = new JSpinner();
+				spinner = new JSpinner();
 				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 				GridBagConstraints gbc_spinner = new GridBagConstraints();
 				gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
@@ -94,6 +97,11 @@ public class DialogAmount extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Afbryd");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonCancelPressed();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -105,7 +113,16 @@ public class DialogAmount extends JDialog {
 	
 	private void buttonOKPressed() {
 		
+		newAmount = (int) spinner.getModel().getValue();
+		this.dispose();
 		
+	}
+	private void buttonCancelPressed() {
+		this.dispose();
+	}
+	
+	public int getNewAmount() {
+		return newAmount;
 	}
 
 }
