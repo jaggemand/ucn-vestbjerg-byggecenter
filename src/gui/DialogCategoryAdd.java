@@ -32,7 +32,6 @@ public class DialogCategoryAdd extends JDialog {
 	private JButton btnAddCategory;
 	private JComboBox comboBox;
 	private static ArrayList<String> categoriesToAdd = new ArrayList<>();
-	private Product product;
 
 	/**
 	 * Launch the application.
@@ -123,6 +122,8 @@ public class DialogCategoryAdd extends JDialog {
 				btnOk.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						newCategoryList();
+						ProductInformation.updateJList(categoriesToAdd);
+						closeWindow();
 					}
 				});
 				buttonPane.add(btnOk);
@@ -136,7 +137,6 @@ public class DialogCategoryAdd extends JDialog {
 				});
 				buttonPane.add(btnCancel);
 			}
-			this.product = product;
 			init();
 		}
 	}
@@ -150,9 +150,19 @@ public class DialogCategoryAdd extends JDialog {
 	
 	public void addCategory() {
 		String selectedCategory = comboBox.getSelectedItem().toString();
-		categoriesToAdd.add(selectedCategory);
-		JOptionPane.showMessageDialog(null, "Kategori "+selectedCategory+" tilføjet", "Success!",
-				JOptionPane.INFORMATION_MESSAGE);
+		String newEnteredCategory = txtNewCategory.getText().toString();
+		if(!newEnteredCategory.isBlank() && !categoriesToAdd.contains(newEnteredCategory)) {
+			categoriesToAdd.add(newEnteredCategory);
+			JOptionPane.showMessageDialog(null, "Kategori "+newEnteredCategory+" tilføjet", "Success!",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else if (!categoriesToAdd.contains(selectedCategory)) {
+			categoriesToAdd.add(selectedCategory);
+			JOptionPane.showMessageDialog(null, "Kategori "+selectedCategory+" tilføjet", "Success!",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "Kategori "+selectedCategory+"/"+newEnteredCategory+" er allerede tilføjet", "Fejl!",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	public static ArrayList<String> newCategoryList() {

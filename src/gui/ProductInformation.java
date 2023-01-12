@@ -32,6 +32,7 @@ import model.Product;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.event.ActionEvent;
 
 public class ProductInformation extends JFrame {
@@ -48,7 +49,7 @@ public class ProductInformation extends JFrame {
 	private JTextField txtBarcode;
 	private JTextField txtProductID;
 	private JTextArea txtProductDescription;
-	private JList categoryList;
+	private static JList categoryList;
 	private static Product product;
 	private static boolean editMode;
 	private JButton btnCategoryAdd;
@@ -428,6 +429,11 @@ public class ProductInformation extends JFrame {
 		panel_2.add(btnCategoryAdd, gbc_btnCategoryAdd);
 
 		btnCategoryRemove = new JButton("Fjern");
+		btnCategoryRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				removeCategory();
+			}
+		});
 		GridBagConstraints gbc_btnCategoryRemove = new GridBagConstraints();
 		gbc_btnCategoryRemove.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCategoryRemove.gridx = 3;
@@ -556,12 +562,12 @@ public class ProductInformation extends JFrame {
 			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null) {
 				ArrayList<String> categories = DialogCategoryAdd.newCategoryList();
 				String[] newCategories = categories.toArray(new String[categories.size()]);
-				Product newProduct = productController.createProduct(productName, barcode, productDescription, newCategories,
-						storeLocation, warehouseLocation, storeAmount, warehouseAmount);
-				// TODO add categories to product instead of null
+				Product newProduct = productController.createProduct(productName, barcode, productDescription,
+						newCategories, storeLocation, warehouseLocation, storeAmount, warehouseAmount);
 				if (productController.getAllProducts().contains(newProduct)) {
 					JOptionPane.showMessageDialog(null, "Produktet er blevet tilføjet", "Success!",
 							JOptionPane.INFORMATION_MESSAGE);
+					closeWindow();
 				} else {
 					JOptionPane.showMessageDialog(null, "En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!",
 							JOptionPane.ERROR_MESSAGE);
@@ -582,6 +588,37 @@ public class ProductInformation extends JFrame {
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 		return amount;
+	}
+
+	public void removeCategory() {
+		//TODO check for index out of bounds exception with correct list
+		int index = categoryList.getSelectedIndex();
+		ArrayList<String> categories = new ArrayList<String>();
+		if (index <= categories.size()) {
+			JOptionPane.showMessageDialog(null, "Index out of bounds", "Fejl!",
+					JOptionPane.ERROR_MESSAGE);
+		} else {
+			Collections.addAll(categories, product.getCategory());
+			categories.remove(index);
+			String[] updatedCategories = categories.toArray(new String[categories.size()]);
+			product.setCategory(updatedCategories);
+			updateJList(categories);
+			JOptionPane.showMessageDialog(null, "Den valgte kategori er blevet fjernet", "Success!",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+
+	public static void updateJList(ArrayList<String> list) {
+		DefaultListModel listModel = new DefaultListModel();
+		if (product != null) {
+			for (String element : product.getCategory()) {
+				listModel.addElement(element);
+			}
+		}
+		for (String element : list) {
+			listModel.addElement(element);
+		}
+		categoryList.setModel(listModel);
 	}
 
 	public void addCategoryWindow() {
