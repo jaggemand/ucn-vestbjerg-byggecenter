@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.BorderLayout;
@@ -18,6 +19,7 @@ import java.awt.Frame;
 
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
@@ -45,6 +47,11 @@ public class ProductInformation extends JFrame {
 	private JTextField txtBarcode;
 	private JTextField txtProductID;
 	private JTextArea txtProductDescription;
+	private JList categoryList;
+	private static Product product;
+	private static boolean editMode;
+	private JButton btnCategoryAdd;
+	private JButton btnCategoryRemove;
 
 	/**
 	 * Launch the application.
@@ -53,7 +60,7 @@ public class ProductInformation extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ProductInformation frame = new ProductInformation();
+					ProductInformation frame = new ProductInformation(null, false);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,8 +72,9 @@ public class ProductInformation extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ProductInformation() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public ProductInformation(Product product, boolean editMode) {
+		setTitle("Produkt");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -401,17 +409,23 @@ public class ProductInformation extends JFrame {
 		gbc_scrollPane.gridy = 2;
 		panel_2.add(scrollPane, gbc_scrollPane);
 
-		JList list = new JList();
-		scrollPane.setViewportView(list);
+		categoryList = new JList();
+		categoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(categoryList);
 
-		JButton btnCategoryAdd = new JButton("Tilføj");
+		btnCategoryAdd = new JButton("Tilføj");
+		btnCategoryAdd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addCategory();
+			}
+		});
 		GridBagConstraints gbc_btnCategoryAdd = new GridBagConstraints();
 		gbc_btnCategoryAdd.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCategoryAdd.gridx = 3;
 		gbc_btnCategoryAdd.gridy = 2;
 		panel_2.add(btnCategoryAdd, gbc_btnCategoryAdd);
 
-		JButton btnCategoryRemove = new JButton("Fjern");
+		btnCategoryRemove = new JButton("Fjern");
 		GridBagConstraints gbc_btnCategoryRemove = new GridBagConstraints();
 		gbc_btnCategoryRemove.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCategoryRemove.gridx = 3;
@@ -421,7 +435,7 @@ public class ProductInformation extends JFrame {
 		JButton btnSave = new JButton("Gem");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				saveProduct();
+				saveProduct(editMode);
 			}
 		});
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
@@ -441,36 +455,104 @@ public class ProductInformation extends JFrame {
 		gbc_btnCancel.gridx = 7;
 		gbc_btnCancel.gridy = 11;
 		contentPane.add(btnCancel, gbc_btnCancel);
-		
+
 		/* Price textfields disabled */
 		txtCostPrice.setEnabled(false);
 		txtSalesPrice.setEnabled(false);
 		txtSuggestedSalesPrice.setEnabled(false);
+		this.product = product;
+		this.editMode = editMode;
+		init();
+		editType(editMode);
 	}
 
-	public void saveProduct() {
+	public void init() {
+		if (product == null) {
+			DefaultListModel listModel = new DefaultListModel();
+			categoryList.setModel(listModel);
+		} else {
+			DefaultListModel listModel = new DefaultListModel();
+			for (String element : product.getCategory()) {
+				listModel.addElement(element);
+			}
+			categoryList.setModel(listModel);
+			txtProductName.setText(product.getName());
+			txtProductID.setText(product.getProductID());
+			txtProductDescription.setText(product.getDescription());
+			txtBarcode.setText(product.getBarcode());
+			txtCostPrice.setText(product.getCostPriceFormatted());
+			txtSuggestedSalesPrice.setText(product.getSuggestedSalesPriceFormatted());
+			txtSalesPrice.setText(product.getSalesPriceFormatted());
+			txtStoreLocation.setText(product.getStorageLocation());
+			txtStoreAmount.setText(Integer.toString(product.getStorageAmount()));
+			txtWarehouseLocation.setText(product.getWarehouseLocation());
+			txtWarehouseAmount.setText(Integer.toString(product.getWarehouseAmount()));
+		}
+	}
+
+	public void editType(boolean editMode) {
+		if (editMode) {
+			txtWarehouseAmount.setEnabled(true);
+			txtWarehouseLocation.setEnabled(true);
+			txtStoreAmount.setEnabled(true);
+			txtStoreLocation.setEnabled(true);
+			txtCostPrice.setEnabled(false); // Not allowed to change price
+			txtSuggestedSalesPrice.setEnabled(false); // Not allowed to change price
+			txtSalesPrice.setEnabled(false); // Not allowed to change price
+			txtProductName.setEnabled(true);
+			txtBarcode.setEnabled(true);
+			txtProductID.setEnabled(false); // Not allowed to edit productID
+			txtProductDescription.setEnabled(true);
+			btnCategoryAdd.setEnabled(true);
+			btnCategoryRemove.setEnabled(true);
+		} else {
+			txtWarehouseAmount.setEnabled(false);
+			txtWarehouseLocation.setEnabled(false);
+			txtStoreAmount.setEnabled(false);
+			txtStoreLocation.setEnabled(false);
+			txtCostPrice.setEnabled(false);
+			txtSuggestedSalesPrice.setEnabled(false);
+			txtSalesPrice.setEnabled(false);
+			txtProductName.setEnabled(false);
+			txtBarcode.setEnabled(false);
+			txtProductID.setEnabled(false);
+			txtProductDescription.setEnabled(false);
+			btnCategoryAdd.setEnabled(false);
+			btnCategoryRemove.setEnabled(false);
+		}
+	}
+
+	public void saveProduct(boolean editMode) {
 		ProductController productController = new ProductController();
 		String productName = txtProductName.getText();
 		String productDescription = txtProductDescription.getText();
+		String barcode = txtBarcode.getText();
+		String productID = txtProductID.getText();
+		String storeLocation = txtStoreLocation.getText();
+		String warehouseLocation = txtWarehouseLocation.getText();
 		int storeAmount = 0;
 		int warehouseAmount = 0;
+		storeAmount = convertToNumber(txtStoreAmount.getText().toString(), "Butiksbeholdning");
+		warehouseAmount = convertToNumber(txtWarehouseAmount.getText().toString(), "Lagerbeholdning");
 
-		if (productName.isBlank() || productDescription.isBlank()) {
+		if (!editMode) {
+			closeWindow();
+		} else if (productName.isBlank() || productDescription.isBlank()) {
 			JOptionPane.showMessageDialog(null, "Produktnavn og beskrivelse skal være udfyldt", "Fejl!",
 					JOptionPane.ERROR_MESSAGE);
+		} else if (editMode && productController.findProduct(productID) != null) {
+			product.setBarcode(barcode);
+			product.setName(productName);
+			product.setDescription(productDescription);
+			product.setStorageLocation(storeLocation);
+			product.setWarehouseLocation(warehouseLocation);
+			product.setStorageAmount(storeAmount);
+			product.setWarehouseAmount(warehouseAmount);
+			JOptionPane.showMessageDialog(null, "Produktet er blevet opdateret", "Success!",
+					JOptionPane.INFORMATION_MESSAGE);
+			closeWindow();
 		} else {
-			String barcode = txtBarcode.getText();
-			if (productController.findProduct(barcode) != null) {
-				try {
-					storeAmount = Integer.parseInt(txtStoreAmount.getText().toString());
-					warehouseAmount = Integer.parseInt(txtWarehouseAmount.getText().toString());
-				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null,
-							"Butikbeholdning/lagerbeholdning var ikke indtastet og er sat til 0.", "Information!",
-							JOptionPane.INFORMATION_MESSAGE);
-				}
-				String storeLocation = txtStoreLocation.getText();
-				String warehouseLocation = txtWarehouseLocation.getText();
+			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null) {
 				Product newProduct = productController.createProduct(productName, barcode, productDescription, null,
 						storeLocation, warehouseLocation, storeAmount, warehouseAmount);
 				// TODO add categories to product instead of null
@@ -482,10 +564,26 @@ public class ProductInformation extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Produktet med det givne varenummer/stregkode findes allerede", "Fejl!",
-						JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Produktet med det givne varenummer/stregkode findes allerede",
+						"Fejl!", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+	}
+
+	public int convertToNumber(String input, String location) {
+		int amount = 0;
+		try {
+			amount = Integer.parseInt(input); // Store amount
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, location+" var ikke indtastet og er sat til 0.",
+					"Information!", JOptionPane.INFORMATION_MESSAGE);
+		}
+		return amount;
+	}
+
+	public void addCategory() {
+		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd();
+		dialogCategoryAdd.setVisible(true);
 	}
 
 	public void closeWindow() {

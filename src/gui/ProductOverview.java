@@ -28,6 +28,7 @@ import javax.swing.event.ListDataListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
 import java.awt.event.ActionListener;
@@ -209,8 +210,10 @@ public class ProductOverview extends JFrame {
 		JButton btnAdd = new JButton("Tilføj");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
+				ProductController productController = new ProductController();
+				Product product = productController.findProduct("1000-1");
+			ProductInformation PI = new ProductInformation(product, true);
+			PI.setVisible(true);
 			}
 		});
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
