@@ -115,7 +115,7 @@ public class DialogAmount extends JDialog {
 	
 	private void buttonOKPressed() {
 		try {
-			newAmount = Integer.parseInt((String) spinner.getModel().getValue());
+			newAmount = Integer.parseInt(spinner.getModel().getValue().toString());
 			this.dispose();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(new JFrame(),"Antal skal være et helt tal");
@@ -124,6 +124,7 @@ public class DialogAmount extends JDialog {
 		
 	}
 	private void buttonCancelPressed() {
+		newAmount = -1;
 		this.dispose();
 	}
 	

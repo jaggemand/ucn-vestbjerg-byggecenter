@@ -19,6 +19,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import controller.ProductController;
 import model.ProductContainer;
@@ -106,11 +107,20 @@ public class DefaultTable extends JTable {
 	}
 	
 	public int findElement() {
-		return this.getSelectedRows()[0];
+		if(rows.length != 0) {
+			return this.getSelectedRows()[0];
+		}
+		else {
+			return -1;
+		}
+		
 	}
 	
 	public void addRow(String[] data) {
 		tabelModel.addRow(data);
+	}
+	public void clear() {
+		tabelModel.setRowCount(0);
 	}
 	
 	public ArrayList<String> selectedProductID() {
