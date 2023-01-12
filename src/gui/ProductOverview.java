@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
 

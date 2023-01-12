@@ -13,11 +13,15 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DialogCategoryAdd extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
+	private JTextField txtNewCategory;
+	private JButton btnAddCategory;
+	private JComboBox comboBox;
 
 	/**
 	 * Launch the application.
@@ -44,10 +48,10 @@ public class DialogCategoryAdd extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
-		gbl_contentPanel.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
-		gbl_contentPanel.rowHeights = new int[]{0, 0, 0, 0, 0};
-		gbl_contentPanel.columnWeights = new double[]{1.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_contentPanel.rowWeights = new double[]{1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPanel.columnWidths = new int[] { 0, 0, 0, 0, 0, 0 };
+		gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0 };
+		gbl_contentPanel.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_contentPanel.rowWeights = new double[] { 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("Vælg fra liste");
@@ -59,7 +63,12 @@ public class DialogCategoryAdd extends JDialog {
 			contentPanel.add(lblNewLabel, gbc_lblNewLabel);
 		}
 		{
-			JComboBox comboBox = new JComboBox();
+			String[] items = { "", "Køkken", "Rør", "VVS", "Bolig", "Opbevaring", "Rengøring", "Sikkerhed", "Batterier",
+					"Lamper", "Elektronik", "Pærer", "Fiskeri", "Camping", "Båd", "Bil", "Gulve", "Fliser", "Tæpper",
+					"Grill", "Haveredskaber", "Havemøbler", "Maling", "Havemaskiner", "Værktøj", "Radiatorer",
+					"Indeklima", "Byggeplader", "Konstruktion", "Lister", "Loft", "Vinduer", "Døre", "Arbejdstøj",
+					"Søm", "Skruer", "Beslag", "Diverse" };
+			comboBox = new JComboBox(items);
 			GridBagConstraints gbc_comboBox = new GridBagConstraints();
 			gbc_comboBox.insets = new Insets(0, 0, 5, 5);
 			gbc_comboBox.fill = GridBagConstraints.HORIZONTAL;
@@ -68,12 +77,17 @@ public class DialogCategoryAdd extends JDialog {
 			contentPanel.add(comboBox, gbc_comboBox);
 		}
 		{
-			JButton btnNewButton = new JButton("Tilføj kategori");
-			GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-			gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-			gbc_btnNewButton.gridx = 3;
-			gbc_btnNewButton.gridy = 1;
-			contentPanel.add(btnNewButton, gbc_btnNewButton);
+			btnAddCategory = new JButton("Tilføj kategori");
+			btnAddCategory.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					addCategory();
+				}
+			});
+			GridBagConstraints gbc_btnAddCategory = new GridBagConstraints();
+			gbc_btnAddCategory.insets = new Insets(0, 0, 5, 5);
+			gbc_btnAddCategory.gridx = 3;
+			gbc_btnAddCategory.gridy = 1;
+			contentPanel.add(btnAddCategory, gbc_btnAddCategory);
 		}
 		{
 			JLabel lblNewLabel_1 = new JLabel("Ny kategori");
@@ -85,31 +99,45 @@ public class DialogCategoryAdd extends JDialog {
 			contentPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		}
 		{
-			textField = new JTextField();
-			GridBagConstraints gbc_textField = new GridBagConstraints();
-			gbc_textField.insets = new Insets(0, 0, 5, 5);
-			gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-			gbc_textField.gridx = 2;
-			gbc_textField.gridy = 2;
-			contentPanel.add(textField, gbc_textField);
-			textField.setColumns(10);
+			txtNewCategory = new JTextField();
+			GridBagConstraints gbc_txtNewCategory = new GridBagConstraints();
+			gbc_txtNewCategory.insets = new Insets(0, 0, 5, 5);
+			gbc_txtNewCategory.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txtNewCategory.gridx = 2;
+			gbc_txtNewCategory.gridy = 2;
+			contentPanel.add(txtNewCategory, gbc_txtNewCategory);
+			txtNewCategory.setColumns(10);
 		}
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
+				JButton btnOk = new JButton("OK");
+				btnOk.setActionCommand("OK");
+				buttonPane.add(btnOk);
+				getRootPane().setDefaultButton(btnOk);
 			}
 			{
-				JButton cancelButton = new JButton("Afbryd");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+				JButton btnCancel = new JButton("Afbryd");
+				btnCancel.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						closeWindow();
+					}
+				});
+				btnCancel.setActionCommand("Cancel");
+				buttonPane.add(btnCancel);
 			}
 		}
+	}
+	
+	public void addCategory() {
+		System.out.println(comboBox.getSelectedItem());
+	}
+	
+	public void closeWindow() {
+		this.dispose();
+		this.setVisible(false);
 	}
 
 }

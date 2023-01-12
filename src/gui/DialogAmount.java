@@ -5,19 +5,25 @@ import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DialogAmount extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private int newAmount;
+	private JSpinner spinner;
 
 	/**
 	 * Launch the application.
@@ -36,6 +42,7 @@ public class DialogAmount extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogAmount() {
+		newAmount = 0;
 		setTitle("Vælg total antal");
 		setResizable(false);
 		setModal(true);
@@ -63,7 +70,7 @@ public class DialogAmount extends JDialog {
 				panel.add(lblNewLabel, gbc_lblNewLabel);
 			}
 			{
-				JSpinner spinner = new JSpinner();
+				spinner = new JSpinner();
 				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 				GridBagConstraints gbc_spinner = new GridBagConstraints();
 				gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
@@ -79,16 +86,49 @@ public class DialogAmount extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonOKPressed();
+					}
+
+					
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Afbryd");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonCancelPressed();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	//TODO: Docs
+	//Stores the value in the spinnerbox
+	
+	private void buttonOKPressed() {
+		try {
+			newAmount = Integer.parseInt((String) spinner.getModel().getValue());
+			this.dispose();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(new JFrame(),"Antal skal være et helt tal");
+		}
+		
+		
+	}
+	private void buttonCancelPressed() {
+		this.dispose();
+	}
+	
+	public int getNewAmount() {
+		return newAmount;
 	}
 
 }

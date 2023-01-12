@@ -21,11 +21,19 @@ public class ProductContainer {
 	private static ProductContainer instance;
 	private List<Product> products;
 	private Set<String> categories;
+	private String[] items = {"Køkken", "Rør", "VVS", "Bolig", "Opbevaring", "Rengøring", "Sikkerhed", "Batterier",
+            "Lamper", "Elektronik", "Pærer", "Fiskeri", "Camping", "Båd", "Bil", "Gulve", "Fliser", "Tæpper",
+            "Grill", "Haveredskaber", "Havemøbler", "Maling", "Havemaskiner", "Værktøj", "Radiatorer",
+            "Indeklima", "Byggeplader", "Konstruktion", "Lister", "Loft", "Vinduer", "Døre", "Arbejdstøj",
+            "Søm", "Skruer", "Beslag", "Diverse" };
 
 	// A constructor.
 	private ProductContainer() {
 		products = new ArrayList<>();
 		categories = new HashSet<String>();
+		for(String e : items) {
+			categories.add(e);
+		}
 	}
 
 	/**
