@@ -7,6 +7,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.ProductController;
+import model.Product;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
@@ -15,10 +19,15 @@ import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.SwingConstants;
 import javax.swing.SpinnerNumberModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class DialogItemAdd extends JDialog {
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textFieldBarcode;
+	private JTextField textFieldProductName;
+	private JButton btnOK;
+	private Product newProduct;
+	private ProductController pController;
 
 	/**
 	 * Launch the application.
@@ -37,6 +46,9 @@ public class DialogItemAdd extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogItemAdd() {
+		
+		pController = new ProductController();
+		
 		setResizable(false);
 		setTitle("Tilføj produkt");
 		setModal(true);
@@ -47,13 +59,24 @@ public class DialogItemAdd extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("Tilføj");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
+				btnOK = new JButton("Tilføj");
+				btnOK.setEnabled(false);
+				btnOK.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonAddPressed();
+					}
+				});
+				btnOK.setActionCommand("OK");
+				buttonPane.add(btnOK);
+				getRootPane().setDefaultButton(btnOK);
 			}
 			{
 				JButton cancelButton = new JButton("Afbryd");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonCancelPressed();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -78,17 +101,22 @@ public class DialogItemAdd extends JDialog {
 				panel.add(lblNewLabel, gbc_lblNewLabel);
 			}
 			{
-				textField = new JTextField();
-				GridBagConstraints gbc_textField = new GridBagConstraints();
-				gbc_textField.insets = new Insets(0, 0, 5, 5);
-				gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-				gbc_textField.gridx = 2;
-				gbc_textField.gridy = 1;
-				panel.add(textField, gbc_textField);
-				textField.setColumns(10);
+				textFieldBarcode = new JTextField();
+				GridBagConstraints gbc_textFieldBarcode = new GridBagConstraints();
+				gbc_textFieldBarcode.insets = new Insets(0, 0, 5, 5);
+				gbc_textFieldBarcode.fill = GridBagConstraints.HORIZONTAL;
+				gbc_textFieldBarcode.gridx = 2;
+				gbc_textFieldBarcode.gridy = 1;
+				panel.add(textFieldBarcode, gbc_textFieldBarcode);
+				textFieldBarcode.setColumns(10);
 			}
 			{
 				JButton btnSearch = new JButton("Søg");
+				btnSearch.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonSearchPressed();
+					}
+				});
 				GridBagConstraints gbc_btnSearch = new GridBagConstraints();
 				gbc_btnSearch.insets = new Insets(0, 0, 5, 5);
 				gbc_btnSearch.gridx = 3;
@@ -105,14 +133,16 @@ public class DialogItemAdd extends JDialog {
 				panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
 			}
 			{
-				textField_1 = new JTextField();
-				GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-				gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-				gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-				gbc_textField_1.gridx = 2;
-				gbc_textField_1.gridy = 2;
-				panel.add(textField_1, gbc_textField_1);
-				textField_1.setColumns(10);
+				textFieldProductName = new JTextField();
+				textFieldProductName.setText("Intet produkt");
+				textFieldProductName.setEditable(false);
+				GridBagConstraints gbc_textFieldProductName = new GridBagConstraints();
+				gbc_textFieldProductName.insets = new Insets(0, 0, 5, 5);
+				gbc_textFieldProductName.fill = GridBagConstraints.HORIZONTAL;
+				gbc_textFieldProductName.gridx = 2;
+				gbc_textFieldProductName.gridy = 2;
+				panel.add(textFieldProductName, gbc_textFieldProductName);
+				textFieldProductName.setColumns(10);
 			}
 			{
 				JLabel lblNewLabel_2 = new JLabel("Antal");
@@ -126,7 +156,7 @@ public class DialogItemAdd extends JDialog {
 			}
 			{
 				JSpinner spinner = new JSpinner();
-				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(0), null, Integer.valueOf(1)));
 				GridBagConstraints gbc_spinner = new GridBagConstraints();
 				gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
 				gbc_spinner.insets = new Insets(0, 0, 5, 5);
@@ -135,6 +165,28 @@ public class DialogItemAdd extends JDialog {
 				panel.add(spinner, gbc_spinner);
 			}
 		}
+	}
+	private void buttonSearchPressed() {
+		newProduct = pController.findProduct(textFieldBarcode.getText());
+		if(newProduct != null) {
+			btnOK.setEnabled(true);
+			textFieldProductName.setText(newProduct.getName());
+		}
+		else {
+			btnOK.setEnabled(false);
+			textFieldProductName.setText("Stregkode ugyldig");
+		}
+	}
+	private void buttonAddPressed() {
+		this.dispose();
+	}
+	private void buttonCancelPressed() {
+		newProduct = null;
+		this.dispose();
+	}
+	
+	public Product getNewProduct() {
+		return newProduct;
 	}
 
 }

@@ -2,6 +2,7 @@ package controller;
 
 import model.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 /**
@@ -154,7 +155,22 @@ public class ProductController {
 
 		if (product != null) {
 			product.setCategory(newCategory);
+			for(String e : newCategory) {
+				ProductContainer.getInstance().addCategory(e);
+			}
 		}
+	}
+	
+	public HashSet<String> getCategoies() {
+		return ProductContainer.getInstance().getCategories();
+	}
+	
+	public boolean addCategory(String newCategory) {
+		return ProductContainer.getInstance().addCategory(newCategory);
+	}
+	
+	public boolean removeCategory(String oldCategory) {
+		return ProductContainer.getInstance().removeCategory(oldCategory);
 	}
 
 	/**
