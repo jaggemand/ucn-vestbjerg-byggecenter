@@ -19,10 +19,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import controller.OrderController;
 import controller.ProductController;
 import model.Order;
+import model.OrderLine;
 import model.Product;
 import model.ProductContainer;
 
@@ -32,7 +34,7 @@ public class CashRegister extends JFrame {
 	private DefaultTable table;
 	private static CashRegister frame;
 	private JScrollPane scrollPane;
-	private Product currentProduct;
+	private OrderController orderController;
 	private JLabel lblStatus;
 	/**
 	 * Launch the application.
@@ -54,6 +56,9 @@ public class CashRegister extends JFrame {
 	 * Create the frame.
 	 */
 	public CashRegister() {
+		orderController = new OrderController();
+		orderController.createOrder(true);
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 622, 398);
 		contentPane = new JPanel();
@@ -124,7 +129,7 @@ public class CashRegister extends JFrame {
 		JButton btnDelete = new JButton("Slet");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				table.deleteData();
+				buttonDeletePressed();
 			}
 		});
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
@@ -135,6 +140,11 @@ public class CashRegister extends JFrame {
 		panel_1.add(btnDelete, gbc_btnDelete);
 		
 		JButton btnDetails = new JButton("Detaljer");
+		btnDetails.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonDetailsPressed();
+			}
+		});
 		GridBagConstraints gbc_btnDetails = new GridBagConstraints();
 		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
@@ -235,31 +245,77 @@ public class CashRegister extends JFrame {
 			lblStatus.setText("Tilføj afbrudt");
 		}
 		else {
-			String[] metaData = new String[4];
-			metaData[0] = newItem.getNewProduct().getName();
-			metaData[1] = newItem.getNewProduct().getDescription();
-			metaData[2] = "" + newItem.getAmount();
-			metaData[3] = newItem.getNewProduct().getSalesPriceFormatted();
-			table.addRow(metaData);
+			orderController.addProduct(newItem.getNewProduct().getBarcode(), newItem.getAmount());
+			updateTable();
 		}
 	}
 	private void buttonAmountPressed() {
-		int rowIndex = table.findElement();
-		int newItemAmount = 0;
-		DialogAmount newAmountDialog = new DialogAmount();
-		newAmountDialog.setVisible(true);
-		newItemAmount = newAmountDialog.getNewAmount();
-		try {
-			table.getModel().setValueAt(newItemAmount, rowIndex , 2);
-			String updatedItem = (String) table.getModel().getValueAt(table.getSelectedRow(), 1);
-			System.out.println(updatedItem);
-			lblStatus.setText(updatedItem + "s antal er blevet ændret til " + newItemAmount);
-			table.getModel().setValueAt(changeItemPriceTotal( (String) table.getModel().getValueAt(table.getSelectedRow(), 0), newItemAmount), table.getSelectedRow(), 3);
+			int row = table.getSelectedRow();
+			int newAmount = -1;
+			if(row != -1) {
+				DialogAmount newAmountDialog = new DialogAmount();
+				newAmountDialog.setVisible(true);
+				newAmount = newAmountDialog.getNewAmount();
+				
+				if(newAmountDialog.getNewAmount() != -1) {
+					orderController.getCurrentOrder().getOrderLines().get(row).setQuantity(newAmountDialog.getNewAmount());
+					updateTable();
+				}
+				else {
+					//Amount set canceled
+				}
+			}
+			else {
+				//No row selected
+			}
+			
+			
+	}
+	
+	private void buttonDeletePressed() {
+		int row = table.getSelectedRow();
+		
+		if(row != -1) {
+			int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du slette dette product", "Bekræft slet", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
+			
+			if(result == 0) {
+				Product productToDelete = orderController.getCurrentOrder().getOrderLines().get(row).getProduct();
+				//Confirmed
+				orderController.getCurrentOrder().removeProduct(productToDelete.getBarcode());
+				updateTable();
+			}
+			else {
+				//Delete canceled
+			}
+		}
+		else {
+			//No row selected
 		}
 		
-		catch (Exception exc) {
-			lblStatus.setBackground(Color.red);
-			lblStatus.setText(newItemAmount + " er ikke et gyldigt antal");
+	}
+	
+	private void buttonDetailsPressed() {
+		int row = table.getSelectedRow();
+		
+		if(row != -1) {
+			Product productToRead = orderController.getCurrentOrder().getOrderLines().get(row).getProduct();
+			ProductInformation productInfomation = new ProductInformation(productToRead,false);
+			productInfomation.setVisible(true);
+		}
+		else {
+			//No row selected
+		}
+	}
+	
+	private void updateTable() {
+		table.clear();
+		for(OrderLine ol : orderController.getCurrentOrder().getOrderLines()) {
+			String[] metaData = new String[4];
+			metaData[0] = ol.getProduct().getName();
+			metaData[1] = ol.getProduct().getDescription();
+			metaData[2] = "" + ol.getQuantity();
+			metaData[3] = ol.getProduct().getSalesPriceFormatted();
+			table.addRow(metaData);
 		}
 	}
 }
