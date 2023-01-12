@@ -1,5 +1,7 @@
 package gui;
 
+import static org.junit.Assert.assertTrue;
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -37,6 +39,8 @@ public class ProductOverview extends JFrame {
 	private JTextField txtMaxPrice;
 	private JTextField txtMinPrice;
 	private JComboBox<String> jcbCategories;
+	private JCheckBox jrbStoreLocation;
+	private JCheckBox jrbWarehouseLocation;
 
 	/**
 	 * Launch the application.
@@ -71,18 +75,9 @@ public class ProductOverview extends JFrame {
 		
 		
 		String[] columns = { "Varenummer", "Navn", "Lagerbeholdning", "Lagerlokation", "Butiksbeholdning", "Butikslokation"};
-		int size = ProductContainer.getInstance().getProducts().size();
+		
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
-		String[][] data = new String[size][6];
-		for(int i = 0; i < size; i++) {
-			Product current = dataArrayList.get(i);
-			data[i][0] = current.getProductID();
-			data[i][1] = current.getName();
-			data[i][2] = Integer.toString(current.getStorageAmount());
-			data[i][3] = current.getStorageLocation();
-			data[i][4] = Integer.toString(current.getWarehouseAmount());
-			data[i][5] = current.getWarehouseLocation();
-		}
+		String[][] data = convertToStringArray(dataArrayList);
 		
 		table = new DefaultTable(data, columns);
 		scrollPane.setViewportView(table);
@@ -105,7 +100,7 @@ public class ProductOverview extends JFrame {
 		gbc_lblFilter.gridy = 0;
 		panel.add(lblFilter, gbc_lblFilter);
 		
-		JCheckBox jrbStoreLocation = new JCheckBox("Butik");
+		jrbStoreLocation = new JCheckBox("Butik");
 		jrbStoreLocation.setSelected(true);
 		GridBagConstraints gbc_jrbStoreLocation = new GridBagConstraints();
 		gbc_jrbStoreLocation.anchor = GridBagConstraints.NORTHWEST;
@@ -164,7 +159,7 @@ public class ProductOverview extends JFrame {
 		panel.add(jcbCategories, gbc_jcbCategories);
 		jcbCategories.addItem("Kategorier");
 		
-		JCheckBox jrbWarehouseLocation = new JCheckBox("Lager");
+		jrbWarehouseLocation = new JCheckBox("Lager");
 		jrbWarehouseLocation.setSelected(true);
 		GridBagConstraints gbc_jrbWarehouseLocation = new GridBagConstraints();
 		gbc_jrbWarehouseLocation.anchor = GridBagConstraints.NORTHWEST;
@@ -317,12 +312,15 @@ public class ProductOverview extends JFrame {
 		ArrayList<Product> products = ProductContainer.getInstance().getProducts();
 		int size = products.size();
 		ArrayList<Product> productResult = new ArrayList<>();
+		double minPrice = -1;
+		double maxPrice = -1;
 		
 		if (txtMinPrice.getText().length() != 0) {
-			double minPrice = Double.parseDouble(txtMinPrice.getText());
+			minPrice = Double.parseDouble(txtMinPrice.getText());
 		}
+			
 		if (txtMaxPrice.getText().length() != 0) {
-			double maxPrice = Double.parseDouble(txtMaxPrice.getText());
+			maxPrice = Double.parseDouble(txtMaxPrice.getText());
 		}
 		
 		Iterator<Product> it = products.iterator();
@@ -332,11 +330,39 @@ public class ProductOverview extends JFrame {
 			
 		List<String> categories = Arrays.asList(p.getCategory());
 			
-			if (p.equals(txtProductName.getText()) && p.getSalesPrice() >= minPrice && p.getSalesPrice() <= maxPrice
-					&& categories.contains(jcbCategories.getSelectedItem())){
-				productResult.add(p);
-				System.out.println("succes");
+			if(p.getName().toLowerCase().contains(txtProductName.getText().toLowerCase()) || txtProductName.getText().length() == 0) {
+				if (p.getSalesPrice() >= minPrice || minPrice == -1 ) {
+					if(p.getSalesPrice() <= maxPrice || maxPrice == -1) {
+						if (categories.contains(jcbCategories.getSelectedItem()) || jcbCategories.getSelectedItem().equals("Kategorier")) {
+							if (jrbWarehouseLocation.isSelected() == true && p.getWarehouseAmount() > 0) {
+								productResult.add(p);
+							}else if (jrbStoreLocation.isSelected() == true && p.getStorageAmount() > 0) {
+								productResult.add(p);
+							}else if (jrbWarehouseLocation.isSelected() == false && jrbStoreLocation.isSelected() == false && p.getWarehouseAmount() <= 0
+									&& p.getStorageAmount() <= 0) {
+								productResult.add(p);
+							}
+						}
+					}
+				}
 			}
 		}
+		table.setNewData(convertToStringArray(productResult));
+	}
+	
+	private String[][] convertToStringArray(ArrayList<Product> dataArrayList){
+		int size = dataArrayList.size();
+		String[][] data = new String[size][6];
+		
+		for(int i = 0; i < size; i++) {
+			Product current = dataArrayList.get(i);
+			data[i][0] = current.getProductID();
+			data[i][1] = current.getName();
+			data[i][2] = Integer.toString(current.getStorageAmount());
+			data[i][3] = current.getStorageLocation();
+			data[i][4] = Integer.toString(current.getWarehouseAmount());
+			data[i][5] = current.getWarehouseLocation();
+		}
+		return data;
 	}
 }
