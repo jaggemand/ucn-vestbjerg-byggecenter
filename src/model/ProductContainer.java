@@ -5,8 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * This class is a singleton class that holds a list of products
@@ -14,10 +20,20 @@ import java.util.Scanner;
 public class ProductContainer {
 	private static ProductContainer instance;
 	private List<Product> products;
+	private Set<String> categories;
+	private String[] items = {"Køkken", "Rør", "VVS", "Bolig", "Opbevaring", "Rengøring", "Sikkerhed", "Batterier",
+            "Lamper", "Elektronik", "Pærer", "Fiskeri", "Camping", "Båd", "Bil", "Gulve", "Fliser", "Tæpper",
+            "Grill", "Haveredskaber", "Havemøbler", "Maling", "Havemaskiner", "Værktøj", "Radiatorer",
+            "Indeklima", "Byggeplader", "Konstruktion", "Lister", "Loft", "Vinduer", "Døre", "Arbejdstøj",
+            "Søm", "Skruer", "Beslag", "Diverse" };
 
 	// A constructor.
 	private ProductContainer() {
 		products = new ArrayList<>();
+		categories = new HashSet<String>();
+		for(String e : items) {
+			categories.add(e);
+		}
 	}
 
 	/**
@@ -54,6 +70,9 @@ public class ProductContainer {
 		if (!products.contains(p)) {
 			success = true;
 			products.add(p);
+			for(String e : p.getCategory()) {
+				categories.add(e);
+			}
 		}
 		return success;
 	}
@@ -65,6 +84,16 @@ public class ProductContainer {
 	 */
 	public ArrayList<Product> getProducts() {
 		return new ArrayList<>(products);
+	}
+	
+	public HashSet<String> getCategories(){
+		return new HashSet<>(categories);
+	}
+	public boolean addCategory(String newCategory) {
+		return categories.add(newCategory);
+	}
+	public boolean removeCategory(String categoryToRemove) {
+		return categories.remove(categoryToRemove);
 	}
 
 	/**
@@ -131,7 +160,8 @@ public class ProductContainer {
 				newProduct.setSuggestedSalesPrice(Double.parseDouble(data[10]));
 		        
 		        
-		        products.add(newProduct);
+		        //products.add(newProduct);
+				addProduct(newProduct);
 		        count++;
 		      }
 		      System.out.println("Imported products to container: " + count);
