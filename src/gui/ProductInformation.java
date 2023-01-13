@@ -54,6 +54,7 @@ public class ProductInformation extends JFrame {
 	private static boolean editMode;
 	private JButton btnCategoryAdd;
 	private JButton btnCategoryRemove;
+	private static ArrayList<String> tempCategoryList = new ArrayList<>();
 
 	/**
 	 * Launch the application.
@@ -476,11 +477,14 @@ public class ProductInformation extends JFrame {
 
 	public void init() {
 		DefaultListModel listModel = new DefaultListModel();
+		listModel.clear();
+		tempCategoryList.clear();
 		if (product == null) {
 			categoryList.setModel(listModel);
 		} else {
 			for (String element : product.getCategory()) {
 				listModel.addElement(element);
+				tempCategoryList.add(element);
 			}
 			categoryList.setModel(listModel);
 			txtProductName.setText(product.getName());
@@ -548,6 +552,8 @@ public class ProductInformation extends JFrame {
 			JOptionPane.showMessageDialog(null, "Produktnavn og beskrivelse skal være udfyldt", "Fejl!",
 					JOptionPane.ERROR_MESSAGE);
 		} else if (editMode && productController.findProduct(productID) != null) {
+			String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
+			product.setCategory(newCategories);
 			product.setBarcode(barcode);
 			product.setName(productName);
 			product.setDescription(productDescription);
@@ -560,8 +566,7 @@ public class ProductInformation extends JFrame {
 			closeWindow();
 		} else {
 			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null) {
-				ArrayList<String> categories = DialogCategoryAdd.newCategoryList();
-				String[] newCategories = categories.toArray(new String[categories.size()]);
+				String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
 				Product newProduct = productController.createProduct(productName, barcode, productDescription,
 						newCategories, storeLocation, warehouseLocation, storeAmount, warehouseAmount);
 				if (productController.getAllProducts().contains(newProduct)) {
@@ -582,7 +587,7 @@ public class ProductInformation extends JFrame {
 	public int convertToNumber(String input, String location) {
 		int amount = 0;
 		try {
-			amount = Integer.parseInt(input); // Store amount
+			amount = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, location + " var ikke indtastet og er sat til 0.", "Information!",
 					JOptionPane.INFORMATION_MESSAGE);
@@ -591,38 +596,33 @@ public class ProductInformation extends JFrame {
 	}
 
 	public void removeCategory() {
-		//TODO check for index out of bounds exception with correct list
 		int index = categoryList.getSelectedIndex();
-		ArrayList<String> categories = new ArrayList<String>();
-		if (index <= categories.size()) {
-			JOptionPane.showMessageDialog(null, "Index out of bounds", "Fejl!",
-					JOptionPane.ERROR_MESSAGE);
+		ArrayList<String> categories = new ArrayList<>(tempCategoryList);
+		if (index < 0) {
+			JOptionPane.showMessageDialog(null, "Vælg en kategori at fjerne først", "Fejl!", JOptionPane.ERROR_MESSAGE);
 		} else {
-			Collections.addAll(categories, product.getCategory());
 			categories.remove(index);
-			String[] updatedCategories = categories.toArray(new String[categories.size()]);
-			product.setCategory(updatedCategories);
 			updateJList(categories);
 			JOptionPane.showMessageDialog(null, "Den valgte kategori er blevet fjernet", "Success!",
 					JOptionPane.INFORMATION_MESSAGE);
+			categories.clear();
 		}
 	}
 
-	public static void updateJList(ArrayList<String> list) {
+	public static void updateJList(ArrayList<String> inputList) {
 		DefaultListModel listModel = new DefaultListModel();
-		if (product != null) {
-			for (String element : product.getCategory()) {
-				listModel.addElement(element);
-			}
-		}
-		for (String element : list) {
+		tempCategoryList.clear();
+		listModel.clear();
+		System.out.println(inputList);
+		for (String element : inputList) {
+			tempCategoryList.add(element);
 			listModel.addElement(element);
 		}
 		categoryList.setModel(listModel);
 	}
 
 	public void addCategoryWindow() {
-		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd();
+		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd(tempCategoryList);
 		dialogCategoryAdd.setVisible(true);
 	}
 

@@ -31,14 +31,14 @@ public class DialogCategoryAdd extends JDialog {
 	private JTextField txtNewCategory;
 	private JButton btnAddCategory;
 	private JComboBox comboBox;
-	private static ArrayList<String> categoriesToAdd = new ArrayList<>();
+	private ArrayList<String> categoriesToAdd = new ArrayList<>();
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogCategoryAdd dialog = new DialogCategoryAdd();
+			DialogCategoryAdd dialog = new DialogCategoryAdd(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -49,7 +49,7 @@ public class DialogCategoryAdd extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogCategoryAdd() {
+	public DialogCategoryAdd(ArrayList<String> categoryList) {
 		setTitle("Tilføj kategorier");
 		setResizable(false);
 		setModal(true);
@@ -121,7 +121,6 @@ public class DialogCategoryAdd extends JDialog {
 				JButton btnOk = new JButton("OK");
 				btnOk.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						newCategoryList();
 						ProductInformation.updateJList(categoriesToAdd);
 						closeWindow();
 					}
@@ -137,38 +136,40 @@ public class DialogCategoryAdd extends JDialog {
 				});
 				buttonPane.add(btnCancel);
 			}
+			for (String element : categoryList) {
+				categoriesToAdd.add(element);
+			}
 			init();
 		}
 	}
+
 	public void init() {
 		ProductController productController = new ProductController();
 		HashSet<String> categories = productController.getCategoies();
-		for(String element : categories) {
+		for (String element : categories) {
 			comboBox.addItem(element);
 		}
 	}
-	
+
 	public void addCategory() {
 		String selectedCategory = comboBox.getSelectedItem().toString();
 		String newEnteredCategory = txtNewCategory.getText().toString();
-		if(!newEnteredCategory.isBlank() && !categoriesToAdd.contains(newEnteredCategory)) {
+		if (!newEnteredCategory.isBlank() && !categoriesToAdd.contains(newEnteredCategory)
+				&& !categoriesToAdd.contains(newEnteredCategory)) {
 			categoriesToAdd.add(newEnteredCategory);
-			JOptionPane.showMessageDialog(null, "Kategori "+newEnteredCategory+" tilføjet", "Success!",
+			JOptionPane.showMessageDialog(null, "Kategori " + newEnteredCategory + " tilføjet", "Success!",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else if (!categoriesToAdd.contains(selectedCategory)) {
 			categoriesToAdd.add(selectedCategory);
-			JOptionPane.showMessageDialog(null, "Kategori "+selectedCategory+" tilføjet", "Success!",
+			JOptionPane.showMessageDialog(null, "Kategori " + selectedCategory + " tilføjet", "Success!",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			JOptionPane.showMessageDialog(null, "Kategori "+selectedCategory+"/"+newEnteredCategory+" er allerede tilføjet", "Fejl!",
+			JOptionPane.showMessageDialog(null,
+					"Kategori " + selectedCategory + "/" + newEnteredCategory + " er allerede tilføjet", "Fejl!",
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	public static ArrayList<String> newCategoryList() {
-		return categoriesToAdd;
-	}
-	
+
 	public void closeWindow() {
 		this.dispose();
 		this.setVisible(false);
