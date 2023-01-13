@@ -32,6 +32,7 @@ import model.Product;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.awt.event.ActionEvent;
 
 public class ProductInformation extends JFrame {
@@ -48,11 +49,14 @@ public class ProductInformation extends JFrame {
 	private JTextField txtBarcode;
 	private JTextField txtProductID;
 	private JTextArea txtProductDescription;
-	private JList categoryList;
+	private static JList categoryList;
 	private static Product product;
 	private static boolean editMode;
 	private JButton btnCategoryAdd;
 	private JButton btnCategoryRemove;
+	private static ArrayList<String> tempCategoryList = new ArrayList<>();
+	private JButton btnSave;
+	private JButton btnCancel;
 
 	/**
 	 * Launch the application.
@@ -428,13 +432,18 @@ public class ProductInformation extends JFrame {
 		panel_2.add(btnCategoryAdd, gbc_btnCategoryAdd);
 
 		btnCategoryRemove = new JButton("Fjern");
+		btnCategoryRemove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				removeCategory();
+			}
+		});
 		GridBagConstraints gbc_btnCategoryRemove = new GridBagConstraints();
 		gbc_btnCategoryRemove.insets = new Insets(0, 0, 5, 0);
 		gbc_btnCategoryRemove.gridx = 3;
 		gbc_btnCategoryRemove.gridy = 3;
 		panel_2.add(btnCategoryRemove, gbc_btnCategoryRemove);
 
-		JButton btnSave = new JButton("Gem");
+		btnSave = new JButton("Gem");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveProduct(editMode);
@@ -446,7 +455,7 @@ public class ProductInformation extends JFrame {
 		gbc_btnSave.gridy = 11;
 		contentPane.add(btnSave, gbc_btnSave);
 
-		JButton btnCancel = new JButton("Afbryd");
+		btnCancel = new JButton("Afbryd");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeWindow();
@@ -470,11 +479,14 @@ public class ProductInformation extends JFrame {
 
 	public void init() {
 		DefaultListModel listModel = new DefaultListModel();
+		listModel.clear();
+		tempCategoryList.clear();
 		if (product == null) {
 			categoryList.setModel(listModel);
 		} else {
 			for (String element : product.getCategory()) {
 				listModel.addElement(element);
+				tempCategoryList.add(element);
 			}
 			categoryList.setModel(listModel);
 			txtProductName.setText(product.getName());
@@ -492,35 +504,24 @@ public class ProductInformation extends JFrame {
 	}
 
 	public void editType(boolean editMode) {
-		if (editMode) {
-			txtWarehouseAmount.setEnabled(true);
-			txtWarehouseLocation.setEnabled(true);
-			txtStoreAmount.setEnabled(true);
-			txtStoreLocation.setEnabled(true);
-			txtCostPrice.setEnabled(false); // Not allowed to change price
-			txtSuggestedSalesPrice.setEnabled(false); // Not allowed to change price
-			txtSalesPrice.setEnabled(false); // Not allowed to change price
-			txtProductName.setEnabled(true);
-			txtBarcode.setEnabled(true);
-			txtProductID.setEnabled(false); // Not allowed to edit productID
-			txtProductDescription.setEnabled(true);
-			btnCategoryAdd.setEnabled(true);
-			btnCategoryRemove.setEnabled(true);
-		} else {
-			txtWarehouseAmount.setEnabled(false);
-			txtWarehouseLocation.setEnabled(false);
-			txtStoreAmount.setEnabled(false);
-			txtStoreLocation.setEnabled(false);
-			txtCostPrice.setEnabled(false);
-			txtSuggestedSalesPrice.setEnabled(false);
-			txtSalesPrice.setEnabled(false);
-			txtProductName.setEnabled(false);
-			txtBarcode.setEnabled(false);
-			txtProductID.setEnabled(false);
-			txtProductDescription.setEnabled(false);
-			btnCategoryAdd.setEnabled(false);
-			btnCategoryRemove.setEnabled(false);
+		if (!editMode) {
+			btnCancel.setText("Tilbage");
+			categoryList.setEnabled(editMode);
+			btnSave.setVisible(editMode);
 		}
+		txtWarehouseAmount.setEnabled(editMode);
+		txtWarehouseLocation.setEnabled(editMode);
+		txtStoreAmount.setEnabled(editMode);
+		txtStoreLocation.setEnabled(editMode);
+		txtCostPrice.setEnabled(false); // Not allowed to change price
+		txtSuggestedSalesPrice.setEnabled(false); // Not allowed to change price
+		txtSalesPrice.setEnabled(false); // Not allowed to change price
+		txtProductName.setEnabled(editMode);
+		txtBarcode.setEnabled(editMode);
+		txtProductID.setEnabled(false); // Not allowed to edit productID
+		txtProductDescription.setEnabled(editMode);
+		btnCategoryAdd.setEnabled(editMode);
+		btnCategoryRemove.setEnabled(editMode);
 	}
 
 	public void saveProduct(boolean editMode) {
@@ -542,6 +543,8 @@ public class ProductInformation extends JFrame {
 			JOptionPane.showMessageDialog(null, "Produktnavn og beskrivelse skal være udfyldt", "Fejl!",
 					JOptionPane.ERROR_MESSAGE);
 		} else if (editMode && productController.findProduct(productID) != null) {
+			String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
+			product.setCategory(newCategories);
 			product.setBarcode(barcode);
 			product.setName(productName);
 			product.setDescription(productDescription);
@@ -554,14 +557,13 @@ public class ProductInformation extends JFrame {
 			closeWindow();
 		} else {
 			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null) {
-				ArrayList<String> categories = DialogCategoryAdd.newCategoryList();
-				String[] newCategories = categories.toArray(new String[categories.size()]);
-				Product newProduct = productController.createProduct(productName, barcode, productDescription, newCategories,
-						storeLocation, warehouseLocation, storeAmount, warehouseAmount);
-				// TODO add categories to product instead of null
+				String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
+				Product newProduct = productController.createProduct(productName, barcode, productDescription,
+						newCategories, storeLocation, warehouseLocation, storeAmount, warehouseAmount);
 				if (productController.getAllProducts().contains(newProduct)) {
 					JOptionPane.showMessageDialog(null, "Produktet er blevet tilføjet", "Success!",
 							JOptionPane.INFORMATION_MESSAGE);
+					closeWindow();
 				} else {
 					JOptionPane.showMessageDialog(null, "En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!",
 							JOptionPane.ERROR_MESSAGE);
@@ -576,7 +578,7 @@ public class ProductInformation extends JFrame {
 	public int convertToNumber(String input, String location) {
 		int amount = 0;
 		try {
-			amount = Integer.parseInt(input); // Store amount
+			amount = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, location + " var ikke indtastet og er sat til 0.", "Information!",
 					JOptionPane.INFORMATION_MESSAGE);
@@ -584,8 +586,33 @@ public class ProductInformation extends JFrame {
 		return amount;
 	}
 
+	public void removeCategory() {
+		int index = categoryList.getSelectedIndex();
+		ArrayList<String> categories = new ArrayList<>(tempCategoryList);
+		if (index < 0) {
+			JOptionPane.showMessageDialog(null, "Vælg en kategori at fjerne først", "Fejl!", JOptionPane.ERROR_MESSAGE);
+		} else {
+			categories.remove(index);
+			updateJList(categories);
+			JOptionPane.showMessageDialog(null, "Den valgte kategori er blevet fjernet", "Success!",
+					JOptionPane.INFORMATION_MESSAGE);
+			categories.clear();
+		}
+	}
+
+	public static void updateJList(ArrayList<String> inputList) {
+		DefaultListModel listModel = new DefaultListModel();
+		tempCategoryList.clear();
+		listModel.clear();
+		for (String element : inputList) {
+			tempCategoryList.add(element);
+			listModel.addElement(element);
+		}
+		categoryList.setModel(listModel);
+	}
+
 	public void addCategoryWindow() {
-		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd();
+		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd(tempCategoryList);
 		dialogCategoryAdd.setVisible(true);
 	}
 
