@@ -55,6 +55,8 @@ public class ProductInformation extends JFrame {
 	private JButton btnCategoryAdd;
 	private JButton btnCategoryRemove;
 	private static ArrayList<String> tempCategoryList = new ArrayList<>();
+	private JButton btnSave;
+	private JButton btnCancel;
 
 	/**
 	 * Launch the application.
@@ -441,7 +443,7 @@ public class ProductInformation extends JFrame {
 		gbc_btnCategoryRemove.gridy = 3;
 		panel_2.add(btnCategoryRemove, gbc_btnCategoryRemove);
 
-		JButton btnSave = new JButton("Gem");
+		btnSave = new JButton("Gem");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveProduct(editMode);
@@ -453,7 +455,7 @@ public class ProductInformation extends JFrame {
 		gbc_btnSave.gridy = 11;
 		contentPane.add(btnSave, gbc_btnSave);
 
-		JButton btnCancel = new JButton("Afbryd");
+		btnCancel = new JButton("Afbryd");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeWindow();
@@ -502,35 +504,24 @@ public class ProductInformation extends JFrame {
 	}
 
 	public void editType(boolean editMode) {
-		if (editMode) {
-			txtWarehouseAmount.setEnabled(true);
-			txtWarehouseLocation.setEnabled(true);
-			txtStoreAmount.setEnabled(true);
-			txtStoreLocation.setEnabled(true);
-			txtCostPrice.setEnabled(false); // Not allowed to change price
-			txtSuggestedSalesPrice.setEnabled(false); // Not allowed to change price
-			txtSalesPrice.setEnabled(false); // Not allowed to change price
-			txtProductName.setEnabled(true);
-			txtBarcode.setEnabled(true);
-			txtProductID.setEnabled(false); // Not allowed to edit productID
-			txtProductDescription.setEnabled(true);
-			btnCategoryAdd.setEnabled(true);
-			btnCategoryRemove.setEnabled(true);
-		} else {
-			txtWarehouseAmount.setEnabled(false);
-			txtWarehouseLocation.setEnabled(false);
-			txtStoreAmount.setEnabled(false);
-			txtStoreLocation.setEnabled(false);
-			txtCostPrice.setEnabled(false);
-			txtSuggestedSalesPrice.setEnabled(false);
-			txtSalesPrice.setEnabled(false);
-			txtProductName.setEnabled(false);
-			txtBarcode.setEnabled(false);
-			txtProductID.setEnabled(false);
-			txtProductDescription.setEnabled(false);
-			btnCategoryAdd.setEnabled(false);
-			btnCategoryRemove.setEnabled(false);
+		if (!editMode) {
+			btnCancel.setText("Tilbage");
+			categoryList.setEnabled(editMode);
+			btnSave.setVisible(editMode);
 		}
+		txtWarehouseAmount.setEnabled(editMode);
+		txtWarehouseLocation.setEnabled(editMode);
+		txtStoreAmount.setEnabled(editMode);
+		txtStoreLocation.setEnabled(editMode);
+		txtCostPrice.setEnabled(false); // Not allowed to change price
+		txtSuggestedSalesPrice.setEnabled(false); // Not allowed to change price
+		txtSalesPrice.setEnabled(false); // Not allowed to change price
+		txtProductName.setEnabled(editMode);
+		txtBarcode.setEnabled(editMode);
+		txtProductID.setEnabled(false); // Not allowed to edit productID
+		txtProductDescription.setEnabled(editMode);
+		btnCategoryAdd.setEnabled(editMode);
+		btnCategoryRemove.setEnabled(editMode);
 	}
 
 	public void saveProduct(boolean editMode) {
