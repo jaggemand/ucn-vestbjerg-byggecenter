@@ -613,7 +613,6 @@ public class ProductInformation extends JFrame {
 		DefaultListModel listModel = new DefaultListModel();
 		tempCategoryList.clear();
 		listModel.clear();
-		System.out.println(inputList);
 		for (String element : inputList) {
 			tempCategoryList.add(element);
 			listModel.addElement(element);
