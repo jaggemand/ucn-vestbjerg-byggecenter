@@ -251,19 +251,10 @@ public class CashRegister extends JFrame {
 	}
 	private void buttonAmountPressed() {
 			int row = table.getSelectedRow();
-			int newAmount = -1;
 			if(row != -1) {
-				DialogAmount newAmountDialog = new DialogAmount();
+				DialogAmount newAmountDialog = new DialogAmount(orderController.getCurrentOrder().getOrderLines().get(row));
 				newAmountDialog.setVisible(true);
-				newAmount = newAmountDialog.getNewAmount();
-				
-				if(newAmountDialog.getNewAmount() != -1) {
-					orderController.getCurrentOrder().getOrderLines().get(row).setQuantity(newAmountDialog.getNewAmount());
-					updateTable();
-				}
-				else {
-					//Amount set canceled
-				}
+				updateTable();
 			}
 			else {
 				//No row selected
