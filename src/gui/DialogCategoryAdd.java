@@ -157,11 +157,11 @@ public class DialogCategoryAdd extends JDialog {
 		if (!newEnteredCategory.isBlank() && !categoriesToAdd.contains(newEnteredCategory)
 				&& !categoriesToAdd.contains(newEnteredCategory)) {
 			categoriesToAdd.add(newEnteredCategory);
-			JOptionPane.showMessageDialog(null, "Kategori " + newEnteredCategory + " tilføjet", "Success!",
+			JOptionPane.showMessageDialog(null, "Kategori " + newEnteredCategory + " tilføjet", "Succes!",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else if (!categoriesToAdd.contains(selectedCategory)) {
 			categoriesToAdd.add(selectedCategory);
-			JOptionPane.showMessageDialog(null, "Kategori " + selectedCategory + " tilføjet", "Success!",
+			JOptionPane.showMessageDialog(null, "Kategori " + selectedCategory + " tilføjet", "Succes!",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(null,
