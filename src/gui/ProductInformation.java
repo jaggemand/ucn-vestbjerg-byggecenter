@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -34,7 +35,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.awt.event.ActionEvent;
-import javax.swing.JToggleButton;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class ProductInformation extends JFrame {
 
@@ -58,6 +60,9 @@ public class ProductInformation extends JFrame {
 	private static ArrayList<String> tempCategoryList = new ArrayList<>();
 	private JButton btnSave;
 	private JButton btnCancel;
+	private JLabel lblStatusText;
+	private JLabel lblTextNameStatus;
+	private String statusLine = "";
 
 	/**
 	 * Launch the application.
@@ -80,6 +85,7 @@ public class ProductInformation extends JFrame {
 	 */
 
 	public ProductInformation(Product product, boolean editMode) {
+		setTitle("Produkt");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 450);
 		contentPane = new JPanel();
@@ -90,7 +96,7 @@ public class ProductInformation extends JFrame {
 		gbl_contentPane.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 0, 20, 0, 0, 0, 111, 0, 0, 0, 0, 0, 32, 0, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,
+		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,
 				Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
@@ -105,15 +111,17 @@ public class ProductInformation extends JFrame {
 		gbc_panel_general.gridy = 1;
 		contentPane.add(panel_general, gbc_panel_general);
 		GridBagLayout gbl_panel_general = new GridBagLayout();
-		gbl_panel_general.columnWidths = new int[] { 24, 0 };
-		gbl_panel_general.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_panel_general.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_panel_general.rowWeights = new double[] { 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_general.columnWidths = new int[] { 24, 26, 0 };
+		gbl_panel_general.rowHeights = new int[] { 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel_general.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+		gbl_panel_general.rowWeights = new double[] { 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0,
+				1.0, Double.MIN_VALUE };
 		panel_general.setLayout(gbl_panel_general);
 
 		JLabel lblHeaderGenerel = new JLabel("Generel");
 		lblHeaderGenerel.setFont(new Font("Tahoma", Font.BOLD, 20));
 		GridBagConstraints gbc_lblHeaderGenerel = new GridBagConstraints();
+		gbc_lblHeaderGenerel.gridwidth = 2;
 		gbc_lblHeaderGenerel.insets = new Insets(0, 0, 5, 0);
 		gbc_lblHeaderGenerel.gridx = 0;
 		gbc_lblHeaderGenerel.gridy = 0;
@@ -122,70 +130,75 @@ public class ProductInformation extends JFrame {
 		JLabel lblProduktID = new JLabel("Varenummer");
 		GridBagConstraints gbc_lblProduktID = new GridBagConstraints();
 		gbc_lblProduktID.fill = GridBagConstraints.VERTICAL;
+		gbc_lblProduktID.gridwidth = 2;
 		gbc_lblProduktID.insets = new Insets(0, 0, 5, 0);
 		gbc_lblProduktID.gridx = 0;
-		gbc_lblProduktID.gridy = 1;
+		gbc_lblProduktID.gridy = 2;
 		panel_general.add(lblProduktID, gbc_lblProduktID);
 
 		txtProductID = new JTextField();
 		GridBagConstraints gbc_txtProductID = new GridBagConstraints();
+		gbc_txtProductID.gridwidth = 2;
 		gbc_txtProductID.insets = new Insets(0, 0, 5, 0);
 		gbc_txtProductID.fill = GridBagConstraints.BOTH;
 		gbc_txtProductID.gridx = 0;
-		gbc_txtProductID.gridy = 2;
+		gbc_txtProductID.gridy = 3;
 		panel_general.add(txtProductID, gbc_txtProductID);
 		txtProductID.setColumns(10);
 
 		JLabel lblBarcode = new JLabel("Stregkode");
 		GridBagConstraints gbc_lblBarcode = new GridBagConstraints();
+		gbc_lblBarcode.gridwidth = 2;
 		gbc_lblBarcode.insets = new Insets(0, 0, 5, 0);
 		gbc_lblBarcode.gridx = 0;
-		gbc_lblBarcode.gridy = 3;
+		gbc_lblBarcode.gridy = 5;
 		panel_general.add(lblBarcode, gbc_lblBarcode);
 
 		txtBarcode = new JTextField();
 		GridBagConstraints gbc_txtBarcode = new GridBagConstraints();
+		gbc_txtBarcode.gridwidth = 2;
 		gbc_txtBarcode.insets = new Insets(0, 0, 5, 0);
 		gbc_txtBarcode.fill = GridBagConstraints.BOTH;
 		gbc_txtBarcode.gridx = 0;
-		gbc_txtBarcode.gridy = 4;
+		gbc_txtBarcode.gridy = 6;
 		panel_general.add(txtBarcode, gbc_txtBarcode);
 		txtBarcode.setColumns(10);
 
 		JLabel lblProductName = new JLabel("Produktnavn");
 		GridBagConstraints gbc_lblProductName = new GridBagConstraints();
 		gbc_lblProductName.fill = GridBagConstraints.VERTICAL;
+		gbc_lblProductName.gridwidth = 2;
 		gbc_lblProductName.insets = new Insets(0, 0, 5, 0);
 		gbc_lblProductName.gridx = 0;
-		gbc_lblProductName.gridy = 5;
+		gbc_lblProductName.gridy = 8;
 		panel_general.add(lblProductName, gbc_lblProductName);
 
 		txtProductName = new JTextField();
 		GridBagConstraints gbc_txtProductName = new GridBagConstraints();
+		gbc_txtProductName.gridwidth = 2;
 		gbc_txtProductName.insets = new Insets(0, 0, 5, 0);
 		gbc_txtProductName.fill = GridBagConstraints.BOTH;
 		gbc_txtProductName.gridx = 0;
-		gbc_txtProductName.gridy = 6;
+		gbc_txtProductName.gridy = 9;
 		panel_general.add(txtProductName, gbc_txtProductName);
 		txtProductName.setColumns(10);
 
 		JLabel lblProductDescription = new JLabel("Beskrivelse");
 		GridBagConstraints gbc_lblProductDescription = new GridBagConstraints();
+		gbc_lblProductDescription.gridwidth = 2;
 		gbc_lblProductDescription.insets = new Insets(0, 0, 5, 0);
 		gbc_lblProductDescription.gridx = 0;
-		gbc_lblProductDescription.gridy = 7;
+		gbc_lblProductDescription.gridy = 11;
 		panel_general.add(lblProductDescription, gbc_lblProductDescription);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
-		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 8;
-		panel_general.add(scrollPane_1, gbc_scrollPane_1);
 
 		txtProductDescription = new JTextArea();
-		scrollPane_1.setViewportView(txtProductDescription);
+		GridBagConstraints gbc_txtProductDescription = new GridBagConstraints();
+		gbc_txtProductDescription.insets = new Insets(0, 0, 5, 0);
+		gbc_txtProductDescription.gridwidth = 2;
+		gbc_txtProductDescription.fill = GridBagConstraints.BOTH;
+		gbc_txtProductDescription.gridx = 0;
+		gbc_txtProductDescription.gridy = 12;
+		panel_general.add(txtProductDescription, gbc_txtProductDescription);
 
 		JPanel panel_price = new JPanel();
 		panel_price.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -215,7 +228,7 @@ public class ProductInformation extends JFrame {
 		gbc_lblHeaderPrice.gridy = 0;
 		panel_price.add(lblHeaderPrice, gbc_lblHeaderPrice);
 
-		JLabel lblCostPrice = new JLabel("Indkøbspris");
+		JLabel lblCostPrice = new JLabel("Indkøbspris (DKK)");
 		GridBagConstraints gbc_lblCostPrice = new GridBagConstraints();
 		gbc_lblCostPrice.gridwidth = 2;
 		gbc_lblCostPrice.insets = new Insets(0, 0, 5, 0);
@@ -224,17 +237,16 @@ public class ProductInformation extends JFrame {
 		panel_price.add(lblCostPrice, gbc_lblCostPrice);
 
 		txtCostPrice = new JTextField();
-		txtCostPrice.setToolTipText("");
+		txtCostPrice.setToolTipText("Eksempel på Format: 0.0");
 		GridBagConstraints gbc_txtCostPrice = new GridBagConstraints();
+		gbc_txtCostPrice.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtCostPrice.gridwidth = 2;
 		gbc_txtCostPrice.insets = new Insets(0, 0, 5, 0);
-		gbc_txtCostPrice.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtCostPrice.gridx = 0;
 		gbc_txtCostPrice.gridy = 3;
 		panel_price.add(txtCostPrice, gbc_txtCostPrice);
-		txtCostPrice.setColumns(10);
 
-		JLabel lblSuggestedSalesPrice = new JLabel("Vejledende pris");
+		JLabel lblSuggestedSalesPrice = new JLabel("Vejledende pris (DKK)");
 		GridBagConstraints gbc_lblSuggestedSalesPrice = new GridBagConstraints();
 		gbc_lblSuggestedSalesPrice.gridwidth = 2;
 		gbc_lblSuggestedSalesPrice.insets = new Insets(0, 0, 5, 0);
@@ -243,6 +255,7 @@ public class ProductInformation extends JFrame {
 		panel_price.add(lblSuggestedSalesPrice, gbc_lblSuggestedSalesPrice);
 
 		txtSuggestedSalesPrice = new JTextField();
+		txtSuggestedSalesPrice.setToolTipText("Eksempel på Format: 0.0");
 		txtSuggestedSalesPrice.setColumns(10);
 		GridBagConstraints gbc_txtSuggestedSalesPrice = new GridBagConstraints();
 		gbc_txtSuggestedSalesPrice.fill = GridBagConstraints.HORIZONTAL;
@@ -252,7 +265,7 @@ public class ProductInformation extends JFrame {
 		gbc_txtSuggestedSalesPrice.gridy = 6;
 		panel_price.add(txtSuggestedSalesPrice, gbc_txtSuggestedSalesPrice);
 
-		JLabel lblSalesPrice = new JLabel("Salgspris");
+		JLabel lblSalesPrice = new JLabel("Salgspris (DKK)");
 		GridBagConstraints gbc_lblSalesPrice = new GridBagConstraints();
 		gbc_lblSalesPrice.fill = GridBagConstraints.VERTICAL;
 		gbc_lblSalesPrice.gridwidth = 2;
@@ -262,6 +275,7 @@ public class ProductInformation extends JFrame {
 		panel_price.add(lblSalesPrice, gbc_lblSalesPrice);
 
 		txtSalesPrice = new JTextField();
+		txtSalesPrice.setToolTipText("Eksempel på Format: 0.0");
 		txtSalesPrice.setColumns(10);
 		GridBagConstraints gbc_txtSalesPrice = new GridBagConstraints();
 		gbc_txtSalesPrice.insets = new Insets(0, 0, 5, 0);
@@ -461,10 +475,26 @@ public class ProductInformation extends JFrame {
 		gbc_btnCancel.gridy = 11;
 		contentPane.add(btnCancel, gbc_btnCancel);
 
-		/* Price textfields disabled */
-		txtCostPrice.setEnabled(false);
-		txtSalesPrice.setEnabled(false);
-		txtSuggestedSalesPrice.setEnabled(false);
+		lblTextNameStatus = new JLabel("Status:");
+		lblTextNameStatus.setHorizontalAlignment(SwingConstants.RIGHT);
+		GridBagConstraints gbc_lblTextNameStatus = new GridBagConstraints();
+		gbc_lblTextNameStatus.fill = GridBagConstraints.BOTH;
+		gbc_lblTextNameStatus.insets = new Insets(0, 0, 0, 5);
+		gbc_lblTextNameStatus.gridx = 3;
+		gbc_lblTextNameStatus.gridy = 12;
+		contentPane.add(lblTextNameStatus, gbc_lblTextNameStatus);
+
+		lblStatusText = new JLabel("");
+		lblStatusText.setToolTipText("Fejl meddeleser vises her");
+		lblStatusText.setHorizontalAlignment(SwingConstants.LEFT);
+		GridBagConstraints gbc_lblStatusText = new GridBagConstraints();
+		gbc_lblStatusText.gridwidth = 4;
+		gbc_lblStatusText.fill = GridBagConstraints.BOTH;
+		gbc_lblStatusText.insets = new Insets(0, 0, 0, 5);
+		gbc_lblStatusText.gridx = 4;
+		gbc_lblStatusText.gridy = 12;
+		contentPane.add(lblStatusText, gbc_lblStatusText);
+
 		this.product = product;
 		this.editMode = editMode;
 		init();
@@ -476,29 +506,24 @@ public class ProductInformation extends JFrame {
 		listModel.clear();
 		tempCategoryList.clear();
 		if (product == null) {
-			setTitle("Tilføj produkt");
 			categoryList.setModel(listModel);
 		} else {
 			for (String element : product.getCategory()) {
 				listModel.addElement(element);
 				tempCategoryList.add(element);
 			}
-			String productInfo = product.getName() + " - " + product.getProductID();
-			setTitle(productInfo);
 			categoryList.setModel(listModel);
 			txtProductName.setText(product.getName());
 			txtProductID.setText(product.getProductID());
 			txtProductDescription.setText(product.getDescription());
 			txtBarcode.setText(product.getBarcode());
-			txtCostPrice.setText(product.getCostPriceFormatted());
-			txtSuggestedSalesPrice.setText(product.getSuggestedSalesPriceFormatted());
-			txtSalesPrice.setText(product.getSalesPriceFormatted());
+			txtCostPrice.setText(product.getCostPrice() + "");
+			txtSuggestedSalesPrice.setText(product.getSuggestedSalesPrice() + "");
+			txtSalesPrice.setText(product.getSalesPrice() + "");
 			txtStoreLocation.setText(product.getStorageLocation());
 			txtStoreAmount.setText(Integer.toString(product.getStorageAmount()));
 			txtWarehouseLocation.setText(product.getWarehouseLocation());
 			txtWarehouseAmount.setText(Integer.toString(product.getWarehouseAmount()));
-			txtProductDescription.setWrapStyleWord(true);
-			txtProductDescription.setLineWrap(true);
 		}
 	}
 
@@ -508,32 +533,28 @@ public class ProductInformation extends JFrame {
 			categoryList.setEnabled(editMode);
 			btnSave.setVisible(editMode);
 		}
+		lblTextNameStatus.setVisible(editMode);
+		lblStatusText.setVisible(editMode);
+		lblStatusText.setText("OK");
+		lblStatusText.setForeground(Color.green);
 		txtWarehouseAmount.setEnabled(editMode);
 		txtWarehouseLocation.setEnabled(editMode);
 		txtStoreAmount.setEnabled(editMode);
 		txtStoreLocation.setEnabled(editMode);
-		txtCostPrice.setEnabled(false); // Not allowed to change price
-		txtSuggestedSalesPrice.setEnabled(false); // Not allowed to change price
-		txtSalesPrice.setEnabled(false); // Not allowed to change price
+		txtSuggestedSalesPrice.setEnabled(editMode);
+		txtSalesPrice.setEnabled(editMode);
+		txtCostPrice.setEnabled(editMode);
 		txtProductName.setEnabled(editMode);
 		txtBarcode.setEnabled(editMode);
 		txtProductID.setEnabled(false); // Not allowed to edit productID
 		txtProductDescription.setEnabled(editMode);
 		btnCategoryAdd.setEnabled(editMode);
 		btnCategoryRemove.setEnabled(editMode);
-		
-		/* Set disabled textfield color */
-		txtWarehouseAmount.setDisabledTextColor(Color.gray);
-		txtWarehouseLocation.setDisabledTextColor(Color.gray);
-		txtStoreAmount.setDisabledTextColor(Color.gray);
-		txtStoreLocation.setDisabledTextColor(Color.gray);
-		txtCostPrice.setDisabledTextColor(Color.gray);
-		txtSuggestedSalesPrice.setDisabledTextColor(Color.gray);
-		txtSalesPrice.setDisabledTextColor(Color.gray);
-		txtProductName.setDisabledTextColor(Color.gray);
-		txtBarcode.setDisabledTextColor(Color.gray);
-		txtProductID.setDisabledTextColor(Color.gray);
-		txtProductDescription.setDisabledTextColor(Color.gray);
+		if (product == null) {
+			txtSuggestedSalesPrice.setEnabled(false);
+			txtSalesPrice.setEnabled(false);
+			txtCostPrice.setEnabled(false);
+		}
 	}
 
 	public void saveProduct(boolean editMode) {
@@ -544,17 +565,25 @@ public class ProductInformation extends JFrame {
 		String productID = txtProductID.getText();
 		String storeLocation = txtStoreLocation.getText();
 		String warehouseLocation = txtWarehouseLocation.getText();
+		double costPrice = 0.0;
+		double suggestedSalesPrice = 0.0;
+		double salesPrice = 0.0;
 		int storeAmount = 0;
 		int warehouseAmount = 0;
-		storeAmount = convertToNumber(txtStoreAmount.getText().toString(), "Butiksbeholdning");
-		warehouseAmount = convertToNumber(txtWarehouseAmount.getText().toString(), "Lagerbeholdning");
+		boolean success = false;
+		costPrice = convertToDouble(txtCostPrice.getText().toString(), "Indkøbspris");
+		suggestedSalesPrice = convertToDouble(txtSuggestedSalesPrice.getText().toString(), "Vejledene pris");
+		salesPrice = convertToDouble(txtSalesPrice.getText().toString(), "Salgspris");
 
-		if (!editMode) {
-			closeWindow();
-		} else if (productName.isBlank() || productDescription.isBlank()) {
+		storeAmount = convertToInteger(txtStoreAmount.getText().toString(), "butiksbeholdning");
+		warehouseAmount = convertToInteger(txtWarehouseAmount.getText().toString(), "lagerbeholdning");
+		if (statusLine.isBlank()) {
+			success = true;
+		}
+		if (productName.isBlank() || productDescription.isBlank()) {
 			JOptionPane.showMessageDialog(null, "Produktnavn og beskrivelse skal være udfyldt", "Fejl!",
 					JOptionPane.ERROR_MESSAGE);
-		} else if (editMode && productController.findProduct(productID) != null) {
+		} else if (editMode && productController.findProduct(productID) != null && success) {
 			String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
 			product.setCategory(newCategories);
 			product.setBarcode(barcode);
@@ -564,16 +593,20 @@ public class ProductInformation extends JFrame {
 			product.setWarehouseLocation(warehouseLocation);
 			product.setStorageAmount(storeAmount);
 			product.setWarehouseAmount(warehouseAmount);
-			JOptionPane.showMessageDialog(null, "Produktet er blevet opdateret", "Succes!",
+			product.setCostPrice(costPrice);
+			product.setSalesPrice(salesPrice);
+			product.setSalesPrice(salesPrice);
+			JOptionPane.showMessageDialog(null, "Produktet er blevet opdateret", "Success!",
 					JOptionPane.INFORMATION_MESSAGE);
 			closeWindow();
 		} else {
-			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null) {
+			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null
+					&& success) {
 				String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
 				Product newProduct = productController.createProduct(productName, barcode, productDescription,
 						newCategories, storeLocation, warehouseLocation, storeAmount, warehouseAmount);
 				if (productController.getAllProducts().contains(newProduct)) {
-					JOptionPane.showMessageDialog(null, "Produktet er blevet tilføjet", "Succes!",
+					JOptionPane.showMessageDialog(null, "Produktet er blevet tilføjet", "Success!",
 							JOptionPane.INFORMATION_MESSAGE);
 					closeWindow();
 				} else {
@@ -581,21 +614,43 @@ public class ProductInformation extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
+				setStatusMessage();
 				JOptionPane.showMessageDialog(null, "Produktet med det givne varenummer/stregkode findes allerede",
 						"Fejl!", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
 
-	public int convertToNumber(String input, String location) {
+	public int convertToInteger(String input, String location) {
 		int amount = 0;
 		try {
 			amount = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, location + " var ikke indtastet og er sat til 0.", "Information!",
-					JOptionPane.INFORMATION_MESSAGE);
+			statusLine += location + ", ";
 		}
 		return amount;
+	}
+
+	public double convertToDouble(String input, String priceName) {
+		double amount = 0;
+		try {
+			amount = Double.parseDouble(input);
+		} catch (NumberFormatException e) {
+			statusLine += priceName + ", ";
+		}
+		return amount;
+	}
+
+	public void setStatusMessage() {
+		if (statusLine.isBlank()) {
+			lblStatusText.setText("OK");
+			lblStatusText.setForeground(Color.green);
+		} else {
+			String yeet = statusLine.substring(0, statusLine.length()-2);
+			lblStatusText.setText("Fejl i " + yeet);
+			lblStatusText.setForeground(Color.red);
+			statusLine = "";
+		}
 	}
 
 	public void removeCategory() {
@@ -606,7 +661,7 @@ public class ProductInformation extends JFrame {
 		} else {
 			categories.remove(index);
 			updateJList(categories);
-			JOptionPane.showMessageDialog(null, "Den valgte kategori er blevet fjernet", "Succes!",
+			JOptionPane.showMessageDialog(null, "Den valgte kategori er blevet fjernet", "Success!",
 					JOptionPane.INFORMATION_MESSAGE);
 			categories.clear();
 		}
