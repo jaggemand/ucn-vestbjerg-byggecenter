@@ -1,20 +1,17 @@
 package gui;
 
-import static org.junit.Assert.assertTrue;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -30,15 +27,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingConstants;
 
 public class ProductOverview extends JFrame {
 
@@ -57,17 +49,6 @@ public class ProductOverview extends JFrame {
 	private String[] columns;
 	private boolean[] activeColumns;
 	
-	private boolean nameIsActive;
-	private boolean warehouseAmountIsActive;
-	private boolean warehouseLocationIsActive;
-	private boolean storeAmountIsActive;
-	private boolean storeLocationIsActive;
-	private boolean salePriceIsActive;
-	private boolean barcodeIsActive;
-	private boolean descriptionIsActive;
-	private boolean categoryIsActive;
-	private boolean costPriceIsActive;
-	private boolean suggestedSalesPriceIsActive;
 	
 	/**
 	 * Launch the application.
@@ -90,8 +71,8 @@ public class ProductOverview extends JFrame {
 	 */
 	
 	public ProductOverview() {
-		activeColumns = new boolean[] {true, true, true, true, true, true, false, false, false, false};
-		columns = new String[]{"Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning", "Lagerlokation", "Salgspris", "Stregkode", "Beskrivelse", "Kategori",
+		activeColumns = new boolean[] {true, true, true, true, true, true, false, false, false, true, false, false};
+		columns = new String[]{"ProduktID", "Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning", "Lagerlokation", "Salgspris", "Stregkode", "Beskrivelse", "Kategori",
 				"Kostpris", "Vejledende udsalgspris"};
 		
 		setTitle("Produktoversigt");
@@ -107,12 +88,13 @@ public class ProductOverview extends JFrame {
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
 		
-		String[] columns = {"Varenummer", "Navn", "Lagerbeholdning", "Lagerlokation", "Butiksbeholdning", "Butikslokation", "Salgspris"};
+		//String[] columns = {"Varenummer", "Navn", "Lagerbeholdning", "Lagerlokation", "Butiksbeholdning", "Butikslokation", "Salgspris", null, null};
 		
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = convertToStringArray(dataArrayList);
 		
 		table = new DefaultTable(data, columns);
+		setColumns();
 		
 		table.getTableHeader().setReorderingAllowed(false);
 		popUp = new JPopupMenu();
@@ -152,7 +134,7 @@ public class ProductOverview extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+				if(e.getClickCount() == 2 && table.getSelectedRow() != -1 && e.getButton() == 1) {
 					showProduct(false);
 				}
 				if (e.getButton() == 3 && table.getSelectedRow() != -1) {
@@ -444,7 +426,6 @@ public class ProductOverview extends JFrame {
 	private void search() {
 		
 		ArrayList<Product> products = ProductContainer.getInstance().getProducts();
-		int size = products.size();
 		ArrayList<Product> productResult = new ArrayList<>();
 		double minPrice = -1;
 		double maxPrice = -1;
@@ -501,85 +482,46 @@ public class ProductOverview extends JFrame {
 			}
 		}
 		table.setNewData(convertToStringArray(productResult));
+		setColumns();
 	}
 	
 	private String[][] convertToStringArray(ArrayList<Product> dataArrayList){
 		
 		int size = dataArrayList.size();
-		String[][] data = new String[size][7];
-		int count = 0;
-		
-		
+		String[][] data = new String[size][12];
 		for(int i = 0; i < size; i++) {
-			count = 1;
-			
 			Product current = dataArrayList.get(i);
 			data[i][0] = current.getProductID();
-			
-			if(nameIsActive) {
-				data[i][count] = current.getName();
-				count++;
-			}
-			if(storeAmountIsActive) {
-				data[i][count] = Integer.toString(current.getStorageAmount());
-				count++;
-			}
-			if(storeLocationIsActive) {
-				data[i][count] = current.getStorageLocation();
-				count++;
-			}
-			if(warehouseAmountIsActive) {
-				data[i][count] = Integer.toString(current.getWarehouseAmount());
-				count++;
-			}
-			if(warehouseLocationIsActive) {
-				data[i][5] = current.getWarehouseLocation();
-				count++;
-			}
-			if(salePriceIsActive) {
-				data[i][count] = String.valueOf(current.getSalesPrice());
-				count++;	
-			}
-			if (barcodeIsActive) {
-				data[i][count] = current.getBarcode();
-				count++;
-			}
-			if (descriptionIsActive) {
-				data[i][count] = current.getDescription();
-				count++;
-			}
-			if (categoryIsActive) {
-				data[i][count] = "temp";
-				//TODO
-			}
-			if(costPriceIsActive) {
-				data[i][count] = String.valueOf(current.getCostPrice());
-				count++;
-			}
-			if(suggestedSalesPriceIsActive) {
-				data[i][count] = String.valueOf(current.getSuggestedSalesPrice());
-				count++;
-			}
-			
+			data[i][1] = current.getName();
+			data[i][2] = Integer.toString(current.getStorageAmount());
+			data[i][3] = current.getStorageLocation();
+			data[i][4] = Integer.toString(current.getWarehouseAmount());
+			data[i][5] = current.getWarehouseLocation();
+			data[i][6] = String.valueOf(current.getSalesPrice());
+			data[i][7] = current.getBarcode();
+			data[i][8] = current.getDescription();
+			data[i][9] = String.join(", ", current.getCategory());
+			data[i][10] = String.valueOf(current.getCostPrice());
+			data[i][11] = String.valueOf(current.getSuggestedSalesPrice());
 		}
 		return data;
 	}
+	private void setColumns() {
+		for(int i = 0;i<activeColumns.length;i++) {
+			if(!activeColumns[i]) {
+				table.getColumnModel().getColumn(i).setMinWidth(0);
+				table.getColumnModel().getColumn(i).setMaxWidth(0);
+			}
+		}
+	}
 	
 	private void rowCounter() {
-		
 		lblRowCounter.setText("Antal: "+ table.getRowCount());
-		
 	}
 	
 	private void showPopUp(MouseEvent e) {
 		if (e.isPopupTrigger()) {
 			popUp.show(e.getComponent(),e.getX(), e.getY());
 		}
-	}
-	
-	private void setColumns() {
-		
-		for()
-		//TODO
 	}
 }
