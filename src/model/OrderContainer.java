@@ -1,5 +1,11 @@
 package model;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,5 +81,26 @@ public class OrderContainer {
 	 */
 	public ArrayList<Order> getOrders() {
 		return new ArrayList<>(orders);
+	}
+	
+	public void exportOrdersToFile() throws IOException {
+		FileOutputStream fos = new FileOutputStream("orders.txt");
+		ObjectOutputStream oos = new ObjectOutputStream(fos);
+		test();
+		for(Order e : orders) {
+			oos.writeObject(e);
+		}
+		oos.flush();
+		oos.close();
+	}
+	
+	public void importOrdersFromFile() throws IOException {
+		FileInputStream fis = new FileInputStream("orders.txt");
+		ObjectInputStream ois = new ObjectInputStream(fis);
+		
+	}
+	
+	private void test() {
+		orders.add(new Order(true));
 	}
 }

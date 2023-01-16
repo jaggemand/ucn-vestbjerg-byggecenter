@@ -18,8 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import controller.OrderController;
 import controller.ProductController;
@@ -36,6 +37,8 @@ public class CashRegister extends JFrame {
 	private JScrollPane scrollPane;
 	private OrderController orderController;
 	private JLabel lblStatus;
+	private JLabel lblTotal;
+	private JLabel lblVat;
 	/**
 	 * Launch the application.
 	 */
@@ -56,6 +59,8 @@ public class CashRegister extends JFrame {
 	 * Create the frame.
 	 */
 	public CashRegister() {
+		setTitle("Kassesalg");
+		
 		orderController = new OrderController();
 		orderController.createOrder(true);
 		
@@ -75,18 +80,23 @@ public class CashRegister extends JFrame {
 		JButton btnPayment = new JButton("Betaling");
 		btnPayment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				OrderController oc = new OrderController();
-				oc.createOrder(true);
-				Order finishedOrder = addItemsToOrder(oc.getCurrentOrder());
-				oc.addOrder();
+				buttonPaymentPressed();
 			}
 		});
+		
+		JButton btnCancleCurrentSale = new JButton("Afbryd salg");
+		btnCancleCurrentSale.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonCancleCurrentSalePressed();
+			}
+		});
+		panel.add(btnCancleCurrentSale);
 		panel.add(btnPayment);
 		
 		JButton btnCancle = new JButton("Afbryd");
 		btnCancle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				buttonCanclePressed();
 			}
 		});
 		panel.add(btnCancle);
@@ -158,50 +168,48 @@ public class CashRegister extends JFrame {
 		
 		JPanel panel_3 = new JPanel();
 		panel_2.add(panel_3, BorderLayout.SOUTH);
-		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_3.rowHeights = new int[]{0,0,0};
-		gbl_panel_3.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{Double.MIN_VALUE};
-		panel_3.setLayout(gbl_panel_3);
+		panel_3.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_UnderTableEast = new JPanel();
+		FlowLayout fl_panel_UnderTableEast = (FlowLayout) panel_UnderTableEast.getLayout();
+		fl_panel_UnderTableEast.setAlignment(FlowLayout.RIGHT);
+		panel_3.add(panel_UnderTableEast, BorderLayout.EAST);
+		
+		lblVat = new JLabel("");
+		panel_UnderTableEast.add(lblVat);
+		
+		lblTotal = new JLabel("Total:");
+		panel_UnderTableEast.add(lblTotal);
+		
+		JPanel panel_UnderTableWest = new JPanel();
+		panel_3.add(panel_UnderTableWest, BorderLayout.WEST);
 		
 		lblStatus = new JLabel("");
-		GridBagConstraints gbc_lblStatus = new GridBagConstraints();
-		gbc_lblStatus.gridwidth = 2;
-		gbc_lblStatus.anchor = GridBagConstraints.WEST;
-		gbc_lblStatus.insets = new Insets(0, 0, 5, 5);
-		gbc_lblStatus.gridx = 0;
-		gbc_lblStatus.gridy = 1;
-		panel_3.add(lblStatus, gbc_lblStatus);
-		
-		JLabel lblTotal = new JLabel("Total:");
-		GridBagConstraints gbc_lblTotal = new GridBagConstraints();
-		gbc_lblTotal.gridwidth = 2;
-		gbc_lblTotal.anchor = GridBagConstraints.WEST;
-		gbc_lblTotal.insets = new Insets(0, 0, 5, 0);
-		gbc_lblTotal.gridx = 8;
-		gbc_lblTotal.gridy = 1;
-		panel_3.add(lblTotal, gbc_lblTotal);
-		
-		JLabel lblTotalVat = new JLabel("Total u/ moms");
-		GridBagConstraints gbc_lblTotalVat = new GridBagConstraints();
-		gbc_lblTotalVat.gridwidth = 2;
-		gbc_lblTotalVat.anchor = GridBagConstraints.WEST;
-		gbc_lblTotalVat.gridx = 8;
-		gbc_lblTotalVat.gridy = 2;
-		panel_3.add(lblTotalVat, gbc_lblTotalVat);
+		panel_UnderTableWest.add(lblStatus);
 		
 		
 		
 		scrollPane = new JScrollPane();
 		panel_2.add(scrollPane, BorderLayout.CENTER);
-		
-		String[] columns = { "Varenummer", "Navn", "Antal", "Pris"};
-		
+		initTable();
+	}
+	
+	private void initTable() {
+		String[] columns = { "Varenummer", "Navn", "Antal", "Pris", "Total"};
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
 		scrollPane.setViewportView(table);
+		//Only allows user to select single a single row at the time
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//User cannot change the ordering of the columns
+		table.getTableHeader().setReorderingAllowed(false);
+		//Make custom cellRenderer and give column 3, 4, 5 the new renderer
+		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(2).setCellRenderer(cellRenderer);
+		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
+		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
 	}
 	
 	private void updateCartTable(String[] data) {
@@ -251,25 +259,14 @@ public class CashRegister extends JFrame {
 	}
 	private void buttonAmountPressed() {
 			int row = table.getSelectedRow();
-			int newAmount = -1;
 			if(row != -1) {
-				DialogAmount newAmountDialog = new DialogAmount();
+				DialogAmount newAmountDialog = new DialogAmount(orderController.getCurrentOrder().getOrderLines().get(row));
 				newAmountDialog.setVisible(true);
-				newAmount = newAmountDialog.getNewAmount();
-				
-				if(newAmountDialog.getNewAmount() != -1) {
-					orderController.getCurrentOrder().getOrderLines().get(row).setQuantity(newAmountDialog.getNewAmount());
-					updateTable();
-				}
-				else {
-					//Amount set canceled
-				}
+				updateTable();
 			}
 			else {
-				//No row selected
+				makeStatusMessage("Ingen række valgt", true);
 			}
-			
-			
 	}
 	
 	private void buttonDeletePressed() {
@@ -289,9 +286,37 @@ public class CashRegister extends JFrame {
 			}
 		}
 		else {
-			//No row selected
+			makeStatusMessage("Ingen række valgt", true);
 		}
-		
+	}
+	
+	private void buttonPaymentPressed() {
+		if(table.getModel().getRowCount() > 0) {
+			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil gennemføre betalingen", "Betaling",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+					new Object[] { "Betal", "Tilbage" }, JOptionPane.YES_OPTION);
+			if(input == 0) {
+				orderController.addOrder();
+				resetFrame();
+			}
+		}
+		else {
+			makeStatusMessage("Ingen produkter er scannet", true);
+		}
+	}
+	
+	private void buttonCancleCurrentSalePressed() {
+		if(table.getModel().getRowCount() < 1) {
+			resetFrame();
+		}
+		else {
+			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg?", "Afbryd salg",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);
+			if(input == 0) {
+				resetFrame();
+			}
+		}
 	}
 	
 	private void buttonDetailsPressed() {
@@ -307,15 +332,82 @@ public class CashRegister extends JFrame {
 		}
 	}
 	
+	private void buttonCanclePressed() {
+		if(table.getModel().getRowCount() < 1) {
+			dispose();
+		}
+		else {
+			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg og lukke modulet", "Afbryd salg og luk modul?",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);
+			if(input == 0) {
+				dispose();
+			}
+		}
+	}
+	
 	private void updateTable() {
 		table.clear();
 		for(OrderLine ol : orderController.getCurrentOrder().getOrderLines()) {
-			String[] metaData = new String[4];
-			metaData[0] = ol.getProduct().getName();
-			metaData[1] = ol.getProduct().getDescription();
+			String[] metaData = new String[5];
+			metaData[0] = ol.getProduct().getBarcode();
+			metaData[1] = ol.getProduct().getName();
 			metaData[2] = "" + ol.getQuantity();
 			metaData[3] = ol.getProduct().getSalesPriceFormatted();
+			metaData[4] = "Wait for format";
 			table.addRow(metaData);
 		}
+		calculateRowTotals();
+		updateTotal();
+	}
+	
+	private void makeStatusMessage(String message, boolean isCorrelatedWithError) {
+		lblStatus.setText(message);
+		if(isCorrelatedWithError) {
+			lblStatus.setBackground(Color.RED);
+		}
+		else {
+			lblStatus.setBackground(Color.BLACK);
+		}
+	}
+	
+	private void calculateRowTotals() {
+		int rowsToCalculate = orderController.getCurrentOrder().getOrderLines().size();
+		ArrayList<OrderLine> ol = orderController.getCurrentOrder().getOrderLines();
+		double productSalesPrice = 0;
+		String rowAmount = "";
+		String rowTotal = "";
+		for(int i = 0; i < rowsToCalculate; i++) {
+			productSalesPrice = ol.get(i).getProduct().getSalesPrice();
+			rowAmount = (String) table.getModel().getValueAt(i, 2);
+			rowTotal = getPriceFormatted(productSalesPrice * Integer.parseInt(rowAmount));
+			table.getModel().setValueAt(rowTotal, i, 4);
+		}
+	}
+	
+	private String getPriceFormatted(double price) {
+		DecimalFormat df = new DecimalFormat("0.00");
+		return df.format(price);
+	}
+	
+	private void updateTotal() {
+		double total = 0;
+		ArrayList<OrderLine> ol = orderController.getCurrentOrder().getOrderLines();
+		for(int i = 0; i < ol.size(); i++) {
+			total += (ol.get(i).getProduct().getSalesPrice() * ol.get(i).getQuantity());
+		}
+		lblTotal.setText("Total: " + getPriceFormatted(total));
+		updateVAT(total);
+	}
+	
+	private void updateVAT(double price) {
+		lblVat.setText("moms: " + getPriceFormatted(price / 5));
+	}
+	
+	private void resetFrame() {
+		dispose();
+		CashRegister cashRegister = new CashRegister();
+		cashRegister.setVisible(true);
+		cashRegister.setBounds(this.getBounds());
 	}
 }

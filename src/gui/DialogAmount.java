@@ -8,6 +8,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.OrderLine;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
@@ -18,35 +21,35 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class DialogAmount extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String newAmountString;
 	private int newAmount;
 	private JSpinner spinner;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogAmount dialog = new DialogAmount();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	private JTextField txtProductName;
+	private OrderLine orderLine;
 
 	/**
 	 * Create the dialog.
 	 */
-	public DialogAmount() {
+	public DialogAmount(OrderLine orderLine) {
+		this.orderLine = orderLine;
 		newAmount = 0;
 		setTitle("Vælg total antal");
 		setResizable(false);
 		setModal(true);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 234, 147);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -56,27 +59,47 @@ public class DialogAmount extends JDialog {
 			contentPanel.add(panel, BorderLayout.CENTER);
 			GridBagLayout gbl_panel = new GridBagLayout();
 			gbl_panel.columnWidths = new int[]{0, 0, 75, 0, 0};
-			gbl_panel.rowHeights = new int[]{0, 0, 0, 0};
-			gbl_panel.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-			gbl_panel.rowWeights = new double[]{1.0, 0.0, 1.0, Double.MIN_VALUE};
+			gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0};
+			gbl_panel.columnWeights = new double[]{1.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
+			gbl_panel.rowWeights = new double[]{1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 			panel.setLayout(gbl_panel);
+			{
+				JLabel lblNewLabel_1 = new JLabel("Produktnavn:");
+				GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+				gbc_lblNewLabel_1.anchor = GridBagConstraints.EAST;
+				gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
+				gbc_lblNewLabel_1.gridx = 1;
+				gbc_lblNewLabel_1.gridy = 1;
+				panel.add(lblNewLabel_1, gbc_lblNewLabel_1);
+			}
+			{
+				txtProductName = new JTextField(orderLine.getProduct().getName());
+				txtProductName.setEditable(false);
+				GridBagConstraints gbc_txtProductName = new GridBagConstraints();
+				gbc_txtProductName.insets = new Insets(0, 0, 5, 5);
+				gbc_txtProductName.fill = GridBagConstraints.HORIZONTAL;
+				gbc_txtProductName.gridx = 2;
+				gbc_txtProductName.gridy = 1;
+				panel.add(txtProductName, gbc_txtProductName);
+				txtProductName.setColumns(10);
+			}
 			{
 				JLabel lblNewLabel = new JLabel("Antal:");
 				GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 				gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
 				gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 				gbc_lblNewLabel.gridx = 1;
-				gbc_lblNewLabel.gridy = 1;
+				gbc_lblNewLabel.gridy = 2;
 				panel.add(lblNewLabel, gbc_lblNewLabel);
 			}
 			{
 				spinner = new JSpinner();
-				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(0), null, Integer.valueOf(1)));
+				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 				GridBagConstraints gbc_spinner = new GridBagConstraints();
 				gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
 				gbc_spinner.insets = new Insets(0, 0, 5, 5);
 				gbc_spinner.gridx = 2;
-				gbc_spinner.gridy = 1;
+				gbc_spinner.gridy = 2;
 				panel.add(spinner, gbc_spinner);
 			}
 		}
@@ -108,17 +131,28 @@ public class DialogAmount extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		initialize();
 	}
 	
+	private void initialize() {
+
+		spinner.setModel(new SpinnerNumberModel(orderLine.getQuantity(), Integer.valueOf(0), null, Integer.valueOf(1)));
+		
+	}
+
 	//TODO: Docs
 	//Stores the value in the spinnerbox
 	
 	private void buttonOKPressed() {
 		try {
-			newAmount = Integer.parseInt(spinner.getModel().getValue().toString());
+			newAmountString = spinner.getValue() + "";
+			
+			newAmount = Integer.parseInt(newAmountString);
+			
+			orderLine.setQuantity(newAmount);
 			this.dispose();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(new JFrame(),"Antal skal være et helt tal");
+			JOptionPane.showMessageDialog(new JFrame(),"Antal skal være et helt tal (positivt)");
 		}
 		
 		

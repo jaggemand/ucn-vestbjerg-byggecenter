@@ -21,6 +21,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SpinnerNumberModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class DialogItemAdd extends JDialog {
 	private JTextField textFieldBarcode;
@@ -55,7 +57,7 @@ public class DialogItemAdd extends JDialog {
 		setResizable(false);
 		setTitle("Tilføj produkt");
 		setModal(true);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 345, 163);
 		getContentPane().setLayout(new BorderLayout());
 		{
 			JPanel buttonPane = new JPanel();
@@ -71,7 +73,7 @@ public class DialogItemAdd extends JDialog {
 				});
 				btnOK.setActionCommand("OK");
 				buttonPane.add(btnOK);
-				getRootPane().setDefaultButton(btnOK);
+//				getRootPane().setDefaultButton(btnOK);
 			}
 			{
 				JButton cancelButton = new JButton("Afbryd");
@@ -88,9 +90,9 @@ public class DialogItemAdd extends JDialog {
 			JPanel panel = new JPanel();
 			getContentPane().add(panel, BorderLayout.CENTER);
 			GridBagLayout gbl_panel = new GridBagLayout();
-			gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+			gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
 			gbl_panel.rowHeights = new int[]{10, 0, 0, 0, 0, 0};
-			gbl_panel.columnWeights = new double[]{1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+			gbl_panel.columnWeights = new double[]{1.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
 			gbl_panel.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 			panel.setLayout(gbl_panel);
 			{
@@ -105,6 +107,14 @@ public class DialogItemAdd extends JDialog {
 			}
 			{
 				textFieldBarcode = new JTextField();
+				textFieldBarcode.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyReleased(KeyEvent e) {
+						if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+							buttonSearchPressed();
+						}
+					}
+				});
 				GridBagConstraints gbc_textFieldBarcode = new GridBagConstraints();
 				gbc_textFieldBarcode.insets = new Insets(0, 0, 5, 5);
 				gbc_textFieldBarcode.fill = GridBagConstraints.HORIZONTAL;
@@ -173,6 +183,7 @@ public class DialogItemAdd extends JDialog {
 		newProduct = pController.findProduct(textFieldBarcode.getText());
 		if(newProduct != null) {
 			btnOK.setEnabled(true);
+			getRootPane().setDefaultButton(btnOK);
 			textFieldProductName.setText(newProduct.getName());
 		}
 		else {
