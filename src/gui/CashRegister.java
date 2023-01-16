@@ -195,9 +195,11 @@ public class CashRegister extends JFrame {
 		
 		scrollPane = new JScrollPane();
 		panel_2.add(scrollPane, BorderLayout.CENTER);
-		
+		initTable();
+	}
+	
+	private void initTable() {
 		String[] columns = { "Varenummer", "Navn", "Antal", "Pris"};
-		
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
