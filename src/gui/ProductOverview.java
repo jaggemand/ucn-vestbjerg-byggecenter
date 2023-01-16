@@ -9,10 +9,13 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,14 +24,21 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.SwingConstants;
 
 public class ProductOverview extends JFrame {
 
@@ -41,7 +51,24 @@ public class ProductOverview extends JFrame {
 	private JComboBox<String> jcbCategories;
 	private JCheckBox jrbStoreLocation;
 	private JCheckBox jrbWarehouseLocation;
-
+	private String firstElement;
+	private JLabel lblRowCounter;
+	private JPopupMenu popUp;
+	private String[] columns;
+	private boolean[] activeColumns;
+	
+	private boolean nameIsActive;
+	private boolean warehouseAmountIsActive;
+	private boolean warehouseLocationIsActive;
+	private boolean storeAmountIsActive;
+	private boolean storeLocationIsActive;
+	private boolean salePriceIsActive;
+	private boolean barcodeIsActive;
+	private boolean descriptionIsActive;
+	private boolean categoryIsActive;
+	private boolean costPriceIsActive;
+	private boolean suggestedSalesPriceIsActive;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -61,7 +88,13 @@ public class ProductOverview extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	
 	public ProductOverview() {
+		activeColumns = new boolean[] {true, true, true, true, true, true, false, false, false, false};
+		columns = new String[]{"Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning", "Lagerlokation", "Salgspris", "Stregkode", "Beskrivelse", "Kategori",
+				"Kostpris", "Vejledende udsalgspris"};
+		
+		setTitle("Produktoversigt");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 923, 644);
 		contentPane = new JPanel();
@@ -74,12 +107,60 @@ public class ProductOverview extends JFrame {
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
 		
-		String[] columns = { "Varenummer", "Navn", "Lagerbeholdning", "Lagerlokation", "Butiksbeholdning", "Butikslokation"};
+		String[] columns = {"Varenummer", "Navn", "Lagerbeholdning", "Lagerlokation", "Butiksbeholdning", "Butikslokation", "Salgspris"};
 		
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = convertToStringArray(dataArrayList);
 		
 		table = new DefaultTable(data, columns);
+		
+		table.getTableHeader().setReorderingAllowed(false);
+		popUp = new JPopupMenu();
+		JMenuItem details = new JMenuItem("Vis detaljer");
+		JMenuItem edit = new JMenuItem("Rediger produkt");
+		JMenuItem delete = new JMenuItem("Slet produkt");
+		
+		popUp.add(details);
+		popUp.add(edit);
+		popUp.add(delete);
+		
+		ActionListener alDetails = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				String s = e.getActionCommand();
+				
+				if (s.equals("Vis detaljer")) {
+					showProduct(false);
+				}
+				else if (s.equals("Rediger produkt")){
+					showProduct(true);
+				}
+				else if (s.equals("Slet produkt")){
+					table.selectedProductID();
+					table.deleteData();
+					rowCounter();
+				}
+			}
+		};
+		
+		details.addActionListener(alDetails);
+		edit.addActionListener(alDetails);
+		delete.addActionListener(alDetails);
+		
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(e.getClickCount() == 2 && table.getSelectedRow() != -1) {
+					showProduct(false);
+				}
+				if (e.getButton() == 3 && table.getSelectedRow() != -1) {
+					showPopUp(e);
+				}
+			}
+		});
+		
 		scrollPane.setViewportView(table);
 		JPanel panel = new JPanel();
 		panel.setLayout(getLayout());
@@ -92,7 +173,7 @@ public class ProductOverview extends JFrame {
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblFilter = new JLabel("Filtre");
-		lblFilter.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblFilter.setFont(new Font("Tahoma", Font.BOLD, 14));
 		GridBagConstraints gbc_lblFilter = new GridBagConstraints();
 		gbc_lblFilter.anchor = GridBagConstraints.WEST;
 		gbc_lblFilter.insets = new Insets(0, 0, 5, 5);
@@ -100,19 +181,14 @@ public class ProductOverview extends JFrame {
 		gbc_lblFilter.gridy = 0;
 		panel.add(lblFilter, gbc_lblFilter);
 		
-		JButton btnSearch = new JButton("Søg");
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				search();
-			}
-		});
-		
-		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
-		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
-		gbc_btnSearch.fill = GridBagConstraints.BOTH;
-		gbc_btnSearch.gridx = 11;
-		gbc_btnSearch.gridy = 0;
-		panel.add(btnSearch, gbc_btnSearch);
+		JLabel lblCategories = new JLabel("Kategorier");
+		lblCategories.setFont(new Font("Tahoma", Font.BOLD, 12));
+		GridBagConstraints gbc_lblCategories = new GridBagConstraints();
+		gbc_lblCategories.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblCategories.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCategories.gridx = 1;
+		gbc_lblCategories.gridy = 1;
+		panel.add(lblCategories, gbc_lblCategories);
 		
 		jrbStoreLocation = new JCheckBox("Butik");
 		jrbStoreLocation.setSelected(true);
@@ -124,17 +200,18 @@ public class ProductOverview extends JFrame {
 		panel.add(jrbStoreLocation, gbc_jrbStoreLocation);
 		
 		JLabel lblMinPrice = new JLabel("Min Pris");
-		lblMinPrice.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblMinPrice.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_lblMinPrice = new GridBagConstraints();
-		gbc_lblMinPrice.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblMinPrice.fill = GridBagConstraints.BOTH;
 		gbc_lblMinPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_lblMinPrice.gridx = 3;
 		gbc_lblMinPrice.gridy = 1;
 		panel.add(lblMinPrice, gbc_lblMinPrice);
 		
 		JLabel lblMaxPrice = new JLabel("Max Pris");
-		lblMaxPrice.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblMaxPrice.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_lblMaxPrice = new GridBagConstraints();
+		gbc_lblMaxPrice.fill = GridBagConstraints.VERTICAL;
 		gbc_lblMaxPrice.anchor = GridBagConstraints.WEST;
 		gbc_lblMaxPrice.insets = new Insets(0, 0, 5, 5);
 		gbc_lblMaxPrice.gridx = 4;
@@ -142,27 +219,13 @@ public class ProductOverview extends JFrame {
 		panel.add(lblMaxPrice, gbc_lblMaxPrice);
 		
 		JLabel lblProductName = new JLabel("Produkt Navn");
-		lblProductName.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblProductName.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_lblProductName = new GridBagConstraints();
 		gbc_lblProductName.anchor = GridBagConstraints.WEST;
 		gbc_lblProductName.insets = new Insets(0, 0, 5, 5);
 		gbc_lblProductName.gridx = 6;
 		gbc_lblProductName.gridy = 1;
 		panel.add(lblProductName, gbc_lblProductName);
-		
-		JButton btnUpdate = new JButton("Vis alt");
-		btnUpdate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String[][] data = convertToStringArray(ProductContainer.getInstance().getProducts());
-				table.setNewData(data);
-			}
-		});
-		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
-		gbc_btnUpdate.insets = new Insets(0, 0, 5, 0);
-		gbc_btnUpdate.fill = GridBagConstraints.BOTH;
-		gbc_btnUpdate.gridx = 11;
-		gbc_btnUpdate.gridy = 1;
-		panel.add(btnUpdate, gbc_btnUpdate);
 		
 		jcbCategories = new JComboBox();
 		GridBagConstraints gbc_jcbCategories = new GridBagConstraints();
@@ -171,7 +234,8 @@ public class ProductOverview extends JFrame {
 		gbc_jcbCategories.gridx = 1;
 		gbc_jcbCategories.gridy = 2;
 		panel.add(jcbCategories, gbc_jcbCategories);
-		jcbCategories.addItem("Kategorier");
+		firstElement = "Vælg kategori";
+		jcbCategories.addItem(firstElement);
 		
 		jrbWarehouseLocation = new JCheckBox("Lager");
 		jrbWarehouseLocation.setSelected(true);
@@ -209,6 +273,36 @@ public class ProductOverview extends JFrame {
 		gbc_txtProductName.gridy = 2;
 		panel.add(txtProductName, gbc_txtProductName);
 		
+		JButton btnSearch = new JButton("Søg");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				search();
+				rowCounter();
+			}
+		});
+		
+		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
+		gbc_btnSearch.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSearch.fill = GridBagConstraints.BOTH;
+		gbc_btnSearch.gridx = 7;
+		gbc_btnSearch.gridy = 2;
+		panel.add(btnSearch, gbc_btnSearch);
+		
+		JButton btnUpdate = new JButton("Nulstil");
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String[][] data = convertToStringArray(ProductContainer.getInstance().getProducts());
+				table.setNewData(data);
+				rowCounter();
+			}
+		});
+		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
+		gbc_btnUpdate.insets = new Insets(0, 0, 5, 5);
+		gbc_btnUpdate.fill = GridBagConstraints.BOTH;
+		gbc_btnUpdate.gridx = 8;
+		gbc_btnUpdate.gridy = 2;
+		panel.add(btnUpdate, gbc_btnUpdate);
+		
 		JPanel panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.EAST);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
@@ -236,7 +330,7 @@ public class ProductOverview extends JFrame {
 		JButton btnEdit = new JButton("Rediger");
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				editProduct();
+				showProduct(true);
 			}
 		});
 		
@@ -250,7 +344,7 @@ public class ProductOverview extends JFrame {
 		JButton btnDetails = new JButton("Detaljer");
 		btnDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				detailsProduct();
+				showProduct(true);
 			}
 		});
 		
@@ -266,6 +360,7 @@ public class ProductOverview extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				table.selectedProductID();
 				table.deleteData();
+				rowCounter();
 			}
 		});
 		
@@ -277,7 +372,12 @@ public class ProductOverview extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
-		panel_2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		GridBagLayout gbl_panel_2 = new GridBagLayout();
+		gbl_panel_2.columnWidths = new int[]{806, 30, 0, 59, 0, 0};
+		gbl_panel_2.rowHeights = new int[]{21, 0};
+		gbl_panel_2.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_2.setLayout(gbl_panel_2);
 		
 		JButton btnClose = new JButton("Afslut");
 		btnClose.addActionListener(new ActionListener() {
@@ -286,40 +386,59 @@ public class ProductOverview extends JFrame {
 			}
 		});
 		
-		panel_2.add(btnClose);
+		lblRowCounter = new JLabel("Antal: "+ table.getRowCount());
+		GridBagConstraints gbc_lblRowCounter = new GridBagConstraints();
+		gbc_lblRowCounter.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblRowCounter.insets = new Insets(0, 0, 0, 5);
+		gbc_lblRowCounter.gridx = 0;
+		gbc_lblRowCounter.gridy = 0;
+		panel_2.add(lblRowCounter, gbc_lblRowCounter);
+		
+		
+		GridBagConstraints gbc_btnClose = new GridBagConstraints();
+		gbc_btnClose.insets = new Insets(0, 0, 0, 5);
+		gbc_btnClose.anchor = GridBagConstraints.NORTHWEST;
+		gbc_btnClose.gridx = 3;
+		gbc_btnClose.gridy = 0;
+		panel_2.add(btnClose, gbc_btnClose);
 		
 		//Initialize window
 		initializeWindow();
-		
 	}
+	
+	
 	private void closeWindow() {
 		this.dispose();
 		this.setVisible(false);
-		
 	}
 
 	private void initializeWindow() {
 		//Fill categories into the combobox
 		//TODO cant access model layer directly???!!
-		for(String e : ProductContainer.getInstance().getCategories()) {
+		ArrayList<String> categories = new ArrayList<>(ProductContainer.getInstance().getCategories());
+		
+		Collections.sort(categories);
+		
+		for(String e : categories) {
 			jcbCategories.addItem(e);
+			
 		}
 	}
 	
-	private void editProduct() {
-		int index = table.findElement();
-		Product product = ProductContainer.getInstance().getProducts().get(index);
-		
-		ProductInformation productInformation = new ProductInformation(product, true);
-		productInformation.setVisible(true);
-	}
 	
-	private void detailsProduct() {
+	private void showProduct(boolean edit) {
 		int index = table.findElement();
-		Product product = ProductContainer.getInstance().getProducts().get(index);
-		
-		ProductInformation productInformation = new ProductInformation(product, false);
-		productInformation.setVisible(true);
+
+		if (index == -1) {
+			table.errorMessage("Intet produkt valgt", "Fejl");
+		}
+		else {
+			ProductController productController = new ProductController();
+			Product product = productController.findProduct(table.getValueAt(index, 0).toString());
+			
+			ProductInformation productInformation = new ProductInformation(product, edit);
+			productInformation.setVisible(true);
+		}
 	}
 	
 	private void search() {
@@ -331,11 +450,30 @@ public class ProductOverview extends JFrame {
 		double maxPrice = -1;
 		
 		if (txtMinPrice.getText().length() != 0) {
-			minPrice = Double.parseDouble(txtMinPrice.getText());
+			try {
+				minPrice = Double.parseDouble(txtMinPrice.getText());
+				
+			} catch (NumberFormatException e) {
+				table.errorMessage("Input skal være et tal", "Fejl: Minimums pris");
+				return;
+			}
 		}
 			
 		if (txtMaxPrice.getText().length() != 0) {
-			maxPrice = Double.parseDouble(txtMaxPrice.getText());
+			try {
+				maxPrice = Double.parseDouble(txtMaxPrice.getText());
+			} catch (NumberFormatException e) {
+				table.errorMessage("Input skal være et tal", "Fejl: Maximums pris");
+				return;
+			}
+		}
+		
+		if (minPrice > maxPrice) {
+			double temp = minPrice;
+			minPrice = maxPrice;
+			maxPrice = temp;
+			txtMinPrice.setText(String.valueOf(minPrice));
+			txtMaxPrice.setText(String.valueOf(maxPrice));
 		}
 		
 		Iterator<Product> it = products.iterator();
@@ -348,7 +486,7 @@ public class ProductOverview extends JFrame {
 			if(p.getName().toLowerCase().contains(txtProductName.getText().toLowerCase()) || txtProductName.getText().length() == 0) {
 				if (p.getSalesPrice() >= minPrice || minPrice == -1 ) {
 					if(p.getSalesPrice() <= maxPrice || maxPrice == -1) {
-						if (categories.contains(jcbCategories.getSelectedItem()) || jcbCategories.getSelectedItem().equals("Kategorier")) {
+						if (categories.contains(jcbCategories.getSelectedItem()) || jcbCategories.getSelectedItem().equals(firstElement)) {
 							if (jrbWarehouseLocation.isSelected() == true && p.getWarehouseAmount() > 0) {
 								productResult.add(p);
 							}else if (jrbStoreLocation.isSelected() == true && p.getStorageAmount() > 0) {
@@ -366,18 +504,82 @@ public class ProductOverview extends JFrame {
 	}
 	
 	private String[][] convertToStringArray(ArrayList<Product> dataArrayList){
+		
 		int size = dataArrayList.size();
-		String[][] data = new String[size][6];
+		String[][] data = new String[size][7];
+		int count = 0;
+		
 		
 		for(int i = 0; i < size; i++) {
+			count = 1;
+			
 			Product current = dataArrayList.get(i);
 			data[i][0] = current.getProductID();
-			data[i][1] = current.getName();
-			data[i][2] = Integer.toString(current.getStorageAmount());
-			data[i][3] = current.getStorageLocation();
-			data[i][4] = Integer.toString(current.getWarehouseAmount());
-			data[i][5] = current.getWarehouseLocation();
+			
+			if(nameIsActive) {
+				data[i][count] = current.getName();
+				count++;
+			}
+			if(storeAmountIsActive) {
+				data[i][count] = Integer.toString(current.getStorageAmount());
+				count++;
+			}
+			if(storeLocationIsActive) {
+				data[i][count] = current.getStorageLocation();
+				count++;
+			}
+			if(warehouseAmountIsActive) {
+				data[i][count] = Integer.toString(current.getWarehouseAmount());
+				count++;
+			}
+			if(warehouseLocationIsActive) {
+				data[i][5] = current.getWarehouseLocation();
+				count++;
+			}
+			if(salePriceIsActive) {
+				data[i][count] = String.valueOf(current.getSalesPrice());
+				count++;	
+			}
+			if (barcodeIsActive) {
+				data[i][count] = current.getBarcode();
+				count++;
+			}
+			if (descriptionIsActive) {
+				data[i][count] = current.getDescription();
+				count++;
+			}
+			if (categoryIsActive) {
+				data[i][count] = "temp";
+				//TODO
+			}
+			if(costPriceIsActive) {
+				data[i][count] = String.valueOf(current.getCostPrice());
+				count++;
+			}
+			if(suggestedSalesPriceIsActive) {
+				data[i][count] = String.valueOf(current.getSuggestedSalesPrice());
+				count++;
+			}
+			
 		}
 		return data;
+	}
+	
+	private void rowCounter() {
+		
+		lblRowCounter.setText("Antal: "+ table.getRowCount());
+		
+	}
+	
+	private void showPopUp(MouseEvent e) {
+		if (e.isPopupTrigger()) {
+			popUp.show(e.getComponent(),e.getX(), e.getY());
+		}
+	}
+	
+	private void setColumns() {
+		
+		for()
+		//TODO
 	}
 }

@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -75,7 +76,18 @@ public class DefaultTable extends JTable {
 				}
 			}
 		}
+		else {
+			
+			errorMessage("Marker én linje der skal slettes", "Bekræft slet");
+		}
 	}
+	
+	public void errorMessage(String message, String title) {
+		
+		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), message, title, 0,
+				JOptionPane.INFORMATION_MESSAGE, null, new String[] {"OK"}, null);
+	}
+	
 	
 	private boolean deleteItems(int amountQty) {
 		
@@ -86,22 +98,25 @@ public class DefaultTable extends JTable {
 			products.append("\t" + tabelModel.getValueAt(rows[i],1));
 			products.append("\n");
 		}
-		JLabel label = new JLabel("Vil du gerne slette disse produkter");
+		
+		JLabel label = new JLabel("Følgende produkter slettes:");
 		label.setFont(new Font("Tahoma", Font.BOLD, 16));
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		panel.add(label, BorderLayout.NORTH);
 		
 		JTextArea textArea = new JTextArea(products.toString());
+		textArea.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(textArea);
 		panel.add(scrollPane, BorderLayout.WEST);
 		textArea.setLineWrap(true);
 		textArea.setWrapStyleWord(true); 
 		scrollPane.setPreferredSize(new Dimension(350, 150));
 		
-		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Afslut program",
+		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet produkter",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-					new Object[] { "Ja", "Nej" }, JOptionPane.YES_OPTION);
+					new Object[] {"Ja", "Nej" }, JOptionPane.YES_OPTION);
+		
 		
 		return input == 0;
 	}
@@ -113,8 +128,8 @@ public class DefaultTable extends JTable {
 		else {
 			return -1;
 		}
-		
 	}
+
 	
 	public void addRow(String[] data) {
 		tabelModel.addRow(data);

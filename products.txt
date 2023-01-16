@@ -2,8 +2,15 @@
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Søm;13E;45B;1000;600;45.0;26.3;45.0
+Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
+Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Søm;13E;45B;1000;600;45.0;26.3;45.0
+Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
+Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
+Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
+Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
+Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
+Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
@@ -14,56 +21,7 @@ Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
+Stor søm;1234;7";test,test 3,Plastik,Lister;testLoc;testLoc2;0;0;10.0;0.0;0.0
 4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
 4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
 4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
