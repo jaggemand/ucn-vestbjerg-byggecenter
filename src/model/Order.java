@@ -3,12 +3,13 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * It's a class that represents an order.
  */
-public class Order {
+public class Order implements Serializable {
 	private static int tempOrderNumber;
 	private String orderNumber;
 	private LocalDate date;
