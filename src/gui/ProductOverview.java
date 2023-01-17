@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -45,9 +46,12 @@ public class ProductOverview extends JFrame {
 	private JCheckBox jrbWarehouseLocation;
 	private String firstElement;
 	private JLabel lblRowCounter;
+	
 	private JPopupMenu popUp;
+	
 	private String[] columns;
 	private boolean[] activeColumns;
+	
 	
 	
 	/**
@@ -71,10 +75,10 @@ public class ProductOverview extends JFrame {
 	 */
 	
 	public ProductOverview() {
-		activeColumns = new boolean[] {true, true, true, true, true, true, false, false, false, true, false, false};
-		columns = new String[]{"ProduktID", "Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning", "Lagerlokation", "Salgspris", "Stregkode", "Beskrivelse", "Kategori",
-				"Kostpris", "Vejledende udsalgspris"};
-		
+		activeColumns = new boolean[] {true, true, true, true, true, true, false, false, false, false, false, false};
+		columns = new String[]{"ProduktID", "Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning", "Lagerlokation", "Salgspris", 
+								"Stregkode", "Beskrivelse", "Kategori",	"Kostpris", "Vejledende salgspris"};
+	
 		setTitle("Produktoversigt");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 923, 644);
@@ -87,61 +91,51 @@ public class ProductOverview extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
-		
-		//String[] columns = {"Varenummer", "Navn", "Lagerbeholdning", "Lagerlokation", "Butiksbeholdning", "Butikslokation", "Salgspris", null, null};
-		
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = convertToStringArray(dataArrayList);
 		
 		table = new DefaultTable(data, columns);
-		setColumns();
+		setColumns(activeColumns);
 		
 		table.getTableHeader().setReorderingAllowed(false);
+		
 		popUp = new JPopupMenu();
 		JMenuItem details = new JMenuItem("Vis detaljer");
 		JMenuItem edit = new JMenuItem("Rediger produkt");
 		JMenuItem delete = new JMenuItem("Slet produkt");
+		JMenuItem addColumn = new JMenuItem("Tilføj kolonne");
+		
 		
 		popUp.add(details);
 		popUp.add(edit);
 		popUp.add(delete);
+		popUp.add(addColumn);
 		
 		ActionListener alDetails = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				String s = e.getActionCommand();
-				
-				if (s.equals("Vis detaljer")) {
-					showProduct(false);
-				}
-				else if (s.equals("Rediger produkt")){
-					showProduct(true);
-				}
-				else if (s.equals("Slet produkt")){
-					table.selectedProductID();
-					table.deleteData();
-					rowCounter();
-				}
-			}
+				popUpMenuAction(false, e);
+			}	
 		};
 		
 		details.addActionListener(alDetails);
 		edit.addActionListener(alDetails);
 		delete.addActionListener(alDetails);
-		
-		table.addMouseListener(new MouseAdapter() {
+		addColumn.addActionListener(alDetails);
+		MouseAdapter ma = new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(e.getClickCount() == 2 && table.getSelectedRow() != -1 && e.getButton() == 1) {
-					showProduct(false);
-				}
-				if (e.getButton() == 3 && table.getSelectedRow() != -1) {
+				if (e.getButton() == 3) {
 					showPopUp(e);
 				}
 			}
-		});
+		
+		};
+		
+		table.getTableHeader().addMouseListener(ma);
+		table.addMouseListener(ma);
 		
 		scrollPane.setViewportView(table);
 		JPanel panel = new JPanel();
@@ -403,7 +397,6 @@ public class ProductOverview extends JFrame {
 		
 		for(String e : categories) {
 			jcbCategories.addItem(e);
-			
 		}
 	}
 	
@@ -482,10 +475,10 @@ public class ProductOverview extends JFrame {
 			}
 		}
 		table.setNewData(convertToStringArray(productResult));
-		setColumns();
+		setColumns(activeColumns);
 	}
 	
-	private String[][] convertToStringArray(ArrayList<Product> dataArrayList){
+	private String[][] convertToStringArray(ArrayList<Product> dataArrayList) {
 		
 		int size = dataArrayList.size();
 		String[][] data = new String[size][12];
@@ -506,11 +499,20 @@ public class ProductOverview extends JFrame {
 		}
 		return data;
 	}
-	private void setColumns() {
-		for(int i = 0;i<activeColumns.length;i++) {
+	
+	public void setColumns(boolean[] newColumn) {
+		activeColumns = newColumn;
+		
+		for(int i = 0; i < activeColumns.length; i++) {
 			if(!activeColumns[i]) {
 				table.getColumnModel().getColumn(i).setMinWidth(0);
 				table.getColumnModel().getColumn(i).setMaxWidth(0);
+			}else if (activeColumns[i]){
+				table.getColumnModel().getColumn(i).setMinWidth(10);
+				table.getColumnModel().getColumn(i).setMaxWidth(5000);
+				table.getColumnModel().getColumn(i).setWidth(50);
+				table.getColumnModel().getColumn(i).setPreferredWidth(0);
+				System.out.println("Works");
 			}
 		}
 	}
@@ -522,6 +524,27 @@ public class ProductOverview extends JFrame {
 	private void showPopUp(MouseEvent e) {
 		if (e.isPopupTrigger()) {
 			popUp.show(e.getComponent(),e.getX(), e.getY());
+		}
+	}
+	
+	private void popUpMenuAction(boolean header, ActionEvent e) {
+		String s = e.getActionCommand();
+		
+		
+		if (s.equals("Vis detaljer")) {
+			showProduct(false);
+		}
+		else if (s.equals("Rediger produkt")){
+			showProduct(true);
+		}
+		else if (s.equals("Slet produkt")){
+			table.selectedProductID();
+			table.deleteData();
+			rowCounter();
+		}
+		else if (s.equals("Tilføj kolonne")){
+			ColumnSelecter cs = new ColumnSelecter(activeColumns, this);
+			cs.setVisible(true);
 		}
 	}
 }
