@@ -3,17 +3,19 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * It's a class that represents an order.
  */
-public class Order {
+public class Order implements Serializable {
 	private static int tempOrderNumber;
 	private String orderNumber;
 	private LocalDate date;
 	private double totalPrice;
 	private OrderStatus status;
+	private boolean paid;
 	private LocalDate pickupDate;
 	private List<OrderLine> orderLines;
 
@@ -28,8 +30,10 @@ public class Order {
 		date = LocalDate.now();
 		if (saleStatus) {
 			this.status = OrderStatus.SALE;
+			paid = true;
 		} else {
 			this.status = OrderStatus.CONFIRMATION;
+			paid = false;
 		}
 		this.pickupDate = LocalDate.now().plusDays(2); // Default 2 day deliverytime value
 
@@ -202,5 +206,13 @@ public class Order {
 	 */
 	public String getOrderNumber() {
 		return orderNumber;
+	}
+
+	public boolean isPaid() {
+		return paid;
+	}
+
+	public void setPaid(boolean paid) {
+		this.paid = paid;
 	}
 }
