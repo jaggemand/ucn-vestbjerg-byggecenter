@@ -15,6 +15,7 @@ public class Order implements Serializable {
 	private LocalDate date;
 	private double totalPrice;
 	private OrderStatus status;
+	private boolean paid;
 	private LocalDate pickupDate;
 	private List<OrderLine> orderLines;
 
@@ -29,8 +30,10 @@ public class Order implements Serializable {
 		date = LocalDate.now();
 		if (saleStatus) {
 			this.status = OrderStatus.SALE;
+			paid = true;
 		} else {
 			this.status = OrderStatus.CONFIRMATION;
+			paid = false;
 		}
 		this.pickupDate = LocalDate.now().plusDays(2); // Default 2 day deliverytime value
 
@@ -203,5 +206,13 @@ public class Order implements Serializable {
 	 */
 	public String getOrderNumber() {
 		return orderNumber;
+	}
+
+	public boolean isPaid() {
+		return paid;
+	}
+
+	public void setPaid(boolean paid) {
+		this.paid = paid;
 	}
 }
