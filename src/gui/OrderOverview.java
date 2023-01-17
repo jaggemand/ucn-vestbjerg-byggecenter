@@ -58,7 +58,7 @@ public class OrderOverview extends JFrame {
 		initWindow();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 565, 395);
+		setBounds(100, 100, 885, 518);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -86,6 +86,11 @@ public class OrderOverview extends JFrame {
 		panel_1.setLayout(gbl_panel_1);
 		
 		JButton btnClose = new JButton("Afslut");
+		btnClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonClosePressed();
+			}
+		});
 		btnClose.setMargin(new Insets(2, 20, 2, 20));
 		GridBagConstraints gbc_btnClose = new GridBagConstraints();
 		gbc_btnClose.fill = GridBagConstraints.BOTH;
@@ -237,6 +242,10 @@ public class OrderOverview extends JFrame {
 		gbc_btnDateFilterPickup.gridy = 2;
 		panel_North.add(btnDateFilterPickup, gbc_btnDateFilterPickup);
 		updateTable();
+	}
+	
+	private void buttonClosePressed() {
+		dispose();
 	}
 	
 	private void initWindow() {
