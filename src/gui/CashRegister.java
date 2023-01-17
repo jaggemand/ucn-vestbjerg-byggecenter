@@ -39,6 +39,7 @@ public class CashRegister extends JFrame {
 	private JLabel lblStatus;
 	private JLabel lblTotal;
 	private JLabel lblVat;
+	private TableColumnManager tcm;
 	/**
 	 * Launch the application.
 	 */
@@ -210,6 +211,7 @@ public class CashRegister extends JFrame {
 		table.getColumnModel().getColumn(2).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
+		tcm = new TableColumnManager(table, true);
 	}
 	
 	private void updateCartTable(String[] data) {
