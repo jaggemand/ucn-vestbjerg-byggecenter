@@ -215,4 +215,13 @@ public class Order implements Serializable {
 	public void setPaid(boolean paid) {
 		this.paid = paid;
 	}
+	
+	//is used as a proxy to show how large the order is
+	public int getAmountOfProducts() {
+		int result = 0;
+		for(OrderLine ol: orderLines) {
+			result += ol.getQuantity();
+		}
+		return result;
+	}
 }

@@ -56,6 +56,7 @@ public class MainMenu extends JFrame {
 	 * @throws ClassNotFoundException 
 	 */
 	public MainMenu() throws IOException {
+		setTitle("Hoved menu");
 		pController = new ProductController();
 		oController = new OrderController();
 		pController.loadFile();
@@ -101,7 +102,7 @@ public class MainMenu extends JFrame {
 		gbc_lblHeader.gridy = 1;
 		panel.add(lblHeader, gbc_lblHeader);
 		
-		JButton btnSale = new JButton("Orde");
+		JButton btnSale = new JButton("Ordre oversigt");
 		btnSale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				OrderOverview orderOverview = new OrderOverview();
