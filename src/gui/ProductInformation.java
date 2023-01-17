@@ -51,7 +51,6 @@ public class ProductInformation extends JFrame {
 	private JTextField txtProductName;
 	private JTextField txtBarcode;
 	private JTextField txtProductID;
-	private JTextArea txtProductDescription;
 	private static JList categoryList;
 	private static Product product;
 	private static boolean editMode;
@@ -63,6 +62,7 @@ public class ProductInformation extends JFrame {
 	private JLabel lblStatusText;
 	private JLabel lblTextNameStatus;
 	private String statusLine = "";
+	private JTextArea txtProductDescription;
 
 	/**
 	 * Launch the application.
@@ -86,6 +86,7 @@ public class ProductInformation extends JFrame {
 
 	public ProductInformation(Product product, boolean editMode) {
 		setTitle("Produkt");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 700, 450);
 		contentPane = new JPanel();
@@ -95,8 +96,8 @@ public class ProductInformation extends JFrame {
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 0, 20, 0, 0, 0, 111, 0, 0, 0, 0, 0, 32, 0, 0 };
-		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,
+		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,
 				Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
@@ -111,9 +112,9 @@ public class ProductInformation extends JFrame {
 		gbc_panel_general.gridy = 1;
 		contentPane.add(panel_general, gbc_panel_general);
 		GridBagLayout gbl_panel_general = new GridBagLayout();
-		gbl_panel_general.columnWidths = new int[] { 24, 26, 0 };
-		gbl_panel_general.rowHeights = new int[] { 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_panel_general.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+		gbl_panel_general.columnWidths = new int[] { 24, 26 };
+		gbl_panel_general.rowHeights = new int[] { 0, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0 };
+		gbl_panel_general.columnWeights = new double[] { 1.0, 1.0 };
 		gbl_panel_general.rowWeights = new double[] { 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0,
 				1.0, Double.MIN_VALUE };
 		panel_general.setLayout(gbl_panel_general);
@@ -190,15 +191,22 @@ public class ProductInformation extends JFrame {
 		gbc_lblProductDescription.gridx = 0;
 		gbc_lblProductDescription.gridy = 11;
 		panel_general.add(lblProductDescription, gbc_lblProductDescription);
-
+		
+		JScrollPane scrollPanetest = new JScrollPane();
+		GridBagConstraints gbc_scrollPanetest = new GridBagConstraints();
+		gbc_scrollPanetest.gridheight = 2;
+		gbc_scrollPanetest.gridwidth = 2;
+		gbc_scrollPanetest.insets = new Insets(0, 0, 5, 0);
+		gbc_scrollPanetest.fill = GridBagConstraints.BOTH;
+		gbc_scrollPanetest.gridx = 0;
+		gbc_scrollPanetest.gridy = 12;
+		panel_general.add(scrollPanetest, gbc_scrollPanetest);
+		
 		txtProductDescription = new JTextArea();
-		GridBagConstraints gbc_txtProductDescription = new GridBagConstraints();
-		gbc_txtProductDescription.insets = new Insets(0, 0, 5, 0);
-		gbc_txtProductDescription.gridwidth = 2;
-		gbc_txtProductDescription.fill = GridBagConstraints.BOTH;
-		gbc_txtProductDescription.gridx = 0;
-		gbc_txtProductDescription.gridy = 12;
-		panel_general.add(txtProductDescription, gbc_txtProductDescription);
+		txtProductDescription.setEnabled(false);
+		txtProductDescription.setLineWrap(true);
+		txtProductDescription.setWrapStyleWord(true);
+		scrollPanetest.setViewportView(txtProductDescription);
 
 		JPanel panel_price = new JPanel();
 		panel_price.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
@@ -476,6 +484,7 @@ public class ProductInformation extends JFrame {
 		contentPane.add(btnCancel, gbc_btnCancel);
 
 		lblTextNameStatus = new JLabel("Status:");
+		lblTextNameStatus.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		lblTextNameStatus.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_lblTextNameStatus = new GridBagConstraints();
 		gbc_lblTextNameStatus.fill = GridBagConstraints.BOTH;
@@ -485,6 +494,7 @@ public class ProductInformation extends JFrame {
 		contentPane.add(lblTextNameStatus, gbc_lblTextNameStatus);
 
 		lblStatusText = new JLabel("");
+		lblStatusText.setFont(new Font("Tahoma", Font.PLAIN, 8));
 		lblStatusText.setToolTipText("Fejl meddeleser vises her");
 		lblStatusText.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblStatusText = new GridBagConstraints();
@@ -502,6 +512,17 @@ public class ProductInformation extends JFrame {
 	}
 
 	public void init() {
+		txtWarehouseAmount.setDisabledTextColor(Color.gray);
+		txtWarehouseLocation.setDisabledTextColor(Color.gray);
+		txtStoreAmount.setDisabledTextColor(Color.gray);
+		txtStoreLocation.setDisabledTextColor(Color.gray);
+		txtSuggestedSalesPrice.setDisabledTextColor(Color.gray);
+		txtSalesPrice.setDisabledTextColor(Color.gray);
+		txtCostPrice.setDisabledTextColor(Color.gray);
+		txtProductName.setDisabledTextColor(Color.gray);
+		txtBarcode.setDisabledTextColor(Color.gray);
+		txtProductID.setDisabledTextColor(Color.gray);
+		txtProductDescription.setDisabledTextColor(Color.gray);
 		DefaultListModel listModel = new DefaultListModel();
 		listModel.clear();
 		tempCategoryList.clear();
@@ -546,7 +567,7 @@ public class ProductInformation extends JFrame {
 		txtCostPrice.setEnabled(editMode);
 		txtProductName.setEnabled(editMode);
 		txtBarcode.setEnabled(editMode);
-		txtProductID.setEnabled(false); // Not allowed to edit productID
+		txtProductID.setEnabled(false);
 		txtProductDescription.setEnabled(editMode);
 		btnCategoryAdd.setEnabled(editMode);
 		btnCategoryRemove.setEnabled(editMode);
@@ -646,7 +667,7 @@ public class ProductInformation extends JFrame {
 			lblStatusText.setText("OK");
 			lblStatusText.setForeground(Color.green);
 		} else {
-			String yeet = statusLine.substring(0, statusLine.length()-2);
+			String yeet = statusLine.substring(0, statusLine.length() - 2);
 			lblStatusText.setText("Fejl i " + yeet);
 			lblStatusText.setForeground(Color.red);
 			statusLine = "";

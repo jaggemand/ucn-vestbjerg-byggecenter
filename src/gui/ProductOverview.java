@@ -301,7 +301,7 @@ public class ProductOverview extends JFrame {
 		JButton btnDetails = new JButton("Detaljer");
 		btnDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showProduct(true);
+				showProduct(false);
 			}
 		});
 		
