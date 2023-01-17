@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -51,24 +50,6 @@ public class ProductOverview extends JFrame {
 	
 	private String[] columns;
 	private boolean[] activeColumns;
-	
-	
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new ProductOverview();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -502,7 +483,6 @@ public class ProductOverview extends JFrame {
 	
 	public void setColumns(boolean[] newColumn) {
 		activeColumns = newColumn;
-		
 		for(int i = 0; i < activeColumns.length; i++) {
 			if(!activeColumns[i]) {
 				table.getColumnModel().getColumn(i).setMinWidth(0);
@@ -512,8 +492,7 @@ public class ProductOverview extends JFrame {
 				table.getColumnModel().getColumn(i).setMaxWidth(5000);
 				table.getColumnModel().getColumn(i).setWidth(50);
 				table.getColumnModel().getColumn(i).setPreferredWidth(0);
-				System.out.println("Works");
-			}
+		}
 		}
 	}
 	
@@ -543,7 +522,7 @@ public class ProductOverview extends JFrame {
 			rowCounter();
 		}
 		else if (s.equals("Tilføj kolonne")){
-			ColumnSelecter cs = new ColumnSelecter(activeColumns, this);
+			ColumnSelecter cs = new ColumnSelecter(activeColumns, columns, this);
 			cs.setVisible(true);
 		}
 	}
