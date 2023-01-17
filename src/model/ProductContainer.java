@@ -108,13 +108,10 @@ public class ProductContainer {
 		try {
 		      File myObj = new File("products.txt");
 		      if (myObj.createNewFile()) {
-		        System.out.println("File created: " + myObj.getName());
 		      } else {
-		        System.out.println("File already exists.");
 		        importFromFile(myObj);
 		      }
 		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
@@ -122,16 +119,13 @@ public class ProductContainer {
 		try {
 		      File myObj = new File("products.txt");
 		      if (myObj.createNewFile()) {
-		        System.out.println("File created: " + myObj.getName());
 		        exportToFile(myObj);
 		      } else {
-		        System.out.println("File already exists.");
 		        myObj.delete();
 		        saveFile();
 		        
 		      }
 		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
@@ -139,13 +133,10 @@ public class ProductContainer {
 		try {
 		      File myObj = new File("categories.txt");
 		      if (myObj.createNewFile()) {
-		        System.out.println("File created: " + myObj.getName());
 		      } else {
-		        System.out.println("File already exists.");
 		        importToCategoryFile();
 		      }
 		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
@@ -153,16 +144,13 @@ public class ProductContainer {
 		try {
 		      File myObj = new File("categories.txt");
 		      if (myObj.createNewFile()) {
-		        System.out.println("File created: " + myObj.getName());
 		        exportToCategoryFile();
 		      } else {
-		        System.out.println("File already exists.");
 		        myObj.delete();
 		        saveCategoryFile();
 		        
 		      }
 		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
@@ -187,10 +175,8 @@ public class ProductContainer {
 				addProduct(newProduct);
 		        count++;
 		      }
-		      System.out.println("Imported products to container: " + count);
 		      myReader.close();
 		    } catch (FileNotFoundException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
@@ -224,9 +210,7 @@ public class ProductContainer {
 		    			  e.getSuggestedSalesPrice() + "\n");
 		      }
 		      myWriter.close();
-		      System.out.println("Successfully wrote to the file.");
 		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
@@ -239,7 +223,6 @@ public class ProductContainer {
 		      }
 		      myReader.close();
 		    } catch (FileNotFoundException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
@@ -254,7 +237,6 @@ public class ProductContainer {
 		      }
 		      myWriter.close();
 		    } catch (IOException e) {
-		      System.out.println("An error occurred.");
 		      e.printStackTrace();
 		    }
 	}
