@@ -82,25 +82,4 @@ public class OrderContainer {
 	public ArrayList<Order> getOrders() {
 		return new ArrayList<>(orders);
 	}
-	
-	public void exportOrdersToFile() throws IOException {
-		FileOutputStream fos = new FileOutputStream("orders.txt");
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		test();
-		for(Order e : orders) {
-			oos.writeObject(e);
-		}
-		oos.flush();
-		oos.close();
-	}
-	
-	public void importOrdersFromFile() throws IOException {
-		FileInputStream fis = new FileInputStream("orders.txt");
-		ObjectInputStream ois = new ObjectInputStream(fis);
-		
-	}
-	
-	private void test() {
-		orders.add(new Order(true));
-	}
 }
