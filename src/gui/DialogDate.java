@@ -138,6 +138,7 @@ public class DialogDate extends JDialog {
 	private void buttonOKPressed() {
 		dateFrom = (Date) spnDateFrom.getValue();
 		dateTo = (Date) spnDateTo.getValue();
+		this.dispose();
 	}
 
 	private void initialize() {
