@@ -90,8 +90,8 @@ public class MainMenu extends JFrame {
 		JButton btnSale = new JButton("Orde");
 		btnSale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				SalesOrder salesOrder = new SalesOrder();
-				salesOrder.setVisible(true);
+				OrderOverview orderOverview = new OrderOverview();
+				orderOverview.setVisible(true);
 			}
 		});
 		btnSale.setBounds(new Rectangle(0, 0, 15, 15));
