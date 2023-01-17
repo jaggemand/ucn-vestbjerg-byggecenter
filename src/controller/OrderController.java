@@ -183,4 +183,8 @@ public class OrderController {
 		success = OrderContainer.getInstance().removeOrder(orderToRemove);
 		return success;
 	}
+	
+	public ArrayList<Order> getAllOrders() {
+		return OrderContainer.getInstance().getOrders();
+	}
 }
