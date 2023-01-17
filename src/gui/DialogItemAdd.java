@@ -169,7 +169,7 @@ public class DialogItemAdd extends JDialog {
 			}
 			{
 				spinner = new JSpinner();
-				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(0), null, Integer.valueOf(1)));
+				spinner.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 				GridBagConstraints gbc_spinner = new GridBagConstraints();
 				gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
 				gbc_spinner.insets = new Insets(0, 0, 5, 5);
