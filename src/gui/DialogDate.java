@@ -113,6 +113,11 @@ public class DialogDate extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						buttonOKPressed();
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
@@ -136,8 +141,17 @@ public class DialogDate extends JDialog {
 	}
 	
 	private void buttonOKPressed() {
-		dateFrom = (Date) spnDateFrom.getValue();
-		dateTo = (Date) spnDateTo.getValue();
+		Date dummyFrom = (Date) spnDateFrom.getValue();
+		Date dummyTo = (Date) spnDateTo.getValue();
+		if(dummyFrom.compareTo(dummyTo) > 0) {
+			//dateFrom occurs after dateTo
+			dateFrom = dummyTo;
+			dateTo = dummyFrom;
+		}
+		else {
+			dateFrom = dummyFrom;
+			dateTo = dummyTo;
+		}
 		this.dispose();
 	}
 
