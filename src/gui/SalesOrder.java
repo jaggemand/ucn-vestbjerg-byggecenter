@@ -456,25 +456,10 @@ public class SalesOrder extends JDialog {
 		}
 	}
 	
-	private void buttonPaymentPressed() {
-		if(table.getModel().getRowCount() > 0) {
-			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil gennemføre betalingen", "Betaling",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-					new Object[] { "Betal", "Tilbage" }, JOptionPane.YES_OPTION);*/
-			int input = GUIPopUpMessages.customBox("Er du sikker på at du vil gennemføre betalingen", "Betaling", new Object[] { "Betal", "Tilbage" }, JOptionPane.QUESTION_MESSAGE);
-			if(input == 0) {
-				orderController.addOrder();
-				resetFrame();
-			}
-		}
-		else {
-			makeStatusMessage("Ingen produkter er scannet", true);
-		}
-	}
 	
 	private void buttonCancleCurrentSalePressed() {
 		if(table.getModel().getRowCount() < 1) {
-			resetFrame();
+			this.dispose();
 		}
 		else {
 			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg?", "Afbryd salg",
@@ -482,7 +467,7 @@ public class SalesOrder extends JDialog {
 					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);*/
 			int input = GUIPopUpMessages.okBackBox("Er du sikker på at du vil afbryde nuværende salg?", "Afbryd salg");
 			if(input == 0) {
-				resetFrame();
+				this.dispose();
 			}
 		}
 	}
