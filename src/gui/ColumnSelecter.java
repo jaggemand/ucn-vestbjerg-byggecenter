@@ -21,15 +21,15 @@ public class ColumnSelecter extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<JCheckBox> checkBox;
 	private boolean[] isVisible;
-	private ProductOverview frame;
+	private DefaultTable table;
 
 	/**
 	 * Create the dialog.
 	 * 
 	 */
-	public ColumnSelecter(boolean[] isVisible, String[] columns, JFrame frame) {
+	public ColumnSelecter(boolean[] isVisible, String[] columns, DefaultTable table) {
 		checkBox = new ArrayList<>();
-		this.frame = (ProductOverview) frame;
+		this.table = table;
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -110,7 +110,7 @@ public class ColumnSelecter extends JDialog {
 					isVisible[i+1] = false;
 				}
 			}
-			frame.setColumns(isVisible);
+			table.setVisibleColumns(isVisible);
 			this.dispose();
 		}
 		
