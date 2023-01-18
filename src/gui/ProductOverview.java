@@ -519,7 +519,13 @@ public class ProductOverview extends JFrame {
 		}
 		else if (s.equals("Slet produkt")){
 			table.selectedProductID();
-			table.deleteData();
+			ArrayList<String> dataToDelete = table.deleteData();
+			if(dataToDelete.size() != 0) {
+				ProductController pC = new ProductController();
+				for(int i = dataToDelete.size()-1; i>= 0;i--) {
+					pC.removeProduct(dataToDelete.get(i));
+				}
+			}
 			rowCounter();
 		}
 	}

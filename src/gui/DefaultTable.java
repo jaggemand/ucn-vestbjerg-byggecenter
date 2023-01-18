@@ -112,17 +112,13 @@ public class DefaultTable extends JTable {
 			tabelModel.addRow(data[i]);
 		}
 	}
-	public void deleteData() {
-		if(rows.length != 0) {
-			
-			ProductController pC = new ProductController();
-			ArrayList<String> data = selectedProductID();
-			
+	public ArrayList<String> deleteData() {
+		ArrayList<String> elementsToDelete = new ArrayList<>();
+		if(rows.length != 0) {			
 			boolean check = deleteItems(rows.length);
 			if(check == true) {
 				for(int i = rows.length-1; i>= 0;i--) {
 					tabelModel.removeRow(rows[i]);
-					pC.removeProduct(data.get(i));
 				}
 			}
 		}
@@ -130,6 +126,7 @@ public class DefaultTable extends JTable {
 			
 			errorMessage("Marker én linje der skal slettes", "Bekræft slet");
 		}
+		return elementsToDelete;
 	}
 	public void errorMessage(String message, String title) {
 		
