@@ -9,13 +9,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -32,11 +33,7 @@ import javax.swing.border.EmptyBorder;
 import controller.OrderController;
 import model.Order;
 import model.Order.OrderStatus;
-import model.OrderContainer;
 import model.OrderLine;
-import model.Product;
-
-import java.time.ZoneId;
 
 public class OrderOverview extends JFrame {
 
@@ -51,6 +48,8 @@ public class OrderOverview extends JFrame {
 	private JComboBox comboBoxStatus;
 	private JCheckBox chckbxOrderCreated;
 	private JCheckBox chckbxOrderPickup;
+	private JButton btnDateFilterCreated;
+	private JButton btnDateFilterPickup;
 
 	/**
 	 * Launch the application.
@@ -169,9 +168,9 @@ public class OrderOverview extends JFrame {
 		JPanel panel_North = new JPanel();
 		contentPane.add(panel_North, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_North = new GridBagLayout();
-		gbl_panel_North.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_North.columnWidths = new int[]{120, 0, 0, 220, 220, 79};
 		gbl_panel_North.rowHeights = new int[]{0, 0};
-		gbl_panel_North.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, 1.0};
+		gbl_panel_North.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
 		gbl_panel_North.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		panel_North.setLayout(gbl_panel_North);
 		
@@ -186,6 +185,7 @@ public class OrderOverview extends JFrame {
 		textFieldOrderNumber.setColumns(10);
 		
 		JCheckBox chckbxBusinessCustomer = new JCheckBox("Erhvervskunde");
+		chckbxBusinessCustomer.setEnabled(false);
 		chckbxBusinessCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxBusinessCustomer = new GridBagConstraints();
 		gbc_chckbxBusinessCustomer.fill = GridBagConstraints.BOTH;
@@ -195,6 +195,7 @@ public class OrderOverview extends JFrame {
 		panel_North.add(chckbxBusinessCustomer, gbc_chckbxBusinessCustomer);
 		
 		chckbxOrderCreated = new JCheckBox("Oprettelsesdato");
+		chckbxOrderCreated.setEnabled(false);
 		chckbxOrderCreated.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderCreated = new GridBagConstraints();
 		gbc_chckbxOrderCreated.fill = GridBagConstraints.BOTH;
@@ -229,7 +230,7 @@ public class OrderOverview extends JFrame {
 		gbc_btnSearch.gridy = 0;
 		panel_North.add(btnSearch, gbc_btnSearch);
 		
-		JButton btnDateFilterCreated = new JButton("Vælg periode");
+		btnDateFilterCreated = new JButton("Vælg periode");
 		btnDateFilterCreated.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonDateCreatedPressed();
@@ -248,6 +249,7 @@ public class OrderOverview extends JFrame {
 		initComboBox();
 		
 		JCheckBox chckbxPrivateCustomer = new JCheckBox("Privatkunde");
+		chckbxPrivateCustomer.setEnabled(false);
 		chckbxPrivateCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxPrivateCustomer = new GridBagConstraints();
 		gbc_chckbxPrivateCustomer.fill = GridBagConstraints.BOTH;
@@ -257,6 +259,7 @@ public class OrderOverview extends JFrame {
 		panel_North.add(chckbxPrivateCustomer, gbc_chckbxPrivateCustomer);
 		
 		chckbxOrderPickup = new JCheckBox("Afhentingsdato");
+		chckbxOrderPickup.setEnabled(false);
 		chckbxOrderPickup.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderPickup = new GridBagConstraints();
 		gbc_chckbxOrderPickup.fill = GridBagConstraints.BOTH;
@@ -265,18 +268,20 @@ public class OrderOverview extends JFrame {
 		gbc_chckbxOrderPickup.gridy = 2;
 		panel_North.add(chckbxOrderPickup, gbc_chckbxOrderPickup);
 		GridBagConstraints gbc_btnDateFilterCreated = new GridBagConstraints();
+		gbc_btnDateFilterCreated.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDateFilterCreated.insets = new Insets(0, 0, 5, 5);
 		gbc_btnDateFilterCreated.gridx = 3;
 		gbc_btnDateFilterCreated.gridy = 2;
 		panel_North.add(btnDateFilterCreated, gbc_btnDateFilterCreated);
 		
-		JButton btnDateFilterPickup = new JButton("Vælg periode");
+		btnDateFilterPickup = new JButton("Vælg periode");
 		btnDateFilterPickup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonDatePickupPressed();
 			}
 		});
 		GridBagConstraints gbc_btnDateFilterPickup = new GridBagConstraints();
+		gbc_btnDateFilterPickup.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDateFilterPickup.insets = new Insets(0, 0, 5, 5);
 		gbc_btnDateFilterPickup.gridx = 4;
 		gbc_btnDateFilterPickup.gridy = 2;
@@ -314,11 +319,13 @@ public class OrderOverview extends JFrame {
 	private void buttonDateCreatedPressed() {
 		dateCreated = new DialogDate();
 		dateCreated.setVisible(true);
+		btnDateFilterCreated.setText(setDateSelecterButtonFormat(dateCreated.getDateFrom(), dateCreated.getDateTo()));
 	}
 	
 	private void buttonDatePickupPressed() {
 		datePickup = new DialogDate();
 		datePickup.setVisible(true);
+		btnDateFilterPickup.setText(setDateSelecterButtonFormat(datePickup.getDateFrom(), datePickup.getDateTo()));
 	}
 	
 	private void initWindow() {
@@ -375,6 +382,13 @@ public class OrderOverview extends JFrame {
 		//Not needed for now
 //		calculateRowTotals();
 //		updateTotal();
+	}
+	
+	private String setDateSelecterButtonFormat(Date dateFrom, Date dateTo) {
+		String pattern = "DD/MM/YYYY";
+		DateFormat df = new SimpleDateFormat(pattern);
+		String output = df.format(dateFrom) +" ---> "+ df.format(dateTo);
+		return output;
 	}
 	
 	private void makeStatusMessage(String message, boolean isCorrelatedWithError) {
