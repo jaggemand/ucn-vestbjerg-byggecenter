@@ -33,6 +33,8 @@ import javax.swing.event.ListSelectionListener;
 import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class ProductOverview extends JFrame {
 
@@ -259,9 +261,9 @@ public class ProductOverview extends JFrame {
 		contentPane.add(panel_1, BorderLayout.EAST);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[]{0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
 		JButton btnAdd = new JButton("Tilføj");
@@ -320,6 +322,7 @@ public class ProductOverview extends JFrame {
 		});
 		
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDelete.gridx = 0;
 		gbc_btnDelete.gridy = 4;
@@ -494,7 +497,6 @@ public class ProductOverview extends JFrame {
 		}
 		return data;
 	}
-	
 	private void rowCounter() {
 		lblRowCounter.setText("Antal: "+ table.getRowCount());
 	}

@@ -136,7 +136,7 @@ public class DialogAmount extends JDialog {
 	
 	private void initialize() {
 
-		spinner.setModel(new SpinnerNumberModel(orderLine.getQuantity(), Integer.valueOf(0), null, Integer.valueOf(1)));
+		spinner.setModel(new SpinnerNumberModel(orderLine.getQuantity(), Integer.valueOf(1), null, Integer.valueOf(1)));
 		
 	}
 

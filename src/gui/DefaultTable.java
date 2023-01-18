@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -130,6 +131,16 @@ public class DefaultTable extends JTable {
 			errorMessage("Marker én linje der skal slettes", "Bekræft slet");
 		}
 	}
+	public void hideColumn(int index) {
+		getColumnModel().getColumn(index).setMinWidth(0);
+		getColumnModel().getColumn(index).setMaxWidth(0);
+	}
+	public void showColumn(int index) {
+		getColumnModel().getColumn(index).setMinWidth(10);
+		getColumnModel().getColumn(index).setMaxWidth(5000);
+		getColumnModel().getColumn(index).setWidth(50);
+		getColumnModel().getColumn(index).setPreferredWidth(0);
+	}
 	public void errorMessage(String message, String title) {
 		
 		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), message, title, 0,
@@ -163,9 +174,9 @@ public class DefaultTable extends JTable {
 		
 		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet produkter",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-					new Object[] {"Ja", "Nej" }, JOptionPane.YES_OPTION);
-		
-		
+					new Object[] {Box.createHorizontalStrut(250), "OK", "Afbryd"}, JOptionPane.YES_OPTION);
+					
+					
 		return input == 0;
 	}
 	
