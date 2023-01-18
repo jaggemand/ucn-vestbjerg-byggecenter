@@ -8,11 +8,27 @@ public class CustomerContainer {
 	private List<Customer> customers;
 	
 	private CustomerContainer() {
-		customers = new ArrayList<>();
+		custommers = new ArrayList<>();
 	}
 	
 	public static CustomerContainer getInstance() {
-		
+		if(instance == null) {
+			instance = new CustomerContainer();
+		}
+		return instance;
 	}
+	
+	public boolean  addCustomer(Customer customer) {
+		boolean result = false;
+		if(customer != null) {
+			result = true;
+			customers.add(customer);
+		}
+		return result;
+	}
+	
+	
+	
+	
 
 }
