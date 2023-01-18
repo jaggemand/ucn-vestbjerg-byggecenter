@@ -191,7 +191,7 @@ public class ProductInformation extends JFrame {
 		gbc_lblProductDescription.gridx = 0;
 		gbc_lblProductDescription.gridy = 11;
 		panel_general.add(lblProductDescription, gbc_lblProductDescription);
-		
+
 		JScrollPane scrollPanetest = new JScrollPane();
 		GridBagConstraints gbc_scrollPanetest = new GridBagConstraints();
 		gbc_scrollPanetest.gridheight = 2;
@@ -201,7 +201,7 @@ public class ProductInformation extends JFrame {
 		gbc_scrollPanetest.gridx = 0;
 		gbc_scrollPanetest.gridy = 12;
 		panel_general.add(scrollPanetest, gbc_scrollPanetest);
-		
+
 		txtProductDescription = new JTextArea();
 		txtProductDescription.setEnabled(false);
 		txtProductDescription.setLineWrap(true);
@@ -484,7 +484,7 @@ public class ProductInformation extends JFrame {
 		contentPane.add(btnCancel, gbc_btnCancel);
 
 		lblTextNameStatus = new JLabel("Status:");
-		lblTextNameStatus.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		lblTextNameStatus.setFont(new Font("Tahoma", Font.BOLD, 10));
 		lblTextNameStatus.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_lblTextNameStatus = new GridBagConstraints();
 		gbc_lblTextNameStatus.fill = GridBagConstraints.BOTH;
@@ -494,7 +494,7 @@ public class ProductInformation extends JFrame {
 		contentPane.add(lblTextNameStatus, gbc_lblTextNameStatus);
 
 		lblStatusText = new JLabel("");
-		lblStatusText.setFont(new Font("Tahoma", Font.PLAIN, 8));
+		lblStatusText.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lblStatusText.setToolTipText("Fejl meddeleser vises her");
 		lblStatusText.setHorizontalAlignment(SwingConstants.LEFT);
 		GridBagConstraints gbc_lblStatusText = new GridBagConstraints();
@@ -511,6 +511,9 @@ public class ProductInformation extends JFrame {
 		editType(editMode);
 	}
 
+	/**
+	 * It sets the text of the text fields to the values of the product object
+	 */
 	public void init() {
 		txtWarehouseAmount.setDisabledTextColor(Color.gray);
 		txtWarehouseLocation.setDisabledTextColor(Color.gray);
@@ -548,6 +551,11 @@ public class ProductInformation extends JFrame {
 		}
 	}
 
+	/**
+	 * It enables or disables the text fields and buttons in the GUI
+	 * 
+	 * @param editMode boolean
+	 */
 	public void editType(boolean editMode) {
 		if (!editMode) {
 			btnCancel.setText("Tilbage");
@@ -568,6 +576,7 @@ public class ProductInformation extends JFrame {
 		txtProductName.setEnabled(editMode);
 		txtBarcode.setEnabled(editMode);
 		txtProductID.setEnabled(false);
+		txtBarcode.setEnabled(false);
 		txtProductDescription.setEnabled(editMode);
 		btnCategoryAdd.setEnabled(editMode);
 		btnCategoryRemove.setEnabled(editMode);
@@ -575,11 +584,19 @@ public class ProductInformation extends JFrame {
 			txtSuggestedSalesPrice.setEnabled(false);
 			txtSalesPrice.setEnabled(false);
 			txtCostPrice.setEnabled(false);
+			txtBarcode.setEnabled(true);
 		}
 	}
 
+	/**
+	 * It takes the input from the text fields and saves it to the database or
+	 * updates the product
+	 * 
+	 * @param editMode boolean
+	 */
 	public void saveProduct(boolean editMode) {
 		ProductController productController = new ProductController();
+
 		String productName = txtProductName.getText();
 		String productDescription = txtProductDescription.getText();
 		String barcode = txtBarcode.getText();
@@ -591,38 +608,38 @@ public class ProductInformation extends JFrame {
 		double salesPrice = 0.0;
 		int storeAmount = 0;
 		int warehouseAmount = 0;
-		boolean success = false;
-		costPrice = convertToDouble(txtCostPrice.getText().toString(), "Indkøbspris");
-		suggestedSalesPrice = convertToDouble(txtSuggestedSalesPrice.getText().toString(), "Vejledene pris");
-		salesPrice = convertToDouble(txtSalesPrice.getText().toString(), "Salgspris");
 
 		storeAmount = convertToInteger(txtStoreAmount.getText().toString(), "butiksbeholdning");
 		warehouseAmount = convertToInteger(txtWarehouseAmount.getText().toString(), "lagerbeholdning");
-		if (statusLine.isBlank()) {
-			success = true;
-		}
+
 		if (productName.isBlank() || productDescription.isBlank()) {
-			JOptionPane.showMessageDialog(null, "Produktnavn og beskrivelse skal være udfyldt", "Fejl!",
-					JOptionPane.ERROR_MESSAGE);
-		} else if (editMode && productController.findProduct(productID) != null && success) {
-			String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
-			product.setCategory(newCategories);
-			product.setBarcode(barcode);
-			product.setName(productName);
-			product.setDescription(productDescription);
-			product.setStorageLocation(storeLocation);
-			product.setWarehouseLocation(warehouseLocation);
-			product.setStorageAmount(storeAmount);
-			product.setWarehouseAmount(warehouseAmount);
-			product.setCostPrice(costPrice);
-			product.setSalesPrice(salesPrice);
-			product.setSalesPrice(salesPrice);
-			JOptionPane.showMessageDialog(null, "Produktet er blevet opdateret", "Success!",
-					JOptionPane.INFORMATION_MESSAGE);
-			closeWindow();
+			statusLine += "produktnavn, beskrivelse, ";
+		} else if (editMode && productController.findProduct(productID) != null && statusLine.isBlank()) { // Updates the current product
+			costPrice = convertToDouble(txtCostPrice.getText().toString(), "Indkøbspris");
+			suggestedSalesPrice = convertToDouble(txtSuggestedSalesPrice.getText().toString(), "Vejledene pris");
+			salesPrice = convertToDouble(txtSalesPrice.getText().toString(), "Salgspris");
+
+			if (statusLine.isBlank()) {
+				String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
+				product.setCategory(newCategories);
+				product.setBarcode(barcode);
+				product.setName(productName);
+				product.setDescription(productDescription);
+				product.setStorageLocation(storeLocation);
+				product.setWarehouseLocation(warehouseLocation);
+				product.setStorageAmount(storeAmount);
+				product.setWarehouseAmount(warehouseAmount);
+				product.setCostPrice(costPrice);
+				product.setSalesPrice(salesPrice);
+				product.setSuggestedSalesPrice(suggestedSalesPrice);
+				JOptionPane.showMessageDialog(null, "Produktet er blevet opdateret", "Success!",
+						JOptionPane.INFORMATION_MESSAGE);
+				closeWindow();
+			}
 		} else {
-			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null
-					&& success) {
+			if (editMode && productController.findProduct(productID) == null
+					&& productController.findProduct(barcode) == null && statusLine.isBlank()) { // Creates a new product
+
 				String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
 				Product newProduct = productController.createProduct(productName, barcode, productDescription,
 						newCategories, storeLocation, warehouseLocation, storeAmount, warehouseAmount);
@@ -634,14 +651,24 @@ public class ProductInformation extends JFrame {
 					JOptionPane.showMessageDialog(null, "En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!",
 							JOptionPane.ERROR_MESSAGE);
 				}
-			} else {
-				setStatusMessage();
-				JOptionPane.showMessageDialog(null, "Produktet med det givne varenummer/stregkode findes allerede",
-						"Fejl!", JOptionPane.ERROR_MESSAGE);
+			}
+			if (productController.findProduct(barcode) != null) {
+				statusLine += "stregkode findes allerede, ";
 			}
 		}
+		setStatusMessage();
+		statusLine = "";
 	}
 
+	/**
+	 * This function takes a string and a location as input, and returns an integer.
+	 * If the string is not a valid integer, the location is added to the status
+	 * line
+	 * 
+	 * @param input    The string to be converted to an integer.
+	 * @param location The location of the input field.
+	 * @return The method is returning an integer.
+	 */
 	public int convertToInteger(String input, String location) {
 		int amount = 0;
 		try {
@@ -652,6 +679,15 @@ public class ProductInformation extends JFrame {
 		return amount;
 	}
 
+	/**
+	 * This function takes a string and a price name as input, and returns a double.
+	 * If the string is not a valid double, the price name is added to the status
+	 * line
+	 * 
+	 * @param input     The string that is to be converted to a double.
+	 * @param priceName The name of the price that is being converted.
+	 * @return The method is returning a double.
+	 */
 	public double convertToDouble(String input, String priceName) {
 		double amount = 0;
 		try {
@@ -662,18 +698,25 @@ public class ProductInformation extends JFrame {
 		return amount;
 	}
 
+	/**
+	 * If the statusLine is blank, the status text is set to "OK" and the color is
+	 * set to green. If the statusLine is not blank, the status text is set to "Fejl
+	 * i " + the statusLine and the color is set to red
+	 */
 	public void setStatusMessage() {
 		if (statusLine.isBlank()) {
 			lblStatusText.setText("OK");
 			lblStatusText.setForeground(Color.green);
 		} else {
-			String yeet = statusLine.substring(0, statusLine.length() - 2);
-			lblStatusText.setText("Fejl i " + yeet);
+			String message = statusLine.substring(0, statusLine.length() - 2);
+			lblStatusText.setText("Fejl i " + message);
 			lblStatusText.setForeground(Color.red);
-			statusLine = "";
 		}
 	}
 
+	/**
+	 * It removes a category from the JList of the product
+	 */
 	public void removeCategory() {
 		int index = categoryList.getSelectedIndex();
 		ArrayList<String> categories = new ArrayList<>(tempCategoryList);
@@ -688,6 +731,12 @@ public class ProductInformation extends JFrame {
 		}
 	}
 
+	/**
+	 * It takes an ArrayList of Strings, clears the JList, adds the Strings to the
+	 * JList, and then updates the JList
+	 * 
+	 * @param inputList ArrayList<String>;
+	 */
 	public static void updateJList(ArrayList<String> inputList) {
 		DefaultListModel listModel = new DefaultListModel();
 		tempCategoryList.clear();
@@ -699,11 +748,18 @@ public class ProductInformation extends JFrame {
 		categoryList.setModel(listModel);
 	}
 
+	/**
+	 * It creates a new DialogCategoryAdd object, sets it to visible, and passes it
+	 * a list of categories
+	 */
 	public void addCategoryWindow() {
 		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd(tempCategoryList);
 		dialogCategoryAdd.setVisible(true);
 	}
 
+	/**
+	 * This function closes the window
+	 */
 	public void closeWindow() {
 		this.dispose();
 		this.setVisible(false);
