@@ -9,6 +9,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -24,7 +31,11 @@ import javax.swing.border.EmptyBorder;
 
 import controller.OrderController;
 import model.Order;
+import model.Order.OrderStatus;
 import model.OrderLine;
+import model.Product;
+
+import java.time.ZoneId;
 
 public class OrderOverview extends JFrame {
 
@@ -34,6 +45,11 @@ public class OrderOverview extends JFrame {
 	private JScrollPane scrollPane;
 	private JLabel lblStatus;
 	private OrderController orderController;
+	private DialogDate dateCreated;
+	private DialogDate datePickup;
+	private JComboBox comboBoxStatus;
+	private JCheckBox chckbxOrderCreated;
+	private JCheckBox chckbxOrderPickup;
 
 	/**
 	 * Launch the application.
@@ -57,7 +73,7 @@ public class OrderOverview extends JFrame {
 	public OrderOverview() {
 		initWindow();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 885, 518);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -162,6 +178,7 @@ public class OrderOverview extends JFrame {
 		textFieldOrderNumber.setColumns(10);
 		
 		JCheckBox chckbxBusinessCustomer = new JCheckBox("Erhvervskunde");
+		chckbxBusinessCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxBusinessCustomer = new GridBagConstraints();
 		gbc_chckbxBusinessCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxBusinessCustomer.insets = new Insets(0, 0, 5, 5);
@@ -169,7 +186,8 @@ public class OrderOverview extends JFrame {
 		gbc_chckbxBusinessCustomer.gridy = 0;
 		panel_North.add(chckbxBusinessCustomer, gbc_chckbxBusinessCustomer);
 		
-		JCheckBox chckbxOrderCreated = new JCheckBox("Order oprettet");
+		chckbxOrderCreated = new JCheckBox("Oprettelsesdato");
+		chckbxOrderCreated.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderCreated = new GridBagConstraints();
 		gbc_chckbxOrderCreated.fill = GridBagConstraints.BOTH;
 		gbc_chckbxOrderCreated.insets = new Insets(0, 0, 5, 5);
@@ -177,14 +195,14 @@ public class OrderOverview extends JFrame {
 		gbc_chckbxOrderCreated.gridy = 0;
 		panel_North.add(chckbxOrderCreated, gbc_chckbxOrderCreated);
 		
-		JLabel lblDateCreated = new JLabel("Oprettet dato");
+		JLabel lblDateCreated = new JLabel("Oprettelsesdato");
 		GridBagConstraints gbc_lblDateCreated = new GridBagConstraints();
 		gbc_lblDateCreated.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDateCreated.gridx = 3;
 		gbc_lblDateCreated.gridy = 0;
 		panel_North.add(lblDateCreated, gbc_lblDateCreated);
 		
-		JLabel lblDatePickup = new JLabel("Pickup dato");
+		JLabel lblDatePickup = new JLabel("Afhentningsdato");
 		GridBagConstraints gbc_lblDatePickup = new GridBagConstraints();
 		gbc_lblDatePickup.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDatePickup.gridx = 4;
@@ -192,19 +210,25 @@ public class OrderOverview extends JFrame {
 		panel_North.add(lblDatePickup, gbc_lblDatePickup);
 		
 		JButton btnSearch = new JButton("Søg");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonSearchPressed();
+			}
+		});
 		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
 		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSearch.gridx = 5;
 		gbc_btnSearch.gridy = 0;
 		panel_North.add(btnSearch, gbc_btnSearch);
 		
-		JButton btnDateFilterCreated = new JButton("Dato");
+		JButton btnDateFilterCreated = new JButton("Vælg periode");
 		btnDateFilterCreated.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				buttonDateCreatedPressed();
 			}
 		});
 		
-		JComboBox comboBoxStatus = new JComboBox();
+		comboBoxStatus = new JComboBox();
 		comboBoxStatus.setModel(new DefaultComboBoxModel(new String[] {"Status"}));
 		comboBoxStatus.setToolTipText("Status på ordre");
 		GridBagConstraints gbc_comboBoxStatus = new GridBagConstraints();
@@ -213,8 +237,10 @@ public class OrderOverview extends JFrame {
 		gbc_comboBoxStatus.gridx = 0;
 		gbc_comboBoxStatus.gridy = 2;
 		panel_North.add(comboBoxStatus, gbc_comboBoxStatus);
+		initComboBox();
 		
 		JCheckBox chckbxPrivateCustomer = new JCheckBox("Privatkunde");
+		chckbxPrivateCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxPrivateCustomer = new GridBagConstraints();
 		gbc_chckbxPrivateCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxPrivateCustomer.insets = new Insets(0, 0, 5, 5);
@@ -222,7 +248,8 @@ public class OrderOverview extends JFrame {
 		gbc_chckbxPrivateCustomer.gridy = 2;
 		panel_North.add(chckbxPrivateCustomer, gbc_chckbxPrivateCustomer);
 		
-		JCheckBox chckbxOrderPickup = new JCheckBox("Pickup");
+		chckbxOrderPickup = new JCheckBox("Afhentingsdato");
+		chckbxOrderPickup.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderPickup = new GridBagConstraints();
 		gbc_chckbxOrderPickup.fill = GridBagConstraints.BOTH;
 		gbc_chckbxOrderPickup.insets = new Insets(0, 0, 5, 5);
@@ -235,7 +262,12 @@ public class OrderOverview extends JFrame {
 		gbc_btnDateFilterCreated.gridy = 2;
 		panel_North.add(btnDateFilterCreated, gbc_btnDateFilterCreated);
 		
-		JButton btnDateFilterPickup = new JButton("Dato");
+		JButton btnDateFilterPickup = new JButton("Vælg periode");
+		btnDateFilterPickup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonDatePickupPressed();
+			}
+		});
 		GridBagConstraints gbc_btnDateFilterPickup = new GridBagConstraints();
 		gbc_btnDateFilterPickup.insets = new Insets(0, 0, 5, 5);
 		gbc_btnDateFilterPickup.gridx = 4;
@@ -248,8 +280,34 @@ public class OrderOverview extends JFrame {
 		dispose();
 	}
 	
+	private void buttonSearchPressed() {
+		search();
+	}
+	
+	private void buttonDateCreatedPressed() {
+		dateCreated = new DialogDate();
+		dateCreated.setVisible(true);
+	}
+	
+	private void buttonDatePickupPressed() {
+		datePickup = new DialogDate();
+		datePickup.setVisible(true);
+	}
+	
 	private void initWindow() {
 		this.orderController = new OrderController();
+	}
+	
+	//Might not be how we want to code this...?
+	@SuppressWarnings("unchecked")
+	private void initComboBox() {
+		ArrayList<OrderStatus> statuses = orderController.getAllStatusTypes();
+		
+		Collections.sort(statuses);
+		
+		for(OrderStatus os : statuses) {
+			comboBoxStatus.addItem(os);
+		}
 	}
 	
 	private void initTable() {
@@ -309,5 +367,79 @@ public class OrderOverview extends JFrame {
 		orderOverview.setVisible(true);
 		orderOverview.setBounds(this.getBounds());
 	}
+	
+private void search() {
+		ArrayList<Order> orders = orderController.getAllOrders();
+		ArrayList<Order> orderResult = new ArrayList<>();
+		
+		Date pickupFrom = null;
+		Date pickupTo = null;
+		Date dateCreatedFrom = null;
+		Date dateCreatedTo = null;
+		
+		if (datePickup != null) {
+			pickupFrom = datePickup.getDateFrom();
+			
+			pickupTo = datePickup.getDateTo();
+		}
+		
+		if(dateCreated != null) {
+			dateCreatedFrom = dateCreated.getDateFrom();
+			
+			dateCreatedTo = dateCreated.getDateTo();
+		}
+		
+		Iterator<Order> it = orders.iterator();
+		
+		while(it.hasNext()) {
+			Order o = it.next();
+			
+//		List<OrderStatus> status = Arrays.asList(o.getStatus());
+			
+			if(o.getOrderNumber().toLowerCase().equals(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0 || textFieldOrderNumber.getText().equals("Ordernummer")) {
+				System.out.println("if1");
+				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickup(), pickupFrom, pickupTo)) {
+					System.out.println("if2");
+					if(o.getStatus().equals(comboBoxStatus.getSelectedItem()) || comboBoxStatus.getSelectedIndex() == 0) {
+						System.out.println("if3");
+						orderResult.add(o);
+					}
+				}
+			}
+		}
+		table.setNewData(convertToStringArray(orderResult));
+	}
+
+
+//returns true if the LocalDate given is between dateFrom and dateTo parameters from the dateFilter
+private boolean isOrderDateBetweenDates(Date dateToCompare, Date dateFrom, Date dateTo) {
+	boolean output = false;
+	Date orderDate = dateToCompare;
+	if(orderDate.compareTo(dateFrom) >= 0 && orderDate.compareTo(dateTo) <= 0) {
+		output = true;
+	}
+	return output;
+}
+
+private Date localDateToDateConv(LocalDate ld) {
+	ZoneId deafaultZoneId = ZoneId.systemDefault();
+	Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
+	return returnDate;
+}
+
+private String[][] convertToStringArray(ArrayList<Order> dataArrayList) {
+	int size = dataArrayList.size();
+	String[][] data = new String[size][12];
+	for(int i = 0; i < size; i++) {
+		Order current = dataArrayList.get(i);
+		data[i][0] = current.getOrderNumber();
+		data[i][1] = current.getStatusAsString();
+		data[i][2] = "Ingen kundetype";
+		data[i][3] = current.getDate().toString();
+		data[i][4] = current.getPickup().toString();
+		data[i][5] = String.valueOf(current.getAmountOfProducts());
+	}
+	return data;
+}
 
 }

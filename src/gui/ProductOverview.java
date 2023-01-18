@@ -489,13 +489,9 @@ public class ProductOverview extends JFrame {
 		activeColumns = newColumn;
 		for(int i = 0; i < activeColumns.length; i++) {
 			if(!activeColumns[i]) {
-				table.getColumnModel().getColumn(i).setMinWidth(0);
-				table.getColumnModel().getColumn(i).setMaxWidth(0);
+				table.hideColumn(i);
 			}else if (activeColumns[i]){
-				table.getColumnModel().getColumn(i).setMinWidth(10);
-				table.getColumnModel().getColumn(i).setMaxWidth(5000);
-				table.getColumnModel().getColumn(i).setWidth(50);
-				table.getColumnModel().getColumn(i).setPreferredWidth(0);
+				table.showColumn(i);
 		}
 		}
 	}
