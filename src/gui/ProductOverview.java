@@ -27,15 +27,18 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class ProductOverview extends JFrame {
 
 	private JPanel contentPane;
-	private static ProductOverview frame;
 	private DefaultTable table;
 	private JTextField txtProductName;
 	private JTextField txtMaxPrice;
@@ -75,8 +78,7 @@ public class ProductOverview extends JFrame {
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = convertToStringArray(dataArrayList);
 		
-		table = new DefaultTable(data, columns);
-		setColumns(activeColumns);
+		table = new DefaultTable(data, columns, activeColumns);
 		
 		table.getTableHeader().setReorderingAllowed(false);
 		
@@ -84,13 +86,11 @@ public class ProductOverview extends JFrame {
 		JMenuItem details = new JMenuItem("Vis detaljer");
 		JMenuItem edit = new JMenuItem("Rediger produkt");
 		JMenuItem delete = new JMenuItem("Slet produkt");
-		JMenuItem addColumn = new JMenuItem("Tilføj kolonne");
 		
 		
 		popUp.add(details);
 		popUp.add(edit);
 		popUp.add(delete);
-		popUp.add(addColumn);
 		
 		ActionListener alDetails = new ActionListener() {
 			
@@ -104,7 +104,6 @@ public class ProductOverview extends JFrame {
 		details.addActionListener(alDetails);
 		edit.addActionListener(alDetails);
 		delete.addActionListener(alDetails);
-		addColumn.addActionListener(alDetails);
 		MouseAdapter ma = new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -114,8 +113,6 @@ public class ProductOverview extends JFrame {
 			}
 		
 		};
-		
-		table.getTableHeader().addMouseListener(ma);
 		table.addMouseListener(ma);
 		
 		scrollPane.setViewportView(table);
@@ -264,9 +261,9 @@ public class ProductOverview extends JFrame {
 		contentPane.add(panel_1, BorderLayout.EAST);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[]{0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
 		JButton btnAdd = new JButton("Tilføj");
@@ -285,6 +282,7 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnAdd, gbc_btnAdd);
 		
 		JButton btnEdit = new JButton("Rediger");
+		btnEdit.setEnabled(false);
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showProduct(true);
@@ -299,6 +297,7 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnEdit, gbc_btnEdit);
 		
 		JButton btnDetails = new JButton("Detaljer");
+		btnDetails.setEnabled(false);
 		btnDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showProduct(false);
@@ -313,6 +312,7 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnDetails, gbc_btnDetails);
 		
 		JButton btnDelete = new JButton("Slet");
+		btnDelete.setEnabled(false);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				table.selectedProductID();
@@ -322,6 +322,7 @@ public class ProductOverview extends JFrame {
 		});
 		
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDelete.gridx = 0;
 		gbc_btnDelete.gridy = 4;
@@ -359,6 +360,22 @@ public class ProductOverview extends JFrame {
 		gbc_btnClose.gridy = 0;
 		panel_2.add(btnClose, gbc_btnClose);
 		
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				int[] rows = table.getSelectedRows();
+				if(rows.length != 0) {
+					btnDelete.setEnabled(true);
+					btnEdit.setEnabled(true);
+					btnDetails.setEnabled(true);
+				}else {
+					btnDelete.setEnabled(false);
+					btnEdit.setEnabled(false);
+					btnDetails.setEnabled(false);
+				}
+			}
+		});
 		//Initialize window
 		initializeWindow();
 	}
@@ -456,7 +473,7 @@ public class ProductOverview extends JFrame {
 			}
 		}
 		table.setNewData(convertToStringArray(productResult));
-		setColumns(activeColumns);
+		table.setVisibleColumns(activeColumns);
 	}
 	
 	private String[][] convertToStringArray(ArrayList<Product> dataArrayList) {
@@ -480,22 +497,6 @@ public class ProductOverview extends JFrame {
 		}
 		return data;
 	}
-	
-	public void setColumns(boolean[] newColumn) {
-		activeColumns = newColumn;
-		for(int i = 0; i < activeColumns.length; i++) {
-			if(!activeColumns[i]) {
-				table.getColumnModel().getColumn(i).setMinWidth(0);
-				table.getColumnModel().getColumn(i).setMaxWidth(0);
-			}else if (activeColumns[i]){
-				table.getColumnModel().getColumn(i).setMinWidth(10);
-				table.getColumnModel().getColumn(i).setMaxWidth(5000);
-				table.getColumnModel().getColumn(i).setWidth(50);
-				table.getColumnModel().getColumn(i).setPreferredWidth(0);
-		}
-		}
-	}
-	
 	private void rowCounter() {
 		lblRowCounter.setText("Antal: "+ table.getRowCount());
 	}
@@ -520,10 +521,6 @@ public class ProductOverview extends JFrame {
 			table.selectedProductID();
 			table.deleteData();
 			rowCounter();
-		}
-		else if (s.equals("Tilføj kolonne")){
-			ColumnSelecter cs = new ColumnSelecter(activeColumns, columns, this);
-			cs.setVisible(true);
 		}
 	}
 }

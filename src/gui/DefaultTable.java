@@ -5,14 +5,19 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.nio.file.FileSystemNotFoundException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-import javax.swing.JDialog;
+import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -20,19 +25,38 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 import controller.ProductController;
-import model.ProductContainer;
 
 public class DefaultTable extends JTable {
 	private DefaultTableModel tabelModel;
 	private int[] rows;
+	private String[][] data;
+	private String[] columns;
+	private boolean[] visibleColumns;
 	
+	private JPopupMenu popUp;
 	/**
 	 * Create the panel.
 	 */
 	public DefaultTable(String[][] data, String[] columns) {
+		this.data = data;
+		this.columns = columns;
+		boolean[] visibleColumns = new boolean[columns.length];
+		for(int i = 0; i<columns.length;i++) {
+			visibleColumns[i] = true;
+		}
+		this.visibleColumns = visibleColumns;
+		initializeTable(data, columns, visibleColumns);
+	}
+	public DefaultTable(String[][] data, String[] columns, boolean[] visibleColumns) {
+		this.data = data;
+		this.columns = columns;
+		this.visibleColumns = visibleColumns;
+		initializeTable(data, columns, visibleColumns);
+	}
+	
+	private void initializeTable(String[][] data, String[] columns, boolean[] visibleColumns) {
 		tabelModel = new DefaultTableModel(data, columns);
 		setModel(tabelModel);
 		setDefaultEditor(Object.class, null);
@@ -45,6 +69,32 @@ public class DefaultTable extends JTable {
 				rows = getSelectedRows();
 			}
 		});
+		setVisibleColumns(visibleColumns);
+		popUp = new JPopupMenu();
+		JMenuItem addColumn = new JMenuItem("Tilføj kolonne");
+		popUp.add(addColumn);
+		
+		ActionListener alDetails = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				selectNewColumns();
+			}	
+		};
+		addColumn.addActionListener(alDetails);
+		
+		
+		MouseAdapter ma = new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (e.getButton() == 3) {
+					showPopUp(e);
+				}
+			}
+		
+		};
+		getTableHeader().addMouseListener(ma);
 	}
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		Component c = super.prepareRenderer(renderer, row, column);
@@ -81,16 +131,6 @@ public class DefaultTable extends JTable {
 			errorMessage("Marker én linje der skal slettes", "Bekræft slet");
 		}
 	}
-	public void showColumn(int index) {
-		getColumnModel().getColumn(index).setMinWidth(0);
-		getColumnModel().getColumn(index).setMaxWidth(0);
-	}
-	public void hideColumn(int index) {
-		getColumnModel().getColumn(index).setMinWidth(10);
-		getColumnModel().getColumn(index).setMaxWidth(5000);
-		getColumnModel().getColumn(index).setWidth(50);
-		getColumnModel().getColumn(index).setPreferredWidth(0);
-	}
 	public void errorMessage(String message, String title) {
 		
 		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), message, title, 0,
@@ -124,9 +164,9 @@ public class DefaultTable extends JTable {
 		
 		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet produkter",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-					new Object[] {"Ja", "Nej" }, JOptionPane.YES_OPTION);
-		
-		
+					new Object[] {Box.createHorizontalStrut(250), "OK", "Afbryd"}, JOptionPane.YES_OPTION);
+					
+					
 		return input == 0;
 	}
 	
@@ -155,9 +195,36 @@ public class DefaultTable extends JTable {
 		for(int i = 0; i < amountQty; i++) {
 			returnString = (String) tabelModel.getValueAt(rows[i],0);
 			returnArr.add(returnString);
-			System.out.println(returnArr.get(i));
 		}
 		return returnArr;
 	}
-	
+	public void selectNewColumns() {
+		ColumnSelecter cs = new ColumnSelecter(visibleColumns, columns, this);
+		cs.setVisible(true);
+	}
+	public void setVisibleColumns(boolean[] newColumn) {
+		visibleColumns = newColumn;
+		for(int i = 0; i < visibleColumns.length; i++) {
+			if(!visibleColumns[i]) {
+				hideColumn(i);
+			}else if (visibleColumns[i]){
+				showColumn(i);
+		}
+		}
+	}
+	private void hideColumn(int index) {
+		getColumnModel().getColumn(index).setMinWidth(0);
+		getColumnModel().getColumn(index).setMaxWidth(0);
+	}
+	private void showColumn(int index) {
+		getColumnModel().getColumn(index).setMinWidth(10);
+		getColumnModel().getColumn(index).setMaxWidth(5000);
+		getColumnModel().getColumn(index).setWidth(50);
+		getColumnModel().getColumn(index).setPreferredWidth(0);
+	}
+	private void showPopUp(MouseEvent e) {
+		if (e.isPopupTrigger()) {
+			popUp.show(e.getComponent(),e.getX(), e.getY());
+		}
+	}
 }

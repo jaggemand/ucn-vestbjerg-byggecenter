@@ -187,4 +187,15 @@ public class OrderController {
 	public ArrayList<Order> getAllOrders() {
 		return OrderContainer.getInstance().getOrders();
 	}
+	
+	public ArrayList<OrderStatus> getAllStatusTypes() {
+		ArrayList<OrderStatus> statuses = new ArrayList<>();
+		statuses.add(OrderStatus.CONFIRMATION);
+		statuses.add(OrderStatus.DELIVERED);
+		statuses.add(OrderStatus.ENROUTE);
+		statuses.add(OrderStatus.FINISHED);
+		statuses.add(OrderStatus.PACKING);
+		statuses.add(OrderStatus.SALE);
+		return statuses;
+	}
 }
