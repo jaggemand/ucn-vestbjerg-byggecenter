@@ -74,6 +74,13 @@ public class SalesOrder extends JDialog {
 			newOrder = true;
 		}
 		
+		if(o == null) {
+			orderController.createOrder(false);
+		}
+		else {
+			orderController.setCurrentOrder(o);
+		}
+		
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 622, 398);
@@ -234,7 +241,7 @@ public class SalesOrder extends JDialog {
 		spnCreatedDate = new JSpinner();
 		spnCreatedDate.setForeground(Color.BLACK);
 		spnCreatedDate.setEnabled(false);
-		spnCreatedDate.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_YEAR));
+		spnCreatedDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getDateAsDateType(), null, null, Calendar.DAY_OF_YEAR));
 		GridBagConstraints gbc_spnCreatedDate = new GridBagConstraints();
 		gbc_spnCreatedDate.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spnCreatedDate.insets = new Insets(0, 0, 5, 5);
@@ -284,7 +291,7 @@ public class SalesOrder extends JDialog {
 		panel_4.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
 		spnPickupDate = new JSpinner();
-		spnPickupDate.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_YEAR));
+		spnPickupDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getPickupDateAsDateType(), orderController.getCurrentOrder().getDateAsDateType(), null, Calendar.DAY_OF_YEAR));
 		GridBagConstraints gbc_spnPickupDate = new GridBagConstraints();
 		gbc_spnPickupDate.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spnPickupDate.insets = new Insets(0, 0, 5, 5);
@@ -302,12 +309,7 @@ public class SalesOrder extends JDialog {
 		
 		//Non windows-builder
 		//Does order exist
-		if(o == null) {
-			orderController.createOrder(false);
-		}
-		else {
-			orderController.setCurrentOrder(o);
-		}
+		
 		
 		initTable();
 		initialize();

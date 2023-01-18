@@ -20,6 +20,7 @@ Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
+Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
