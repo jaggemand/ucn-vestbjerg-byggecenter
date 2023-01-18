@@ -5,10 +5,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.nio.file.FileSystemNotFoundException;
 import java.util.ArrayList;
 
-import javax.swing.JDialog;
+import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -20,10 +19,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
 
 import controller.ProductController;
-import model.ProductContainer;
+import java.awt.Component;
+
 
 public class DefaultTable extends JTable {
 	private DefaultTableModel tabelModel;
@@ -124,9 +123,9 @@ public class DefaultTable extends JTable {
 		
 		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet produkter",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-					new Object[] {"Ja", "Nej" }, JOptionPane.YES_OPTION);
-		
-		
+					new Object[] {Box.createHorizontalStrut(250), "OK", "Afbryd"}, JOptionPane.YES_OPTION);
+					
+					
 		return input == 0;
 	}
 	
