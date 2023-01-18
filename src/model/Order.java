@@ -200,6 +200,10 @@ public class Order implements Serializable {
 	public void setDate(long days) {
 		date = LocalDate.now().minusDays(days);
 	}
+	
+	public void setPickupDate(Date d) {
+		pickupDate = convDateToLocalDate(d);
+	}
 
 	/**
 	 * This function returns the order number
@@ -239,5 +243,8 @@ public class Order implements Serializable {
 		ZoneId deafaultZoneId = ZoneId.systemDefault();
 		Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
 		return returnDate;
+	}
+	private LocalDate convDateToLocalDate(Date d) {
+		return d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 }

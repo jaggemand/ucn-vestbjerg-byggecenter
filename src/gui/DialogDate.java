@@ -44,6 +44,7 @@ public class DialogDate extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogDate() {
+		setModal(true);
 		setTitle("Vælg periode");
 		setBounds(100, 100, 196, 171);
 		getContentPane().setLayout(new BorderLayout());

@@ -55,21 +55,6 @@ public class SalesOrder extends JDialog {
 	private JSpinner spnCreatedDate;
 	private JSpinner spnPickupDate;
 	private JComboBox<String> jcbStatus;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new SalesOrder(new Order(true), true);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -228,6 +213,7 @@ public class SalesOrder extends JDialog {
 		panel_4.add(lblNewLabel, gbc_lblNewLabel);
 		
 		txtOrderNumber = new JTextField();
+		txtOrderNumber.setEditable(false);
 		txtOrderNumber.setForeground(Color.BLACK);
 		GridBagConstraints gbc_txtOrderNumber = new GridBagConstraints();
 		gbc_txtOrderNumber.insets = new Insets(0, 0, 5, 5);
@@ -248,7 +234,7 @@ public class SalesOrder extends JDialog {
 		spnCreatedDate = new JSpinner();
 		spnCreatedDate.setForeground(Color.BLACK);
 		spnCreatedDate.setEnabled(false);
-		spnCreatedDate.setModel(new SpinnerDateModel(new Date(1673996400000L), null, null, Calendar.DAY_OF_YEAR));
+		spnCreatedDate.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_YEAR));
 		GridBagConstraints gbc_spnCreatedDate = new GridBagConstraints();
 		gbc_spnCreatedDate.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spnCreatedDate.insets = new Insets(0, 0, 5, 5);
@@ -298,7 +284,7 @@ public class SalesOrder extends JDialog {
 		panel_4.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
 		spnPickupDate = new JSpinner();
-		spnPickupDate.setModel(new SpinnerDateModel(new Date(1673996400000L), null, null, Calendar.DAY_OF_YEAR));
+		spnPickupDate.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_YEAR));
 		GridBagConstraints gbc_spnPickupDate = new GridBagConstraints();
 		gbc_spnPickupDate.fill = GridBagConstraints.HORIZONTAL;
 		gbc_spnPickupDate.insets = new Insets(0, 0, 5, 5);
@@ -334,8 +320,8 @@ public class SalesOrder extends JDialog {
 		JSpinner.DateEditor editor2 = new JSpinner.DateEditor(spnPickupDate, "dd-MM-yyyy");
 		spnPickupDate.setEditor(editor2);
 		
-		spnPickupDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getPickupDateAsDateType(), orderController.getCurrentOrder().getDateAsDateType(), null, Calendar.DAY_OF_YEAR));
 		spnCreatedDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getDateAsDateType(), null, null, Calendar.DAY_OF_YEAR));
+		spnPickupDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getPickupDateAsDateType(), orderController.getCurrentOrder().getDateAsDateType(), null, Calendar.DAY_OF_YEAR));
 		
 		txtOrderNumber.setText(orderController.getCurrentOrder().getOrderNumber());
 		txtCustomerID.setText("TODO");
@@ -397,6 +383,11 @@ public class SalesOrder extends JDialog {
 	private void buttonSavePressed() {
 		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du gemme ændringerne", "Bekræft gem", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
 		if(result == 0) {
+			//Save the changes
+			orderController.getCurrentOrder().setStatus((OrderStatus) jcbStatus.getSelectedItem());
+			orderController.getCurrentOrder().setPickupDate((Date) spnPickupDate.getModel().getValue());
+			//TODO: add customerID here when implemented
+			
 			if(newOrder) {
 				orderController.addOrder();
 			}
