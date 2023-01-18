@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import model.Customer;
 import model.CustomerContainer;
@@ -14,12 +15,24 @@ public class CustomerController {
 		currentCustomer = null;
 	}
 	
-	//TODO add functionality in container
-	private boolean addCustomer(Customer c) {
-		
+	//TODO add functionality in customerContainer
+	private boolean addCustomer() {
+		boolean success = false;
+		if (currentCustomer != null) {
+			success = CustomerContainer.getInstance().addCustomer(getCustomer());
+		}
+		return success;
 	}
-	public boolean removeCustomer(String customerID) {
 	
+	//TODO add function to customerContainer
+	public boolean removeCustomer(String phone) {
+		boolean success = false;
+		Customer c = findCustomerByInformation(phone);
+		
+		if(c != null) {
+			success = CustomerContainer.getInstance().removeCustomer(c);
+		}
+		return success;
 	}
 	
 	public void setCustomer(Customer c) {
@@ -30,6 +43,7 @@ public class CustomerController {
 		return this.currentCustomer;
 	}
 	
+	//TODO add functionality to customerContainer
 	public Customer findCustomerByInformation(String phone){
 		Customer returnCustomer = null;
 		ArrayList<Customer> customers = CustomerContainer.getInstance().getCustomers();
@@ -55,10 +69,12 @@ public class CustomerController {
 	public boolean createCustomer (String name, String sirname, String address, String deliveryAddress
 			, String paymentAddress, String phone, String email, double credit, String postCode, String companyName) {
 		boolean result = false;
-		Customer c = new Customer(name, sirname, address, postCode, credit, phone, email, companyName);
+		
+		Customer c = new Customer(name, sirname, address, deliveryAddress,
+				paymentAddress, phone, email, credit, postCode, companyName);
+				
+		
 		result = addCustomer(c);
 		return result; 
 	}
 }
-
-

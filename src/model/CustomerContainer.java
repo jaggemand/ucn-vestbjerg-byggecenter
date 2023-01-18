@@ -5,10 +5,10 @@ import java.util.List;
 
 public class CustomerContainer {
 	private static CustomerContainer instance;
-	private List<Customer> customers;
+	private ArrayList<Customer> customers;
 	
 	private CustomerContainer() {
-		custommers = new ArrayList<>();
+		customers = new ArrayList<>();
 	}
 	
 	public static CustomerContainer getInstance() {
@@ -18,7 +18,7 @@ public class CustomerContainer {
 		return instance;
 	}
 	
-	public boolean  addCustomer(Customer customer) {
+	public boolean addCustomer(Customer customer) {
 		boolean result = false;
 		if(customer != null) {
 			result = true;
@@ -27,8 +27,16 @@ public class CustomerContainer {
 		return result;
 	}
 	
+	public ArrayList<Customer> getCustomers(){
+		return customers;
+	}
 	
-	
-	
-
+	public boolean removeCustomer(Customer c) {
+		boolean success = false;
+		if (c != null && customers.contains(c)) {
+			success = true;
+			customers.remove(c);
+		}
+		return success;
+	}
 }
