@@ -275,8 +275,8 @@ public class CashRegister extends JFrame {
 		int row = table.getSelectedRow();
 		
 		if(row != -1) {
-			int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du slette dette product", "Bekræft slet", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
-			
+			//int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du slette dette product", "Bekræft slet", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
+			int result = GUIPopUpMessages.customBox("Vil du slette dette product", "Bekræft slet",new String[] {"Ja","Nej"},JOptionPane.INFORMATION_MESSAGE );
 			if(result == 0) {
 				Product productToDelete = orderController.getCurrentOrder().getOrderLines().get(row).getProduct();
 				//Confirmed
@@ -294,9 +294,10 @@ public class CashRegister extends JFrame {
 	
 	private void buttonPaymentPressed() {
 		if(table.getModel().getRowCount() > 0) {
-			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil gennemføre betalingen", "Betaling",
+			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil gennemføre betalingen", "Betaling",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-					new Object[] { "Betal", "Tilbage" }, JOptionPane.YES_OPTION);
+					new Object[] { "Betal", "Tilbage" }, JOptionPane.YES_OPTION);*/
+			int input = GUIPopUpMessages.customBox("Er du sikker på at du vil gennemføre betalingen", "Betaling",new Object[] { "Betal", "Tilbage" } , JOptionPane.QUESTION_MESSAGE);
 			if(input == 0) {
 				orderController.addOrder();
 				resetFrame();
@@ -312,9 +313,10 @@ public class CashRegister extends JFrame {
 			resetFrame();
 		}
 		else {
-			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg?", "Afbryd salg",
+			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg?", "Afbryd salg",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);
+					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);*/
+			int input = GUIPopUpMessages.okBackBox("Er du sikker på at du vil afbryde nuværende salg?", "Afbryd Salg");
 			if(input == 0) {
 				resetFrame();
 			}
@@ -339,9 +341,10 @@ public class CashRegister extends JFrame {
 			dispose();
 		}
 		else {
-			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg og lukke modulet", "Afbryd salg og luk modul?",
+			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg og lukke modulet", "Afbryd salg og luk modul?",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);
+					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);*/
+			int input = GUIPopUpMessages.okBackBox("Er du sikker på at du vil afbryde nuværende salg og lukke modulet", "Afbryd salg og luk modul?");
 			if(input == 0) {
 				dispose();
 			}

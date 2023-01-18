@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -33,8 +32,6 @@ import javax.swing.event.ListSelectionListener;
 import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
-import java.awt.Component;
-import javax.swing.Box;
 
 public class ProductOverview extends JFrame {
 
@@ -402,7 +399,7 @@ public class ProductOverview extends JFrame {
 		int index = table.findElement();
 
 		if (index == -1) {
-			table.errorMessage("Intet produkt valgt", "Fejl");
+			GUIPopUpMessages.informationMessage("Intet produkt valgt", "Fejl");
 		}
 		else {
 			ProductController productController = new ProductController();
@@ -425,7 +422,7 @@ public class ProductOverview extends JFrame {
 				minPrice = Double.parseDouble(txtMinPrice.getText());
 				
 			} catch (NumberFormatException e) {
-				table.errorMessage("Input skal være et tal", "Fejl: Minimums pris");
+				GUIPopUpMessages.informationMessage("Input skal være et tal", "Fejl: Minimums pris");
 				return;
 			}
 		}
@@ -434,7 +431,7 @@ public class ProductOverview extends JFrame {
 			try {
 				maxPrice = Double.parseDouble(txtMaxPrice.getText());
 			} catch (NumberFormatException e) {
-				table.errorMessage("Input skal være et tal", "Fejl: Maximums pris");
+				GUIPopUpMessages.informationMessage("Input skal være et tal", "Fejl: Maximums pris");
 				return;
 			}
 		}
@@ -522,7 +519,7 @@ public class ProductOverview extends JFrame {
 		}
 	}
 	private void deleteData() {
-		int[] columnsToShow = new int[]{0, 1, 2};
+		int[] columnsToShow = new int[]{0, 1};
 		ArrayList<String> dataToDelete = table.deleteData(0, columnsToShow);
 		if(dataToDelete.size() != 0) {
 			ProductController pC = new ProductController();

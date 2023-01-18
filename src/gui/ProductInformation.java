@@ -602,8 +602,7 @@ public class ProductInformation extends JFrame {
 			success = true;
 		}
 		if (productName.isBlank() || productDescription.isBlank()) {
-			JOptionPane.showMessageDialog(null, "Produktnavn og beskrivelse skal være udfyldt", "Fejl!",
-					JOptionPane.ERROR_MESSAGE);
+			GUIPopUpMessages.warningMessage("Produktnavn og beskrivelse skal være udfyldt", "Fejl!");
 		} else if (editMode && productController.findProduct(productID) != null && success) {
 			String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
 			product.setCategory(newCategories);
@@ -617,8 +616,7 @@ public class ProductInformation extends JFrame {
 			product.setCostPrice(costPrice);
 			product.setSalesPrice(salesPrice);
 			product.setSalesPrice(salesPrice);
-			JOptionPane.showMessageDialog(null, "Produktet er blevet opdateret", "Success!",
-					JOptionPane.INFORMATION_MESSAGE);
+			GUIPopUpMessages.informationMessage("Produktet er blevet opdateret", "Success!");
 			closeWindow();
 		} else {
 			if (productController.findProduct(productID) == null && productController.findProduct(barcode) == null
@@ -627,17 +625,14 @@ public class ProductInformation extends JFrame {
 				Product newProduct = productController.createProduct(productName, barcode, productDescription,
 						newCategories, storeLocation, warehouseLocation, storeAmount, warehouseAmount);
 				if (productController.getAllProducts().contains(newProduct)) {
-					JOptionPane.showMessageDialog(null, "Produktet er blevet tilføjet", "Success!",
-							JOptionPane.INFORMATION_MESSAGE);
+					GUIPopUpMessages.informationMessage("Produktet er blevet tilføjet", "Success!");
 					closeWindow();
 				} else {
-					JOptionPane.showMessageDialog(null, "En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!",
-							JOptionPane.ERROR_MESSAGE);
+					GUIPopUpMessages.warningMessage("En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!");
 				}
 			} else {
 				setStatusMessage();
-				JOptionPane.showMessageDialog(null, "Produktet med det givne varenummer/stregkode findes allerede",
-						"Fejl!", JOptionPane.ERROR_MESSAGE);
+				GUIPopUpMessages.warningMessage("En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!");
 			}
 		}
 	}
@@ -678,12 +673,11 @@ public class ProductInformation extends JFrame {
 		int index = categoryList.getSelectedIndex();
 		ArrayList<String> categories = new ArrayList<>(tempCategoryList);
 		if (index < 0) {
-			JOptionPane.showMessageDialog(null, "Vælg en kategori at fjerne først", "Fejl!", JOptionPane.ERROR_MESSAGE);
+			GUIPopUpMessages.warningMessage("Vælg en kategori at fjerne først", "Fejl!");
 		} else {
 			categories.remove(index);
 			updateJList(categories);
-			JOptionPane.showMessageDialog(null, "Den valgte kategori er blevet fjernet", "Success!",
-					JOptionPane.INFORMATION_MESSAGE);
+			GUIPopUpMessages.informationMessage("Den valgte kategori er blevet fjernet", "Success!");
 			categories.clear();
 		}
 	}

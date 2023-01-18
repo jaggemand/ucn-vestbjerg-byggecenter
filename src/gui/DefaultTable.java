@@ -124,8 +124,7 @@ public class DefaultTable extends JTable {
 			}
 		}
 		else {
-			
-			errorMessage("Marker én linje der skal slettes", "Bekræft slet");
+			GUIPopUpMessages.informationMessage("Marker én linje der skal slettes", "Bekræft slet");
 		}
 		return dataToDelete;
 	}
@@ -166,11 +165,6 @@ public class DefaultTable extends JTable {
 					
 		return input == 1;
 	}
-	public void errorMessage(String message, String title) {
-		
-		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), message, title, 0,
-				JOptionPane.INFORMATION_MESSAGE, null, new String[] {"OK"}, null);
-	}
 	public int findElement() {
 		if(rows.length != 0) {
 			return this.getSelectedRows()[0];
@@ -186,17 +180,6 @@ public class DefaultTable extends JTable {
 	}
 	public void clear() {
 		tabelModel.setRowCount(0);
-	}
-	
-	public ArrayList<String> getSelectedItems() {
-		ArrayList<String> returnArr = new ArrayList<>();
-		int amount = rows.length; 
-		
-		for(int i = 0; i < amount; i++) {
-			
-			returnArr.add(tabelModel.getValueAt(rows[i],0).toString());
-		}
-		return returnArr;
 	}
 	public void selectNewColumns() {
 		ColumnSelecter cs = new ColumnSelecter(visibleColumns, columns, this);
