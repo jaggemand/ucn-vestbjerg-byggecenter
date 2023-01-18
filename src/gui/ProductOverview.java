@@ -315,8 +315,7 @@ public class ProductOverview extends JFrame {
 		btnDelete.setEnabled(false);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				table.selectedProductID();
-				table.deleteData();
+				deleteData();
 				rowCounter();
 			}
 		});
@@ -518,15 +517,18 @@ public class ProductOverview extends JFrame {
 			showProduct(true);
 		}
 		else if (s.equals("Slet produkt")){
-			table.selectedProductID();
-			ArrayList<String> dataToDelete = table.deleteData();
-			if(dataToDelete.size() != 0) {
-				ProductController pC = new ProductController();
-				for(int i = dataToDelete.size()-1; i>= 0;i--) {
-					pC.removeProduct(dataToDelete.get(i));
-				}
-			}
+			deleteData();
 			rowCounter();
+		}
+	}
+	private void deleteData() {
+		int[] columnsToShow = new int[]{0, 1, 2};
+		ArrayList<String> dataToDelete = table.deleteData(0, columnsToShow);
+		if(dataToDelete.size() != 0) {
+			ProductController pC = new ProductController();
+			for(int i = dataToDelete.size()-1; i>= 0;i--) {
+				pC.removeProduct(dataToDelete.get(i));
+			}
 		}
 	}
 }

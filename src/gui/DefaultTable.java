@@ -112,12 +112,13 @@ public class DefaultTable extends JTable {
 			tabelModel.addRow(data[i]);
 		}
 	}
-	public ArrayList<String> deleteData() {
-		ArrayList<String> elementsToDelete = new ArrayList<>();
+	public ArrayList<String> deleteData(int column, int[] columnsConfirm) {
+		ArrayList<String> dataToDelete = new ArrayList<>();
 		if(rows.length != 0) {			
-			boolean check = deleteItems(rows.length);
+			boolean check = deleteItems(rows.length, columnsConfirm);
 			if(check == true) {
 				for(int i = rows.length-1; i>= 0;i--) {
+					dataToDelete.add(tabelModel.getValueAt(rows[i],column).toString());
 					tabelModel.removeRow(rows[i]);
 				}
 			}
@@ -126,22 +127,21 @@ public class DefaultTable extends JTable {
 			
 			errorMessage("Marker én linje der skal slettes", "Bekræft slet");
 		}
-		return elementsToDelete;
-	}
-	public void errorMessage(String message, String title) {
-		
-		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), message, title, 0,
-				JOptionPane.INFORMATION_MESSAGE, null, new String[] {"OK"}, null);
+		return dataToDelete;
 	}
 	
 	
-	private boolean deleteItems(int amountQty) {
+	private boolean deleteItems(int amountQty, int[] columns) {
 		
 		StringBuilder products = new StringBuilder();
 		
 		for(int i = 0; i < amountQty; i++) {
-			products.append(tabelModel.getValueAt(rows[i],0));
-			products.append("\t" + tabelModel.getValueAt(rows[i],1));
+			for(int x = 0; x < columns.length; x++) {
+				if(columns[x] <= tabelModel.getColumnCount() && columns[x] >= 0) {
+				products.append(tabelModel.getValueAt(rows[i],columns[x])+ "\t");
+				}
+			}
+			
 			products.append("\n");
 		}
 		
@@ -164,9 +164,13 @@ public class DefaultTable extends JTable {
 					new Object[] {Box.createHorizontalStrut(250), "OK", "Afbryd"}, JOptionPane.YES_OPTION);
 					
 					
-		return input == 0;
+		return input == 1;
 	}
-	
+	public void errorMessage(String message, String title) {
+		
+		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), message, title, 0,
+				JOptionPane.INFORMATION_MESSAGE, null, new String[] {"OK"}, null);
+	}
 	public int findElement() {
 		if(rows.length != 0) {
 			return this.getSelectedRows()[0];
@@ -184,14 +188,13 @@ public class DefaultTable extends JTable {
 		tabelModel.setRowCount(0);
 	}
 	
-	public ArrayList<String> selectedProductID() {
-		String returnString = "";
+	public ArrayList<String> getSelectedItems() {
 		ArrayList<String> returnArr = new ArrayList<>();
-		int amountQty = rows.length; 
+		int amount = rows.length; 
 		
-		for(int i = 0; i < amountQty; i++) {
-			returnString = (String) tabelModel.getValueAt(rows[i],0);
-			returnArr.add(returnString);
+		for(int i = 0; i < amount; i++) {
+			
+			returnArr.add(tabelModel.getValueAt(rows[i],0).toString());
 		}
 		return returnArr;
 	}
