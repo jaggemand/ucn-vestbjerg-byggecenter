@@ -81,11 +81,11 @@ public class DefaultTable extends JTable {
 			errorMessage("Marker én linje der skal slettes", "Bekræft slet");
 		}
 	}
-	public void showColumn(int index) {
+	public void hideColumn(int index) {
 		getColumnModel().getColumn(index).setMinWidth(0);
 		getColumnModel().getColumn(index).setMaxWidth(0);
 	}
-	public void hideColumn(int index) {
+	public void showColumn(int index) {
 		getColumnModel().getColumn(index).setMinWidth(10);
 		getColumnModel().getColumn(index).setMaxWidth(5000);
 		getColumnModel().getColumn(index).setWidth(50);
