@@ -53,21 +53,21 @@ public class DialogCategoryAdd extends JDialog {
 		setTitle("Tilføj kategorier");
 		setResizable(false);
 		setModal(true);
-		setBounds(100, 100, 308, 137);
+		setBounds(100, 100, 350, 137);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_contentPanel = new GridBagLayout();
 		gbl_contentPanel.columnWidths = new int[] { 0, 0, 0, 0, 0, 0 };
 		gbl_contentPanel.rowHeights = new int[] { 0, 0, 0, 0, 0 };
-		gbl_contentPanel.columnWeights = new double[] { 1.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE };
-		gbl_contentPanel.rowWeights = new double[] { 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
+		gbl_contentPanel.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
+		gbl_contentPanel.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			JLabel lblNewLabel = new JLabel("Vælg fra liste");
 			GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+			gbc_lblNewLabel.fill = GridBagConstraints.HORIZONTAL;
 			gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
 			gbc_lblNewLabel.gridx = 1;
 			gbc_lblNewLabel.gridy = 1;
 			contentPanel.add(lblNewLabel, gbc_lblNewLabel);
@@ -89,6 +89,7 @@ public class DialogCategoryAdd extends JDialog {
 				}
 			});
 			GridBagConstraints gbc_btnAddCategory = new GridBagConstraints();
+			gbc_btnAddCategory.fill = GridBagConstraints.HORIZONTAL;
 			gbc_btnAddCategory.insets = new Insets(0, 0, 5, 5);
 			gbc_btnAddCategory.gridx = 3;
 			gbc_btnAddCategory.gridy = 1;
@@ -97,8 +98,8 @@ public class DialogCategoryAdd extends JDialog {
 		{
 			JLabel lblNewLabel_1 = new JLabel("Ny kategori");
 			GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+			gbc_lblNewLabel_1.fill = GridBagConstraints.HORIZONTAL;
 			gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-			gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
 			gbc_lblNewLabel_1.gridx = 1;
 			gbc_lblNewLabel_1.gridy = 2;
 			contentPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);
