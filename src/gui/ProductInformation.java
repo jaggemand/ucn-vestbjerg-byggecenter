@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.awt.event.ActionEvent;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.ScrollPaneConstants;
 
 public class ProductInformation extends JFrame {
 
@@ -59,10 +60,11 @@ public class ProductInformation extends JFrame {
 	private static ArrayList<String> tempCategoryList = new ArrayList<>();
 	private JButton btnSave;
 	private JButton btnCancel;
-	private JLabel lblStatusText;
 	private JLabel lblTextNameStatus;
 	private String statusLine = "";
 	private JTextArea txtProductDescription;
+	private JTextArea lblStatusText;
+	private JScrollPane scrollPaneStatusText;
 
 	/**
 	 * Launch the application.
@@ -94,18 +96,19 @@ public class ProductInformation extends JFrame {
 
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-		gbl_contentPane.rowHeights = new int[] { 0, 20, 0, 0, 0, 111, 0, 0, 0, 0, 0, 32, 0, 0 };
-		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,
+		gbl_contentPane.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_contentPane.rowHeights = new int[] { 0, 20, 0, 0, 0, 111, 0, 0, 0, 0, 0, 0, 32, 30, 0 };
+		gbl_contentPane.columnWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0,
 				Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0,
+				1.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
 		JPanel panel_general = new JPanel();
 		panel_general.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		panel_general.setBackground(new Color(192, 192, 192));
 		GridBagConstraints gbc_panel_general = new GridBagConstraints();
-		gbc_panel_general.gridheight = 11;
+		gbc_panel_general.gridheight = 12;
 		gbc_panel_general.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_general.fill = GridBagConstraints.BOTH;
 		gbc_panel_general.gridx = 1;
@@ -212,7 +215,7 @@ public class ProductInformation extends JFrame {
 		panel_price.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		panel_price.setBackground(new Color(192, 192, 192));
 		GridBagConstraints gbc_panel_price = new GridBagConstraints();
-		gbc_panel_price.gridwidth = 2;
+		gbc_panel_price.gridwidth = 3;
 		gbc_panel_price.gridheight = 5;
 		gbc_panel_price.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_price.fill = GridBagConstraints.BOTH;
@@ -301,7 +304,7 @@ public class ProductInformation extends JFrame {
 		gbc_panel_location.gridheight = 10;
 		gbc_panel_location.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_location.fill = GridBagConstraints.BOTH;
-		gbc_panel_location.gridx = 6;
+		gbc_panel_location.gridx = 7;
 		gbc_panel_location.gridy = 1;
 		contentPane.add(panel_location, gbc_panel_location);
 		GridBagLayout gbl_panel_location = new GridBagLayout();
@@ -398,8 +401,8 @@ public class ProductInformation extends JFrame {
 		panel_2.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		panel_2.setBackground(new Color(192, 192, 192));
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.gridwidth = 2;
-		gbc_panel_2.gridheight = 5;
+		gbc_panel_2.gridwidth = 3;
+		gbc_panel_2.gridheight = 6;
 		gbc_panel_2.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_2.fill = GridBagConstraints.BOTH;
 		gbc_panel_2.gridx = 3;
@@ -467,8 +470,8 @@ public class ProductInformation extends JFrame {
 		});
 		GridBagConstraints gbc_btnSave = new GridBagConstraints();
 		gbc_btnSave.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSave.gridx = 6;
-		gbc_btnSave.gridy = 11;
+		gbc_btnSave.gridx = 7;
+		gbc_btnSave.gridy = 12;
 		contentPane.add(btnSave, gbc_btnSave);
 
 		btnCancel = new JButton("Afbryd");
@@ -479,31 +482,44 @@ public class ProductInformation extends JFrame {
 		});
 		GridBagConstraints gbc_btnCancel = new GridBagConstraints();
 		gbc_btnCancel.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCancel.gridx = 7;
-		gbc_btnCancel.gridy = 11;
+		gbc_btnCancel.gridx = 8;
+		gbc_btnCancel.gridy = 12;
 		contentPane.add(btnCancel, gbc_btnCancel);
 
 		lblTextNameStatus = new JLabel("Status:");
-		lblTextNameStatus.setFont(new Font("Tahoma", Font.BOLD, 10));
-		lblTextNameStatus.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTextNameStatus.setVerticalAlignment(SwingConstants.TOP);
 		GridBagConstraints gbc_lblTextNameStatus = new GridBagConstraints();
-		gbc_lblTextNameStatus.fill = GridBagConstraints.BOTH;
+		gbc_lblTextNameStatus.anchor = GridBagConstraints.NORTHEAST;
 		gbc_lblTextNameStatus.insets = new Insets(0, 0, 0, 5);
 		gbc_lblTextNameStatus.gridx = 3;
-		gbc_lblTextNameStatus.gridy = 12;
+		gbc_lblTextNameStatus.gridy = 13;
 		contentPane.add(lblTextNameStatus, gbc_lblTextNameStatus);
+		lblTextNameStatus.setFont(new Font("Tahoma", Font.BOLD, 10));
+		lblTextNameStatus.setHorizontalAlignment(SwingConstants.RIGHT);
 
-		lblStatusText = new JLabel("");
+		scrollPaneStatusText = new JScrollPane();
+		scrollPaneStatusText.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPaneStatusText.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneStatusText.setViewportBorder(null);
+		scrollPaneStatusText.setBorder(null);
+		GridBagConstraints gbc_scrollPaneStatusText = new GridBagConstraints();
+		gbc_scrollPaneStatusText.gridwidth = 2;
+		gbc_scrollPaneStatusText.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPaneStatusText.fill = GridBagConstraints.BOTH;
+		gbc_scrollPaneStatusText.gridx = 4;
+		gbc_scrollPaneStatusText.gridy = 13;
+		contentPane.add(scrollPaneStatusText, gbc_scrollPaneStatusText);
+
+		lblStatusText = new JTextArea();
 		lblStatusText.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		lblStatusText.setToolTipText("Fejl meddeleser vises her");
-		lblStatusText.setHorizontalAlignment(SwingConstants.LEFT);
-		GridBagConstraints gbc_lblStatusText = new GridBagConstraints();
-		gbc_lblStatusText.gridwidth = 4;
-		gbc_lblStatusText.fill = GridBagConstraints.BOTH;
-		gbc_lblStatusText.insets = new Insets(0, 0, 0, 5);
-		gbc_lblStatusText.gridx = 4;
-		gbc_lblStatusText.gridy = 12;
-		contentPane.add(lblStatusText, gbc_lblStatusText);
+		lblStatusText.setText("OK");
+		lblStatusText.setForeground(new Color(0, 255, 0));
+		lblStatusText.setEditable(false);
+		scrollPaneStatusText.setViewportView(lblStatusText);
+		lblStatusText.setRows(4);
+		lblStatusText.setWrapStyleWord(true);
+		lblStatusText.setLineWrap(true);
+		lblStatusText.setBackground(new Color(240, 240, 240));
 
 		this.product = product;
 		this.editMode = editMode;
@@ -564,8 +580,6 @@ public class ProductInformation extends JFrame {
 		}
 		lblTextNameStatus.setVisible(editMode);
 		lblStatusText.setVisible(editMode);
-		lblStatusText.setText("OK");
-		lblStatusText.setForeground(Color.green);
 		txtWarehouseAmount.setEnabled(editMode);
 		txtWarehouseLocation.setEnabled(editMode);
 		txtStoreAmount.setEnabled(editMode);
@@ -608,13 +622,13 @@ public class ProductInformation extends JFrame {
 		double salesPrice = 0.0;
 		int storeAmount = 0;
 		int warehouseAmount = 0;
-
+		setStatusMessage();
 		storeAmount = convertToInteger(txtStoreAmount.getText().toString(), "butiksbeholdning");
 		warehouseAmount = convertToInteger(txtWarehouseAmount.getText().toString(), "lagerbeholdning");
 
 		if (productName.isBlank() || productDescription.isBlank()) {
 			statusLine += "produktnavn, beskrivelse, ";
-		} else if (editMode && productController.findProduct(productID) != null && statusLine.isBlank()) { // Updates the current product
+		} else if (editMode && productController.findProduct(productID) != null) { // Updates the current product
 			costPrice = convertToDouble(txtCostPrice.getText().toString(), "Indkøbspris");
 			suggestedSalesPrice = convertToDouble(txtSuggestedSalesPrice.getText().toString(), "Vejledene pris");
 			salesPrice = convertToDouble(txtSalesPrice.getText().toString(), "Salgspris");
@@ -637,7 +651,8 @@ public class ProductInformation extends JFrame {
 			}
 		} else {
 			if (editMode && productController.findProduct(productID) == null
-					&& productController.findProduct(barcode) == null && statusLine.isBlank()) { // Creates a new product
+					&& productController.findProduct(barcode) == null && statusLine.isBlank()) { // Creates a new
+																									// product
 
 				String[] newCategories = tempCategoryList.toArray(new String[tempCategoryList.size()]);
 				Product newProduct = productController.createProduct(productName, barcode, productDescription,
@@ -648,10 +663,8 @@ public class ProductInformation extends JFrame {
 				} else {
 					GUIPopUpMessages.warningMessage("En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!");
 				}
-			} else {
-				GUIPopUpMessages.warningMessage("En fejl opstod og produktet er ikke blevet tilføjet", "Fejl!");
 			}
-			if (productController.findProduct(barcode) != null) {
+			if (productController.findProduct(barcode) != null && editMode && product == null) {
 				statusLine += "stregkode findes allerede, ";
 			}
 		}
