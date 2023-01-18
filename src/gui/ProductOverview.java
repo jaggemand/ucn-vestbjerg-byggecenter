@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,19 +57,193 @@ public class ProductOverview extends JFrame {
 	 */
 	
 	public ProductOverview() {
-		activeColumns = new boolean[] {true, true, true, true, true, true, false, false, false, false, false, false};
-		columns = new String[]{"ProduktID", "Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning", "Lagerlokation", "Salgspris", 
-								"Stregkode", "Beskrivelse", "Kategori",	"Kostpris", "Vejledende salgspris"};
-	
 		setTitle("Produktoversigt");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 923, 644);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
+		setTable();
+		setPopUpMenu();
+		setButtons();
+		//Initialize window
+		initializeWindow();
+	}
+	
+	
+	private void closeWindow() {
+		this.dispose();
+		this.setVisible(false);
+	}
+
+	private void initializeWindow() {
+		//Fill categories into the combobox
+		//ArrayList<String> categories = new ArrayList<>(ProductContainer.getInstance().getCategories());
+		ProductController pc = new ProductController();
+		
+		ArrayList<Product> products = pc.getAllProducts();
+		ArrayList<String> existingCategories = new ArrayList<>();
+		for(int i = 0;i<products.size();i++) {
+			String[] productCategories = products.get(i).getCategory();
+			for(int x = 0;x<productCategories.length;x++) {
+				if(!existingCategories.contains(productCategories[x].toLowerCase())) {
+					existingCategories.add(productCategories[x].toLowerCase());
+				}
+			}
+		}
+		/*Collections.sort(categories);
+		
+		for(String e : categories) {
+			if(existingCategories.contains(e.toLowerCase())) {
+			jcbCategories.addItem(e);
+			}
+		}*/
+		Collections.sort(existingCategories);
+		for(String e: existingCategories) {
+			jcbCategories.addItem(e);
+		}
+	}
+	
+	
+	private void showProduct(boolean edit) {
+		int index = table.findElement();
+
+		if (index == -1) {
+			GUIPopUpMessages.informationMessage("Intet produkt valgt", "Fejl");
+		}
+		else {
+			ProductController productController = new ProductController();
+			Product product = productController.findProduct(table.getValueAt(index, 0).toString());
+			
+			ProductInformation productInformation = new ProductInformation(product, edit);
+			productInformation.setVisible(true);
+		}
+	}
+	
+	private void search() {
+		
+		ArrayList<Product> products = ProductContainer.getInstance().getProducts();
+		ArrayList<Product> productResult = new ArrayList<>();
+		double minPrice = -1;
+		double maxPrice = -1;
+		
+		if (txtMinPrice.getText().length() != 0) {
+			try {
+				minPrice = Double.parseDouble(txtMinPrice.getText());
+				
+			} catch (NumberFormatException e) {
+				GUIPopUpMessages.informationMessage("Input skal være et tal", "Fejl: Minimums pris");
+				return;
+			}
+		}
+			
+		if (txtMaxPrice.getText().length() != 0) {
+			try {
+				maxPrice = Double.parseDouble(txtMaxPrice.getText());
+			} catch (NumberFormatException e) {
+				GUIPopUpMessages.informationMessage("Input skal være et tal", "Fejl: Maximums pris");
+				return;
+			}
+		}
+		
+		if (minPrice > maxPrice) {
+			double temp = minPrice;
+			minPrice = maxPrice;
+			maxPrice = temp;
+			txtMinPrice.setText(String.valueOf(minPrice));
+			txtMaxPrice.setText(String.valueOf(maxPrice));
+		}
+		
+		Iterator<Product> it = products.iterator();
+		
+		while(it.hasNext()) {
+			Product p = it.next();
+			
+		List<String> categories = Arrays.asList(p.getCategory());
+			
+			if(p.getName().toLowerCase().contains(txtProductName.getText().toLowerCase()) || txtProductName.getText().length() == 0) {
+				if (p.getSalesPrice() >= minPrice || minPrice == -1 ) {
+					if(p.getSalesPrice() <= maxPrice || maxPrice == -1) {
+						if (categories.contains(jcbCategories.getSelectedItem()) || jcbCategories.getSelectedItem().equals(firstElement)) {
+							if (jrbWarehouseLocation.isSelected() == true && p.getWarehouseAmount() > 0) {
+								productResult.add(p);
+							}else if (jrbStoreLocation.isSelected() == true && p.getStorageAmount() > 0) {
+								productResult.add(p);
+							}else if (jrbWarehouseLocation.isSelected() == false && jrbStoreLocation.isSelected() == false && p.getWarehouseAmount() <= 0
+									&& p.getStorageAmount() <= 0) {
+								productResult.add(p);
+							}
+						}
+					}
+				}
+			}
+		}
+		table.setNewData(convertToStringArray(productResult));
+		table.setVisibleColumns(activeColumns);
+	}
+	
+	private String[][] convertToStringArray(ArrayList<Product> dataArrayList) {
+		
+		int size = dataArrayList.size();
+		String[][] data = new String[size][12];
+		for(int i = 0; i < size; i++) {
+			Product current = dataArrayList.get(i);
+			data[i][0] = current.getProductID();
+			data[i][1] = current.getName();
+			data[i][2] = Integer.toString(current.getStorageAmount());
+			data[i][3] = current.getStorageLocation();
+			data[i][4] = Integer.toString(current.getWarehouseAmount());
+			data[i][5] = current.getWarehouseLocation();
+			data[i][6] = String.valueOf(current.getSalesPrice());
+			data[i][7] = current.getBarcode();
+			data[i][8] = current.getDescription();
+			data[i][9] = String.join(", ", current.getCategory());
+			data[i][10] = String.valueOf(current.getCostPrice());
+			data[i][11] = String.valueOf(current.getSuggestedSalesPrice());
+		}
+		return data;
+	}
+	private void rowCounter() {
+		lblRowCounter.setText("Antal: "+ table.getRowCount());
+	}
+	
+	private void showPopUp(MouseEvent e) {
+		if (e.isPopupTrigger()) {
+			popUp.show(e.getComponent(),e.getX(), e.getY());
+		}
+	}
+	
+	private void popUpMenuAction(boolean header, ActionEvent e) {
+		String s = e.getActionCommand();
+		
+		
+		if (s.equals("Vis detaljer")) {
+			showProduct(false);
+		}
+		else if (s.equals("Rediger produkt")){
+			showProduct(true);
+		}
+		else if (s.equals("Slet produkt")){
+			deleteData();
+			rowCounter();
+		}
+	}
+	private void deleteData() {
+		int[] columnsToShow = new int[]{0, 1};
+		ArrayList<String> dataToDelete = table.deleteData(0, columnsToShow);
+		if(dataToDelete.size() != 0) {
+			ProductController pC = new ProductController();
+			for(int i = dataToDelete.size()-1; i>= 0;i--) {
+				pC.removeProduct(dataToDelete.get(i));
+			}
+		}
+	}
+	private void setTable() {
+		activeColumns = new boolean[] {true, true, true, true, true, true, false, false, false, false, false, false};
+		columns = new String[]{"ProduktID", "Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning", "Lagerlokation", "Salgspris", 
+								"Stregkode", "Beskrivelse", "Kategori",	"Kostpris", "Vejledende salgspris"};
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
@@ -79,6 +254,9 @@ public class ProductOverview extends JFrame {
 		
 		table.getTableHeader().setReorderingAllowed(false);
 		
+		scrollPane.setViewportView(table);
+	}
+	private void setPopUpMenu() {
 		popUp = new JPopupMenu();
 		JMenuItem details = new JMenuItem("Vis detaljer");
 		JMenuItem edit = new JMenuItem("Rediger produkt");
@@ -111,8 +289,8 @@ public class ProductOverview extends JFrame {
 		
 		};
 		table.addMouseListener(ma);
-		
-		scrollPane.setViewportView(table);
+	}
+	private void setButtons() {
 		JPanel panel = new JPanel();
 		panel.setLayout(getLayout());
 		contentPane.add(panel, BorderLayout.NORTH);
@@ -355,7 +533,6 @@ public class ProductOverview extends JFrame {
 		gbc_btnClose.gridx = 3;
 		gbc_btnClose.gridy = 0;
 		panel_2.add(btnClose, gbc_btnClose);
-		
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
@@ -372,160 +549,5 @@ public class ProductOverview extends JFrame {
 				}
 			}
 		});
-		//Initialize window
-		initializeWindow();
-	}
-	
-	
-	private void closeWindow() {
-		this.dispose();
-		this.setVisible(false);
-	}
-
-	private void initializeWindow() {
-		//Fill categories into the combobox
-		//TODO cant access model layer directly???!!
-		ArrayList<String> categories = new ArrayList<>(ProductContainer.getInstance().getCategories());
-		
-		Collections.sort(categories);
-		
-		for(String e : categories) {
-			jcbCategories.addItem(e);
-		}
-	}
-	
-	
-	private void showProduct(boolean edit) {
-		int index = table.findElement();
-
-		if (index == -1) {
-			GUIPopUpMessages.informationMessage("Intet produkt valgt", "Fejl");
-		}
-		else {
-			ProductController productController = new ProductController();
-			Product product = productController.findProduct(table.getValueAt(index, 0).toString());
-			
-			ProductInformation productInformation = new ProductInformation(product, edit);
-			productInformation.setVisible(true);
-		}
-	}
-	
-	private void search() {
-		
-		ArrayList<Product> products = ProductContainer.getInstance().getProducts();
-		ArrayList<Product> productResult = new ArrayList<>();
-		double minPrice = -1;
-		double maxPrice = -1;
-		
-		if (txtMinPrice.getText().length() != 0) {
-			try {
-				minPrice = Double.parseDouble(txtMinPrice.getText());
-				
-			} catch (NumberFormatException e) {
-				GUIPopUpMessages.informationMessage("Input skal være et tal", "Fejl: Minimums pris");
-				return;
-			}
-		}
-			
-		if (txtMaxPrice.getText().length() != 0) {
-			try {
-				maxPrice = Double.parseDouble(txtMaxPrice.getText());
-			} catch (NumberFormatException e) {
-				GUIPopUpMessages.informationMessage("Input skal være et tal", "Fejl: Maximums pris");
-				return;
-			}
-		}
-		
-		if (minPrice > maxPrice) {
-			double temp = minPrice;
-			minPrice = maxPrice;
-			maxPrice = temp;
-			txtMinPrice.setText(String.valueOf(minPrice));
-			txtMaxPrice.setText(String.valueOf(maxPrice));
-		}
-		
-		Iterator<Product> it = products.iterator();
-		
-		while(it.hasNext()) {
-			Product p = it.next();
-			
-		List<String> categories = Arrays.asList(p.getCategory());
-			
-			if(p.getName().toLowerCase().contains(txtProductName.getText().toLowerCase()) || txtProductName.getText().length() == 0) {
-				if (p.getSalesPrice() >= minPrice || minPrice == -1 ) {
-					if(p.getSalesPrice() <= maxPrice || maxPrice == -1) {
-						if (categories.contains(jcbCategories.getSelectedItem()) || jcbCategories.getSelectedItem().equals(firstElement)) {
-							if (jrbWarehouseLocation.isSelected() == true && p.getWarehouseAmount() > 0) {
-								productResult.add(p);
-							}else if (jrbStoreLocation.isSelected() == true && p.getStorageAmount() > 0) {
-								productResult.add(p);
-							}else if (jrbWarehouseLocation.isSelected() == false && jrbStoreLocation.isSelected() == false && p.getWarehouseAmount() <= 0
-									&& p.getStorageAmount() <= 0) {
-								productResult.add(p);
-							}
-						}
-					}
-				}
-			}
-		}
-		table.setNewData(convertToStringArray(productResult));
-		table.setVisibleColumns(activeColumns);
-	}
-	
-	private String[][] convertToStringArray(ArrayList<Product> dataArrayList) {
-		
-		int size = dataArrayList.size();
-		String[][] data = new String[size][12];
-		for(int i = 0; i < size; i++) {
-			Product current = dataArrayList.get(i);
-			data[i][0] = current.getProductID();
-			data[i][1] = current.getName();
-			data[i][2] = Integer.toString(current.getStorageAmount());
-			data[i][3] = current.getStorageLocation();
-			data[i][4] = Integer.toString(current.getWarehouseAmount());
-			data[i][5] = current.getWarehouseLocation();
-			data[i][6] = String.valueOf(current.getSalesPrice());
-			data[i][7] = current.getBarcode();
-			data[i][8] = current.getDescription();
-			data[i][9] = String.join(", ", current.getCategory());
-			data[i][10] = String.valueOf(current.getCostPrice());
-			data[i][11] = String.valueOf(current.getSuggestedSalesPrice());
-		}
-		return data;
-	}
-	private void rowCounter() {
-		lblRowCounter.setText("Antal: "+ table.getRowCount());
-	}
-	
-	private void showPopUp(MouseEvent e) {
-		if (e.isPopupTrigger()) {
-			popUp.show(e.getComponent(),e.getX(), e.getY());
-		}
-	}
-	
-	private void popUpMenuAction(boolean header, ActionEvent e) {
-		String s = e.getActionCommand();
-		
-		
-		if (s.equals("Vis detaljer")) {
-			showProduct(false);
-		}
-		else if (s.equals("Rediger produkt")){
-			showProduct(true);
-		}
-		else if (s.equals("Slet produkt")){
-			deleteData();
-			rowCounter();
-		}
-	}
-	private void deleteData() {
-		int[] columnsToShow = new int[]{0, 1};
-		ArrayList<String> dataToDelete = table.deleteData(0, columnsToShow);
-		if(dataToDelete.size() != 0) {
-			ProductController pC = new ProductController();
-			for(int i = dataToDelete.size()-1; i>= 0;i--) {
-				pC.removeProduct(dataToDelete.get(i));
-			}
-		}
 	}
 }
