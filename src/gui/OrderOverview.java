@@ -178,6 +178,7 @@ public class OrderOverview extends JFrame {
 		textFieldOrderNumber.setColumns(10);
 		
 		JCheckBox chckbxBusinessCustomer = new JCheckBox("Erhvervskunde");
+		chckbxBusinessCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxBusinessCustomer = new GridBagConstraints();
 		gbc_chckbxBusinessCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxBusinessCustomer.insets = new Insets(0, 0, 5, 5);
@@ -186,6 +187,7 @@ public class OrderOverview extends JFrame {
 		panel_North.add(chckbxBusinessCustomer, gbc_chckbxBusinessCustomer);
 		
 		chckbxOrderCreated = new JCheckBox("Oprettelsesdato");
+		chckbxOrderCreated.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderCreated = new GridBagConstraints();
 		gbc_chckbxOrderCreated.fill = GridBagConstraints.BOTH;
 		gbc_chckbxOrderCreated.insets = new Insets(0, 0, 5, 5);
@@ -208,6 +210,11 @@ public class OrderOverview extends JFrame {
 		panel_North.add(lblDatePickup, gbc_lblDatePickup);
 		
 		JButton btnSearch = new JButton("Søg");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonSearchPressed();
+			}
+		});
 		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
 		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSearch.gridx = 5;
@@ -233,6 +240,7 @@ public class OrderOverview extends JFrame {
 		initComboBox();
 		
 		JCheckBox chckbxPrivateCustomer = new JCheckBox("Privatkunde");
+		chckbxPrivateCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxPrivateCustomer = new GridBagConstraints();
 		gbc_chckbxPrivateCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxPrivateCustomer.insets = new Insets(0, 0, 5, 5);
@@ -241,6 +249,7 @@ public class OrderOverview extends JFrame {
 		panel_North.add(chckbxPrivateCustomer, gbc_chckbxPrivateCustomer);
 		
 		chckbxOrderPickup = new JCheckBox("Afhentingsdato");
+		chckbxOrderPickup.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderPickup = new GridBagConstraints();
 		gbc_chckbxOrderPickup.fill = GridBagConstraints.BOTH;
 		gbc_chckbxOrderPickup.insets = new Insets(0, 0, 5, 5);
@@ -269,6 +278,10 @@ public class OrderOverview extends JFrame {
 	
 	private void buttonClosePressed() {
 		dispose();
+	}
+	
+	private void buttonSearchPressed() {
+		search();
 	}
 	
 	private void buttonDateCreatedPressed() {
@@ -356,7 +369,6 @@ public class OrderOverview extends JFrame {
 	}
 	
 private void search() {
-		
 		ArrayList<Order> orders = orderController.getAllOrders();
 		ArrayList<Order> orderResult = new ArrayList<>();
 		
@@ -384,23 +396,25 @@ private void search() {
 			
 //		List<OrderStatus> status = Arrays.asList(o.getStatus());
 			
-			if(o.getOrderNumber().toLowerCase().equals(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0) {
-				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDate(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickup(), pickupFrom, pickupTo)) {
-					if(o.getStatus().equals(comboBoxStatus.getSelectedItem())) {
+			if(o.getOrderNumber().toLowerCase().equals(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0 || textFieldOrderNumber.getText().equals("Ordernummer")) {
+				System.out.println("if1");
+				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickup(), pickupFrom, pickupTo)) {
+					System.out.println("if2");
+					if(o.getStatus().equals(comboBoxStatus.getSelectedItem()) || comboBoxStatus.getSelectedIndex() == 0) {
+						System.out.println("if3");
 						orderResult.add(o);
 					}
 				}
 			}
 		}
 		table.setNewData(convertToStringArray(orderResult));
-		setColumns();
-		}
+	}
 
 
 //returns true if the LocalDate given is between dateFrom and dateTo parameters from the dateFilter
-private boolean isOrderDateBetweenDates(LocalDate dateToCompare, Date dateFrom, Date dateTo) {
+private boolean isOrderDateBetweenDates(Date dateToCompare, Date dateFrom, Date dateTo) {
 	boolean output = false;
-	Date orderDate = localDateToDateConv(dateToCompare);
+	Date orderDate = dateToCompare;
 	if(orderDate.compareTo(dateFrom) >= 0 && orderDate.compareTo(dateTo) <= 0) {
 		output = true;
 	}
@@ -408,7 +422,9 @@ private boolean isOrderDateBetweenDates(LocalDate dateToCompare, Date dateFrom, 
 }
 
 private Date localDateToDateConv(LocalDate ld) {
-	return new Date(ld.toEpochDay());
+	ZoneId deafaultZoneId = ZoneId.systemDefault();
+	Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
+	return returnDate;
 }
 
 private String[][] convertToStringArray(ArrayList<Order> dataArrayList) {

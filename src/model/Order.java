@@ -1,10 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Iterator;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 /**
  * It's a class that represents an order.
@@ -223,5 +225,19 @@ public class Order implements Serializable {
 			result += ol.getQuantity();
 		}
 		return result;
+	}
+	
+	public Date getDateAsDateType() {
+		return convLocalDateToDate(date);
+	}
+	
+	public Date getPickupDateAsDateType() {
+		return convLocalDateToDate(pickupDate);
+	}
+	
+	private Date convLocalDateToDate(LocalDate ld) {
+		ZoneId deafaultZoneId = ZoneId.systemDefault();
+		Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
+		return returnDate;
 	}
 }
