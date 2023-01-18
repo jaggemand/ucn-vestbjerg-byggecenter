@@ -32,6 +32,7 @@ import javax.swing.border.EmptyBorder;
 import controller.OrderController;
 import model.Order;
 import model.Order.OrderStatus;
+import model.OrderContainer;
 import model.OrderLine;
 import model.Product;
 
@@ -127,36 +128,43 @@ public class OrderOverview extends JFrame {
 		gbl_panel_East.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_East.setLayout(gbl_panel_East);
 		
-		JButton btnAdd = new JButton("Tilføj");
-		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
-		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
-		gbc_btnAdd.gridx = 0;
-		gbc_btnAdd.gridy = 0;
-		panel_East.add(btnAdd, gbc_btnAdd);
+		JButton btnAddOrder = new JButton("Opret Ordre");
+		btnAddOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonCreateOrderPressed();
+			}
+		});
+		GridBagConstraints gbc_btnAddOrder = new GridBagConstraints();
+		gbc_btnAddOrder.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnAddOrder.insets = new Insets(0, 0, 5, 0);
+		gbc_btnAddOrder.gridx = 0;
+		gbc_btnAddOrder.gridy = 0;
+		panel_East.add(btnAddOrder, gbc_btnAddOrder);
 		
-		JButton btnEdit = new JButton("Rediger");
-		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
-		gbc_btnEdit.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnEdit.insets = new Insets(0, 0, 5, 0);
-		gbc_btnEdit.gridx = 0;
-		gbc_btnEdit.gridy = 1;
-		panel_East.add(btnEdit, gbc_btnEdit);
+		JButton btnShowOrder = new JButton("Vis Ordre");
+		btnShowOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonShowOrderPressed();
+			}
+		});
+		GridBagConstraints gbc_btnShowOrder = new GridBagConstraints();
+		gbc_btnShowOrder.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnShowOrder.insets = new Insets(0, 0, 5, 0);
+		gbc_btnShowOrder.gridx = 0;
+		gbc_btnShowOrder.gridy = 1;
+		panel_East.add(btnShowOrder, gbc_btnShowOrder);
 		
-		JButton btnDetails = new JButton("Detaljer");
-		GridBagConstraints gbc_btnDetails = new GridBagConstraints();
-		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
-		gbc_btnDetails.gridx = 0;
-		gbc_btnDetails.gridy = 2;
-		panel_East.add(btnDetails, gbc_btnDetails);
-		
-		JButton btnDelete = new JButton("Slet");
-		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDelete.gridx = 0;
-		gbc_btnDelete.gridy = 4;
-		panel_East.add(btnDelete, gbc_btnDelete);
+		JButton btnDeleteOrdre = new JButton("Slet Ordre");
+		btnDeleteOrdre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonDeleteOrderPressed();
+			}
+		});
+		GridBagConstraints gbc_btnDeleteOrdre = new GridBagConstraints();
+		gbc_btnDeleteOrdre.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDeleteOrdre.gridx = 0;
+		gbc_btnDeleteOrdre.gridy = 4;
+		panel_East.add(btnDeleteOrdre, gbc_btnDeleteOrdre);
 		
 		JPanel panel_North = new JPanel();
 		contentPane.add(panel_North, BorderLayout.NORTH);
@@ -274,6 +282,25 @@ public class OrderOverview extends JFrame {
 		gbc_btnDateFilterPickup.gridy = 2;
 		panel_North.add(btnDateFilterPickup, gbc_btnDateFilterPickup);
 		updateTable();
+	}
+	
+	private void buttonShowOrderPressed() {
+		String selectedOrderNumber = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
+		Order selectedOrder = orderController.findOrder(selectedOrderNumber);
+		SalesOrder salesOrder = new SalesOrder(selectedOrder,false);
+		salesOrder.setVisible(true);
+	}
+	
+	private void buttonCreateOrderPressed() {
+		SalesOrder salesOrder = new SalesOrder(null,true);
+		salesOrder.setVisible(true);
+		updateTable();
+	}
+	
+	private void buttonDeleteOrderPressed() {
+		//TODO: ask if user want to delete the order.
+		updateTable();
+		
 	}
 	
 	private void buttonClosePressed() {
@@ -398,7 +425,7 @@ private void search() {
 			
 			if(o.getOrderNumber().toLowerCase().equals(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0 || textFieldOrderNumber.getText().equals("Ordernummer")) {
 				System.out.println("if1");
-				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickup(), pickupFrom, pickupTo)) {
+				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickupDateAsDateType(), pickupFrom, pickupTo)) {
 					System.out.println("if2");
 					if(o.getStatus().equals(comboBoxStatus.getSelectedItem()) || comboBoxStatus.getSelectedIndex() == 0) {
 						System.out.println("if3");

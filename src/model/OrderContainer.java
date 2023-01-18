@@ -73,6 +73,18 @@ public class OrderContainer {
 		}
 		return success;
 	}
+	
+	public boolean updateOrder(Order o) {
+		boolean outputBoolean = false;
+		
+		if(orders.contains(o)) {
+			int indexOfOrder = orders.indexOf(o);
+			orders.set(indexOfOrder, o);
+			outputBoolean = true;
+		}
+		
+		return outputBoolean;
+	}
 
 	/**
 	 * This function returns a copy of the orders list.

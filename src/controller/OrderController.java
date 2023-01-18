@@ -50,6 +50,10 @@ public class OrderController {
 	public Order getCurrentOrder() {
 		return currentOrder;
 	}
+	
+	public void setCurrentOrder(Order o) {
+		currentOrder = o;
+	}
 
 	/**
 	 * This method takes two input parameters search and quantity, searches for a
@@ -197,5 +201,9 @@ public class OrderController {
 		statuses.add(OrderStatus.PACKING);
 		statuses.add(OrderStatus.SALE);
 		return statuses;
+	}
+	
+	public boolean updateOrder() {
+		return OrderContainer.getInstance().updateOrder(currentOrder);
 	}
 }
