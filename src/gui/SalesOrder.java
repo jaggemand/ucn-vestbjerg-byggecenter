@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,12 +26,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 import controller.OrderController;
 import controller.ProductController;
 import model.Order;
+import model.Order.OrderStatus;
 import model.OrderLine;
 import model.Product;
 import model.ProductContainer;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import java.util.Date;
+import java.util.Calendar;
 
-public class SalesOrder extends JFrame {
+public class SalesOrder extends JDialog {
+	
+	private boolean newOrder;
 
 	private JPanel contentPane;
 	private DefaultTable table;
@@ -40,11 +50,11 @@ public class SalesOrder extends JFrame {
 	private JLabel lblStatus;
 	private JLabel lblTotal;
 	private JLabel lblVat;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField txtOrderNumber;
+	private JTextField txtCustomerID;
+	private JSpinner spnCreatedDate;
+	private JSpinner spnPickupDate;
+	private JComboBox<String> jcbStatus;
 	/**
 	 * Launch the application.
 	 */
@@ -52,7 +62,7 @@ public class SalesOrder extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					frame = new SalesOrder();
+					frame = new SalesOrder(new Order(true), true);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,11 +74,21 @@ public class SalesOrder extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public SalesOrder() {
+	public SalesOrder(Order o, boolean isModal) {
 		setTitle("Kassesalg");
-		
 		orderController = new OrderController();
-		orderController.createOrder(true);
+		setModal(isModal);
+		if(o != null) {
+			
+			orderController.setCurrentOrder(o);
+			newOrder = false;
+			
+		}
+		else {
+			orderController.addOrder();
+			newOrder = true;
+		}
+		
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 622, 398);
@@ -83,21 +103,13 @@ public class SalesOrder extends JFrame {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		contentPane.add(panel, BorderLayout.SOUTH);
 		
-		JButton btnPayment = new JButton("Betaling");
-		btnPayment.addActionListener(new ActionListener() {
+		JButton btnSave = new JButton("Gem");
+		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonPaymentPressed();
+				buttonSavePressed();
 			}
 		});
-		
-		JButton btnCancleCurrentSale = new JButton("Afbryd salg");
-		btnCancleCurrentSale.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				buttonCancleCurrentSalePressed();
-			}
-		});
-		panel.add(btnCancleCurrentSale);
-		panel.add(btnPayment);
+		panel.add(btnSave);
 		
 		JButton btnCancle = new JButton("Afbryd");
 		btnCancle.addActionListener(new ActionListener() {
@@ -215,15 +227,15 @@ public class SalesOrder extends JFrame {
 		gbc_lblNewLabel.gridy = 1;
 		panel_4.add(lblNewLabel, gbc_lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setForeground(Color.BLACK);
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		panel_4.add(textField, gbc_textField);
-		textField.setColumns(10);
+		txtOrderNumber = new JTextField();
+		txtOrderNumber.setForeground(Color.BLACK);
+		GridBagConstraints gbc_txtOrderNumber = new GridBagConstraints();
+		gbc_txtOrderNumber.insets = new Insets(0, 0, 5, 5);
+		gbc_txtOrderNumber.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtOrderNumber.gridx = 1;
+		gbc_txtOrderNumber.gridy = 1;
+		panel_4.add(txtOrderNumber, gbc_txtOrderNumber);
+		txtOrderNumber.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Oprettelsesdato");
 		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
@@ -233,14 +245,16 @@ public class SalesOrder extends JFrame {
 		gbc_lblNewLabel_2.gridy = 1;
 		panel_4.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 3;
-		gbc_textField_2.gridy = 1;
-		panel_4.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		spnCreatedDate = new JSpinner();
+		spnCreatedDate.setForeground(Color.BLACK);
+		spnCreatedDate.setEnabled(false);
+		spnCreatedDate.setModel(new SpinnerDateModel(new Date(1673996400000L), null, null, Calendar.DAY_OF_YEAR));
+		GridBagConstraints gbc_spnCreatedDate = new GridBagConstraints();
+		gbc_spnCreatedDate.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spnCreatedDate.insets = new Insets(0, 0, 5, 5);
+		gbc_spnCreatedDate.gridx = 3;
+		gbc_spnCreatedDate.gridy = 1;
+		panel_4.add(spnCreatedDate, gbc_spnCreatedDate);
 		
 		JLabel lblNewLabel_4 = new JLabel("Status:");
 		GridBagConstraints gbc_lblNewLabel_4 = new GridBagConstraints();
@@ -250,14 +264,13 @@ public class SalesOrder extends JFrame {
 		gbc_lblNewLabel_4.gridy = 1;
 		panel_4.add(lblNewLabel_4, gbc_lblNewLabel_4);
 		
-		textField_4 = new JTextField();
-		GridBagConstraints gbc_textField_4 = new GridBagConstraints();
-		gbc_textField_4.insets = new Insets(0, 0, 5, 0);
-		gbc_textField_4.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_4.gridx = 5;
-		gbc_textField_4.gridy = 1;
-		panel_4.add(textField_4, gbc_textField_4);
-		textField_4.setColumns(10);
+		jcbStatus = new JComboBox(OrderStatus.values());
+		GridBagConstraints gbc_jcbStatus = new GridBagConstraints();
+		gbc_jcbStatus.insets = new Insets(0, 0, 5, 0);
+		gbc_jcbStatus.fill = GridBagConstraints.HORIZONTAL;
+		gbc_jcbStatus.gridx = 5;
+		gbc_jcbStatus.gridy = 1;
+		panel_4.add(jcbStatus, gbc_jcbStatus);
 		
 		JLabel lblNewLabel_1 = new JLabel("Kundenummer");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -267,14 +280,14 @@ public class SalesOrder extends JFrame {
 		gbc_lblNewLabel_1.gridy = 2;
 		panel_4.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 2;
-		panel_4.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		txtCustomerID = new JTextField();
+		GridBagConstraints gbc_txtCustomerID = new GridBagConstraints();
+		gbc_txtCustomerID.insets = new Insets(0, 0, 5, 5);
+		gbc_txtCustomerID.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtCustomerID.gridx = 1;
+		gbc_txtCustomerID.gridy = 2;
+		panel_4.add(txtCustomerID, gbc_txtCustomerID);
+		txtCustomerID.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Afhentningsdato");
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
@@ -284,32 +297,51 @@ public class SalesOrder extends JFrame {
 		gbc_lblNewLabel_3.gridy = 2;
 		panel_4.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
-		textField_3 = new JTextField();
-		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
-		gbc_textField_3.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_3.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_3.gridx = 3;
-		gbc_textField_3.gridy = 2;
-		panel_4.add(textField_3, gbc_textField_3);
-		textField_3.setColumns(10);
-		
-		JButton btnNewButton = new JButton("Ændre status");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
-		gbc_btnNewButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton.gridx = 5;
-		gbc_btnNewButton.gridy = 2;
-		panel_4.add(btnNewButton, gbc_btnNewButton);
+		spnPickupDate = new JSpinner();
+		spnPickupDate.setModel(new SpinnerDateModel(new Date(1673996400000L), null, null, Calendar.DAY_OF_YEAR));
+		GridBagConstraints gbc_spnPickupDate = new GridBagConstraints();
+		gbc_spnPickupDate.fill = GridBagConstraints.HORIZONTAL;
+		gbc_spnPickupDate.insets = new Insets(0, 0, 5, 5);
+		gbc_spnPickupDate.gridx = 3;
+		gbc_spnPickupDate.gridy = 2;
+		panel_4.add(spnPickupDate, gbc_spnPickupDate);
 		
 		JLabel lblNewLabel_5 = new JLabel("Produkter");
 		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
 		gbc_lblNewLabel_5.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_5.gridwidth = 6;
-		gbc_lblNewLabel_5.insets = new Insets(0, 0, 0, 5);
 		gbc_lblNewLabel_5.gridx = 0;
 		gbc_lblNewLabel_5.gridy = 3;
 		panel_4.add(lblNewLabel_5, gbc_lblNewLabel_5);
+		
+		//Non windows-builder
+		//Does order exist
+		if(o == null) {
+			orderController.createOrder(false);
+		}
+		else {
+			orderController.setCurrentOrder(o);
+		}
+		
 		initTable();
+		initialize();
+	}
+	
+	private void initialize() {
+		
+		JSpinner.DateEditor editor = new JSpinner.DateEditor(spnCreatedDate, "dd-MM-yyyy");
+		spnCreatedDate.setEditor(editor);
+		JSpinner.DateEditor editor2 = new JSpinner.DateEditor(spnPickupDate, "dd-MM-yyyy");
+		spnPickupDate.setEditor(editor2);
+		
+		spnPickupDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getPickupDateAsDateType(), orderController.getCurrentOrder().getDateAsDateType(), null, Calendar.DAY_OF_YEAR));
+		spnCreatedDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getDateAsDateType(), null, null, Calendar.DAY_OF_YEAR));
+		
+		txtOrderNumber.setText(orderController.getCurrentOrder().getOrderNumber());
+		txtCustomerID.setText("TODO");
+		jcbStatus.setSelectedItem(orderController.getCurrentOrder().getStatus());
+		
+		
 	}
 	
 	private void initTable() {
@@ -329,6 +361,7 @@ public class SalesOrder extends JFrame {
 		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
 	}
+	
 	
 	private void updateCartTable(String[] data) {
 		table.addRow(data);
@@ -359,6 +392,21 @@ public class SalesOrder extends JFrame {
 			o.addProduct(tempProduct, productAmount);
 		}
 		return o;
+	}
+	
+	private void buttonSavePressed() {
+		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du gemme ændringerne", "Bekræft gem", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
+		if(result == 0) {
+			if(newOrder) {
+				orderController.addOrder();
+			}
+			else {
+				orderController.updateOrder();
+			}
+			
+			this.dispose();
+		}
+		
 	}
 
 	private void buttonAddPressed() {
@@ -405,35 +453,6 @@ public class SalesOrder extends JFrame {
 		}
 		else {
 			makeStatusMessage("Ingen række valgt", true);
-		}
-	}
-	
-	private void buttonPaymentPressed() {
-		if(table.getModel().getRowCount() > 0) {
-			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil gennemføre betalingen", "Betaling",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-					new Object[] { "Betal", "Tilbage" }, JOptionPane.YES_OPTION);
-			if(input == 0) {
-				orderController.addOrder();
-				resetFrame();
-			}
-		}
-		else {
-			makeStatusMessage("Ingen produkter er scannet", true);
-		}
-	}
-	
-	private void buttonCancleCurrentSalePressed() {
-		if(table.getModel().getRowCount() < 1) {
-			resetFrame();
-		}
-		else {
-			int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg?", "Afbryd salg",
-					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-					new Object[] { "OK", "Tilbage" }, JOptionPane.YES_OPTION);
-			if(input == 0) {
-				resetFrame();
-			}
 		}
 	}
 	
@@ -520,12 +539,5 @@ public class SalesOrder extends JFrame {
 	
 	private void updateVAT(double price) {
 		lblVat.setText("moms: " + getPriceFormatted(price / 5));
-	}
-	
-	private void resetFrame() {
-		dispose();
-		SalesOrder cashRegister = new SalesOrder();
-		cashRegister.setVisible(true);
-		cashRegister.setBounds(this.getBounds());
 	}
 }
