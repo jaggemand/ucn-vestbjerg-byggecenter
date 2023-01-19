@@ -290,10 +290,18 @@ public class OrderOverview extends JFrame {
 	}
 	
 	private void buttonShowOrderPressed() {
-		String selectedOrderNumber = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
-		Order selectedOrder = orderController.findOrder(selectedOrderNumber);
-		SalesOrder salesOrder = new SalesOrder(selectedOrder,false);
-		salesOrder.setVisible(true);
+		if(table.getSelectedRow() >= 0)
+		{
+			String selectedOrderNumber = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
+			Order selectedOrder = orderController.findOrder(selectedOrderNumber);
+			SalesOrder salesOrder = new SalesOrder(selectedOrder,false);
+			salesOrder.setVisible(true);
+		}
+		else {
+			//No row is selected
+			//TODO: update Status
+		}
+		
 	}
 	
 	private void buttonCreateOrderPressed() {
@@ -304,6 +312,14 @@ public class OrderOverview extends JFrame {
 	
 	private void buttonDeleteOrderPressed() {
 		//TODO: ask if user want to delete the order.
+		if(table.getSelectedRow() >= 0)
+		{
+			//A row is selected
+		}
+		else {
+			//No row is selected
+			//TODO: update Status
+		}
 		updateTable();
 		
 	}
