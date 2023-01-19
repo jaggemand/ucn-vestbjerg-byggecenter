@@ -170,6 +170,11 @@ public class MainMenu extends JFrame {
 		panel.add(btnStock, gbc_btnStock);
 		
 		JButton btnCustomer = new JButton("Kundeoversigt");
+		btnCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openCustomerOverview();
+			}
+		});
 		btnCustomer.setPreferredSize(new Dimension(65, 40));
 		btnCustomer.setMinimumSize(new Dimension(140, 40));
 		btnCustomer.setMaximumSize(new Dimension(140, 40));
@@ -210,5 +215,9 @@ public class MainMenu extends JFrame {
 			frame.dispose();
 			System.exit(0);
 		}
+	}
+	private void openCustomerOverview() {
+		CustomerOverview customerOverview = new CustomerOverview();
+		customerOverview.setVisible(true);
 	}
 }
