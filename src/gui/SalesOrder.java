@@ -60,7 +60,7 @@ public class SalesOrder extends JDialog {
 	 * Create the frame.
 	 */
 	public SalesOrder(Order o, boolean isModal) {
-		setTitle("Kassesalg");
+		setTitle("Ordre");
 		orderController = new OrderController();
 		setModal(isModal);
 		if(o != null) {
