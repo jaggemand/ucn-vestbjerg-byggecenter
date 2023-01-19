@@ -12,7 +12,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -232,7 +231,7 @@ public class ProductOverview extends JFrame {
 	}
 	private void deleteData() {
 		int[] columnsToShow = new int[]{0, 1};
-		ArrayList<String> dataToDelete = table.deleteData(0, columnsToShow);
+		ArrayList<String> dataToDelete = table.deleteData("ProduktID", columnsToShow);
 		if(dataToDelete.size() != 0) {
 			ProductController pC = new ProductController();
 			for(int i = dataToDelete.size()-1; i>= 0;i--) {
@@ -251,9 +250,6 @@ public class ProductOverview extends JFrame {
 		String[][] data = convertToStringArray(dataArrayList);
 		
 		table = new DefaultTable(data, columns, activeColumns);
-		
-		table.getTableHeader().setReorderingAllowed(false);
-		
 		scrollPane.setViewportView(table);
 	}
 	private void setPopUpMenu() {
@@ -457,6 +453,7 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnAdd, gbc_btnAdd);
 		
 		JButton btnEdit = new JButton("Rediger");
+		btnEdit.setToolTipText("Du skal vælge et produkt først");
 		btnEdit.setEnabled(false);
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -472,6 +469,7 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnEdit, gbc_btnEdit);
 		
 		JButton btnDetails = new JButton("Detaljer");
+		btnDetails.setToolTipText("Du skal vælge et produkt først");
 		btnDetails.setEnabled(false);
 		btnDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -487,6 +485,7 @@ public class ProductOverview extends JFrame {
 		panel_1.add(btnDetails, gbc_btnDetails);
 		
 		JButton btnDelete = new JButton("Slet");
+		btnDelete.setToolTipText("Du skal vælge et produkt først");
 		btnDelete.setEnabled(false);
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -539,12 +538,18 @@ public class ProductOverview extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				int[] rows = table.getSelectedRows();
 				if(rows.length != 0) {
+					btnDelete.setToolTipText(null);
 					btnDelete.setEnabled(true);
+					btnEdit.setToolTipText(null);
 					btnEdit.setEnabled(true);
+					btnDetails.setToolTipText(null);
 					btnDetails.setEnabled(true);
 				}else {
+					btnDelete.setToolTipText("Du skal vælge et produkt først");
 					btnDelete.setEnabled(false);
+					btnEdit.setToolTipText("Du skal vælge et produkt først");
 					btnEdit.setEnabled(false);
+					btnDetails.setToolTipText("Du skal vælge et produkt først");
 					btnDetails.setEnabled(false);
 				}
 			}

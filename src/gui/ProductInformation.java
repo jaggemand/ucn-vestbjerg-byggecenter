@@ -612,7 +612,11 @@ public class ProductInformation extends JFrame {
 		ProductController productController = new ProductController();
 
 		String productName = txtProductName.getText();
-		String productDescription = txtProductDescription.getText();
+		String productDescriptionFinal = "";
+		for(String line : txtProductDescription.getText().split("\\n")) {
+			productDescriptionFinal += line + " ";
+		}
+		String productDescription = productDescriptionFinal.trim();
 		String barcode = txtBarcode.getText();
 		String productID = txtProductID.getText();
 		String storeLocation = txtStoreLocation.getText();
