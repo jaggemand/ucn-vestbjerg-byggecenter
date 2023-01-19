@@ -50,8 +50,8 @@ public class DialogCategoryAdd extends JDialog {
 	 * Create the dialog.
 	 */
 	public DialogCategoryAdd(ArrayList<String> categoryList) {
-		setTitle("Tilføj kategorier");
 		setResizable(false);
+		setTitle("Tilføj kategorier");
 		setModal(true);
 		setBounds(100, 100, 350, 137);
 		getContentPane().setLayout(new BorderLayout());

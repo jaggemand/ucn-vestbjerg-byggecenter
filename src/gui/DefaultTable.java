@@ -115,7 +115,7 @@ public class DefaultTable extends JTable {
 		if(rows.length != 0) {			
 			boolean check = deleteItems(rows.length, columnsConfirm);
 			if(check == true) {
-				for(int i = rows.length-1; i>= 0;i--) {
+				for(int i = rows.length-1; i >= 0; i--) {
 					dataToDelete.add(tabelModel.getValueAt(rows[i],this.getColumn(column).getModelIndex()).toString());
 					tabelModel.removeRow(rows[i]);
 				}
@@ -142,7 +142,7 @@ public class DefaultTable extends JTable {
 			products.append("\n");
 		}
 		
-		JLabel label = new JLabel("Følgende produkter slettes:");
+		JLabel label = new JLabel("Følgende elementer slettes:");
 		label.setFont(new Font("Tahoma", Font.BOLD, 16));
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -156,7 +156,7 @@ public class DefaultTable extends JTable {
 		textArea.setWrapStyleWord(true); 
 		scrollPane.setPreferredSize(new Dimension(350, 150));
 		
-		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet produkter",
+		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet element",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
 					new Object[] {Box.createHorizontalStrut(250), "OK", "Afbryd"}, JOptionPane.YES_OPTION);
 					

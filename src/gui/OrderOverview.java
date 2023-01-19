@@ -163,6 +163,7 @@ public class OrderOverview extends JFrame {
 				buttonDeleteOrderPressed();
 			}
 		});
+		
 		GridBagConstraints gbc_btnDeleteOrdre = new GridBagConstraints();
 		gbc_btnDeleteOrdre.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDeleteOrdre.gridx = 0;
@@ -402,7 +403,7 @@ public class OrderOverview extends JFrame {
 		int[] columnsToShow = new int[]{0, 1};
 		ArrayList<String> dataToDelete = table.deleteData("Ordernummer", columnsToShow);
 		if(dataToDelete.size() != 0) {
-			for(int i = dataToDelete.size()-1; i>= 0;i--) {
+			for(int i = dataToDelete.size()-1; i >= 0; i--) {
 				orderController.removeOrder(dataToDelete.get(i));
 			}
 		}
@@ -455,7 +456,7 @@ public class OrderOverview extends JFrame {
 		orderOverview.setBounds(this.getBounds());
 	}
 	
-private void search() {
+	private void search() {
 		ArrayList<Order> orders = orderController.getAllOrders();
 		ArrayList<Order> orderResult = new ArrayList<>();
 		
@@ -466,7 +467,6 @@ private void search() {
 		
 		if (datePickup != null) {
 			pickupFrom = datePickup.getDateFrom();
-			
 			pickupTo = datePickup.getDateTo();
 		}
 		
@@ -495,35 +495,34 @@ private void search() {
 	}
 
 
-//returns true if the LocalDate given is between dateFrom and dateTo parameters from the dateFilter
-private boolean isOrderDateBetweenDates(Date dateToCompare, Date dateFrom, Date dateTo) {
-	boolean output = false;
-	Date orderDate = dateToCompare;
-	if(orderDate.compareTo(dateFrom) >= 0 && orderDate.compareTo(dateTo) <= 0) {
-		output = true;
+	//returns true if the LocalDate given is between dateFrom and dateTo parameters from the dateFilter
+	private boolean isOrderDateBetweenDates(Date dateToCompare, Date dateFrom, Date dateTo) {
+		boolean output = false;
+		Date orderDate = dateToCompare;
+		if(orderDate.compareTo(dateFrom) >= 0 && orderDate.compareTo(dateTo) <= 0) {
+			output = true;
+		}
+		return output;
 	}
-	return output;
+	
+	private Date localDateToDateConv(LocalDate ld) {
+		ZoneId deafaultZoneId = ZoneId.systemDefault();
+		Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
+		return returnDate;
 }
 
-private Date localDateToDateConv(LocalDate ld) {
-	ZoneId deafaultZoneId = ZoneId.systemDefault();
-	Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
-	return returnDate;
-}
-
-private String[][] convertToStringArray(ArrayList<Order> dataArrayList) {
-	int size = dataArrayList.size();
-	String[][] data = new String[size][12];
-	for(int i = 0; i < size; i++) {
-		Order current = dataArrayList.get(i);
-		data[i][0] = current.getOrderNumber();
-		data[i][1] = current.getStatusAsString();
-		data[i][2] = "Ingen kundetype";
-		data[i][3] = current.getDate().toString();
-		data[i][4] = current.getPickup().toString();
-		data[i][5] = String.valueOf(current.getAmountOfProducts());
+	private String[][] convertToStringArray(ArrayList<Order> dataArrayList) {
+		int size = dataArrayList.size();
+		String[][] data = new String[size][12];
+		for(int i = 0; i < size; i++) {
+			Order current = dataArrayList.get(i);
+			data[i][0] = current.getOrderNumber();
+			data[i][1] = current.getStatusAsString();
+			data[i][2] = "Ingen kundetype";
+			data[i][3] = current.getDate().toString();
+			data[i][4] = current.getPickup().toString();
+			data[i][5] = String.valueOf(current.getAmountOfProducts());
+		}
+		return data;
 	}
-	return data;
-}
-
 }
