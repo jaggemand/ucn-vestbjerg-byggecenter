@@ -16,10 +16,10 @@ public class CustomerController {
 	}
 	
 	//TODO add functionality in customerContainer
-	private boolean addCustomer() {
+	private boolean addCustomer(Customer c) {
 		boolean success = false;
 		if (currentCustomer != null) {
-			success = CustomerContainer.getInstance().addCustomer(getCustomer());
+			success = CustomerContainer.getInstance().addCustomer(c);
 		}
 		return success;
 	}
@@ -73,7 +73,6 @@ public class CustomerController {
 		Customer c = new Customer(name, sirname, address, deliveryAddress,
 				paymentAddress, phone, email, credit, postCode, companyName);
 				
-		
 		result = addCustomer(c);
 		return result; 
 	}
