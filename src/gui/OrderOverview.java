@@ -29,8 +29,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import controller.OrderController;
+import controller.ProductController;
 import model.Order;
 import model.Order.OrderStatus;
 import model.OrderLine;
@@ -50,6 +53,7 @@ public class OrderOverview extends JFrame {
 	private JCheckBox chckbxOrderPickup;
 	private JButton btnDateFilterCreated;
 	private JButton btnDateFilterPickup;
+	private String[] comboBoksDefaultText = new String[] {"Status"};
 
 	/**
 	 * Launch the application.
@@ -185,8 +189,6 @@ public class OrderOverview extends JFrame {
 		textFieldOrderNumber.setColumns(10);
 		
 		JCheckBox chckbxBusinessCustomer = new JCheckBox("Erhvervskunde");
-		chckbxBusinessCustomer.setEnabled(false);
-		chckbxBusinessCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxBusinessCustomer = new GridBagConstraints();
 		gbc_chckbxBusinessCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxBusinessCustomer.insets = new Insets(0, 0, 5, 5);
@@ -195,8 +197,6 @@ public class OrderOverview extends JFrame {
 		panel_North.add(chckbxBusinessCustomer, gbc_chckbxBusinessCustomer);
 		
 		chckbxOrderCreated = new JCheckBox("Oprettelsesdato");
-		chckbxOrderCreated.setEnabled(false);
-		chckbxOrderCreated.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderCreated = new GridBagConstraints();
 		gbc_chckbxOrderCreated.fill = GridBagConstraints.BOTH;
 		gbc_chckbxOrderCreated.insets = new Insets(0, 0, 5, 5);
@@ -238,7 +238,33 @@ public class OrderOverview extends JFrame {
 		});
 		
 		comboBoxStatus = new JComboBox();
-		comboBoxStatus.setModel(new DefaultComboBoxModel(new String[] {"Status"}));
+		comboBoxStatus.addPopupMenuListener(new PopupMenuListener() {
+			
+			@Override
+			public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+				// TODO Auto-generated method stub
+				if(comboBoxStatus.getSelectedItem().equals("ALLE STATUSER") || comboBoxStatus.getSelectedItem().equals("Status")) {
+					comboBoksDefaultText = new String[] {"ALLE STATUSER"};
+					comboBoxStatus.setModel(new DefaultComboBoxModel(comboBoksDefaultText));
+				}
+				initComboBox();
+			}
+			
+			@Override
+			public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void popupMenuCanceled(PopupMenuEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		
+			
+		});
+		comboBoxStatus.setModel(new DefaultComboBoxModel(comboBoksDefaultText));
 		comboBoxStatus.setToolTipText("Status på ordre");
 		GridBagConstraints gbc_comboBoxStatus = new GridBagConstraints();
 		gbc_comboBoxStatus.insets = new Insets(0, 0, 5, 5);
@@ -249,8 +275,6 @@ public class OrderOverview extends JFrame {
 		initComboBox();
 		
 		JCheckBox chckbxPrivateCustomer = new JCheckBox("Privatkunde");
-		chckbxPrivateCustomer.setEnabled(false);
-		chckbxPrivateCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxPrivateCustomer = new GridBagConstraints();
 		gbc_chckbxPrivateCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxPrivateCustomer.insets = new Insets(0, 0, 5, 5);
@@ -259,8 +283,6 @@ public class OrderOverview extends JFrame {
 		panel_North.add(chckbxPrivateCustomer, gbc_chckbxPrivateCustomer);
 		
 		chckbxOrderPickup = new JCheckBox("Afhentingsdato");
-		chckbxOrderPickup.setEnabled(false);
-		chckbxOrderPickup.setSelected(true);
 		GridBagConstraints gbc_chckbxOrderPickup = new GridBagConstraints();
 		gbc_chckbxOrderPickup.fill = GridBagConstraints.BOTH;
 		gbc_chckbxOrderPickup.insets = new Insets(0, 0, 5, 5);
@@ -290,18 +312,15 @@ public class OrderOverview extends JFrame {
 	}
 	
 	private void buttonShowOrderPressed() {
-		if(table.getSelectedRow() >= 0)
-		{
+	if(table.getSelectedRowCount() > 0) {
 			String selectedOrderNumber = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
 			Order selectedOrder = orderController.findOrder(selectedOrderNumber);
 			SalesOrder salesOrder = new SalesOrder(selectedOrder,false);
 			salesOrder.setVisible(true);
 		}
 		else {
-			//No row is selected
-			//TODO: update Status
+			makeStatusMessage("Ingen ordre valgt", true);
 		}
-		
 	}
 	
 	private void buttonCreateOrderPressed() {
@@ -311,17 +330,8 @@ public class OrderOverview extends JFrame {
 	}
 	
 	private void buttonDeleteOrderPressed() {
-		//TODO: ask if user want to delete the order.
-		if(table.getSelectedRow() >= 0)
-		{
-			//A row is selected
-		}
-		else {
-			//No row is selected
-			//TODO: update Status
-		}
+		deleteData();
 		updateTable();
-		
 	}
 	
 	private void buttonClosePressed() {
@@ -335,13 +345,23 @@ public class OrderOverview extends JFrame {
 	private void buttonDateCreatedPressed() {
 		dateCreated = new DialogDate();
 		dateCreated.setVisible(true);
-		btnDateFilterCreated.setText(setDateSelecterButtonFormat(dateCreated.getDateFrom(), dateCreated.getDateTo()));
+		if(!dateCreated.isOkPressed()) {
+			//button text shouldn't change
+		}
+		else {
+			btnDateFilterCreated.setText(setDateSelecterButtonFormat(dateCreated.getDateFrom(), dateCreated.getDateTo()));
+		}
 	}
 	
 	private void buttonDatePickupPressed() {
 		datePickup = new DialogDate();
 		datePickup.setVisible(true);
-		btnDateFilterPickup.setText(setDateSelecterButtonFormat(datePickup.getDateFrom(), datePickup.getDateTo()));
+		if(!datePickup.isOkPressed()) {
+			//button text shouldn't change
+		}
+		else {
+			btnDateFilterPickup.setText(setDateSelecterButtonFormat(datePickup.getDateFrom(), datePickup.getDateTo()));
+		}
 	}
 	
 	private void initWindow() {
@@ -376,6 +396,16 @@ public class OrderOverview extends JFrame {
 //		table.getColumnModel().getColumn(2).setCellRenderer(cellRenderer);
 //		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
 //		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
+	}
+	
+	private void deleteData() {
+		int[] columnsToShow = new int[]{0, 1};
+		ArrayList<String> dataToDelete = table.deleteData(0, columnsToShow);
+		if(dataToDelete.size() != 0) {
+			for(int i = dataToDelete.size()-1; i>= 0;i--) {
+				orderController.removeOrder(dataToDelete.get(i));
+			}
+		}
 	}
 	
 	private void updateTable() {
@@ -454,11 +484,8 @@ private void search() {
 //		List<OrderStatus> status = Arrays.asList(o.getStatus());
 			
 			if(o.getOrderNumber().toLowerCase().equals(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0 || textFieldOrderNumber.getText().equals("Ordernummer")) {
-				System.out.println("if1");
 				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickupDateAsDateType(), pickupFrom, pickupTo)) {
-					System.out.println("if2");
-					if(o.getStatus().equals(comboBoxStatus.getSelectedItem()) || comboBoxStatus.getSelectedIndex() == 0) {
-						System.out.println("if3");
+					if(o.getStatus().equals(comboBoxStatus.getSelectedItem()) || comboBoxStatus.getSelectedIndex() == 0 || comboBoxStatus.getSelectedItem().equals("ALLE STATUSER")) {
 						orderResult.add(o);
 					}
 				}
