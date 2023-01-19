@@ -348,6 +348,7 @@ public class SalesOrder extends JDialog {
 		table.getColumnModel().getColumn(2).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
+		updateTable();
 	}
 	
 	
