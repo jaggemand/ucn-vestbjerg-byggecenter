@@ -26,8 +26,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import controller.ProductController;
-
 public class DefaultTable extends JTable {
 	private DefaultTableModel tabelModel;
 	private int[] rows;
@@ -112,13 +110,13 @@ public class DefaultTable extends JTable {
 			tabelModel.addRow(data[i]);
 		}
 	}
-	public ArrayList<String> deleteData(int column, int[] columnsConfirm) {
+	public ArrayList<String> deleteData(String column, int[] columnsConfirm) {
 		ArrayList<String> dataToDelete = new ArrayList<>();
 		if(rows.length != 0) {			
 			boolean check = deleteItems(rows.length, columnsConfirm);
 			if(check == true) {
 				for(int i = rows.length-1; i>= 0;i--) {
-					dataToDelete.add(tabelModel.getValueAt(rows[i],column).toString());
+					dataToDelete.add(tabelModel.getValueAt(rows[i],this.getColumn(column).getModelIndex()).toString());
 					tabelModel.removeRow(rows[i]);
 				}
 			}
@@ -210,4 +208,5 @@ public class DefaultTable extends JTable {
 			popUp.show(e.getComponent(),e.getX(), e.getY());
 		}
 	}
+
 }

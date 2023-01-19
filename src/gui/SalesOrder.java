@@ -60,7 +60,7 @@ public class SalesOrder extends JDialog {
 	 * Create the frame.
 	 */
 	public SalesOrder(Order o, boolean isModal) {
-		setTitle("Kassesalg");
+		setTitle("Ordre");
 		orderController = new OrderController();
 		setModal(isModal);
 		if(o != null) {
@@ -348,6 +348,7 @@ public class SalesOrder extends JDialog {
 		table.getColumnModel().getColumn(2).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
+		updateTable();
 	}
 	
 	
