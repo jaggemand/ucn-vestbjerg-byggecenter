@@ -66,11 +66,11 @@ public class CustomerController {
 	}
 
 	// TODO add functionality in container
-	public boolean createCustomer(String name, String address, String deliveryAddress, String paymentAddress,
+	public boolean createCustomer(String name, String deliveryAddress, String paymentAddress,
 			String phone, String email, double credit, String postCode, String companyName, customerType type) {
 		boolean result = false;
 
-		Customer c = new Customer(name, address, deliveryAddress, paymentAddress, phone, email, credit, postCode,
+		Customer c = new Customer(name, deliveryAddress, paymentAddress, phone, email, credit, postCode,
 				companyName, type);
 
 		result = addCustomer(c);

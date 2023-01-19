@@ -142,7 +142,7 @@ public class DefaultTable extends JTable {
 			products.append("\n");
 		}
 		
-		JLabel label = new JLabel("Følgende produkter slettes:");
+		JLabel label = new JLabel("Følgende valgte slettes:");
 		label.setFont(new Font("Tahoma", Font.BOLD, 16));
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -156,7 +156,7 @@ public class DefaultTable extends JTable {
 		textArea.setWrapStyleWord(true); 
 		scrollPane.setPreferredSize(new Dimension(350, 150));
 		
-		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet produkter",
+		int input = JOptionPane.showOptionDialog(new JFrame(), panel, "Slet valgte",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
 					new Object[] {Box.createHorizontalStrut(250), "OK", "Afbryd"}, JOptionPane.YES_OPTION);
 					

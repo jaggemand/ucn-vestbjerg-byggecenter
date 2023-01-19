@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.CustomerController;
+import controller.ProductController;
 import model.Customer;
 import model.Customer.customerType;
 import model.CustomerContainer;
@@ -21,7 +22,9 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -47,7 +50,7 @@ public class CustomerOverview extends JFrame {
 	private JCheckBox chckBoxPrivate;
 	private JCheckBox chckBoxBusiness;
 	private JScrollPane scrollPane;
-	private JTable table;
+	private DefaultTable table;
 
 	/**
 	 * Launch the application.
@@ -269,9 +272,9 @@ public class CustomerOverview extends JFrame {
 		String phone = txtPhone.getText();
 
 		if (chckBoxBusiness.isSelected()) {
-			activeColumns = new boolean[] { true, false, true, true, true, true, false, false, true, false };
-			columns = new String[] { "Kundetype", "Adresse", "Leveringsadresse", "Betalingsadresse", "Telefonnummer",
-					"Email", "Kredit", "Postnummer", "Firmanavn", "Navn" };
+			activeColumns = new boolean[] { true, true, false, true, true, true, true, true, true };
+			columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
+					"Postnummer", "Telefonnummer", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.BUSINESS) {
@@ -287,9 +290,9 @@ public class CustomerOverview extends JFrame {
 			}
 		}
 		if (chckBoxPrivate.isSelected()) {
-			activeColumns = new boolean[] { true, true, true, true, true, true, false, false, false, true };
-			columns = new String[] { "Kundetype", "Adresse", "Leveringsadresse", "Betalingsadresse", "Telefonnummer",
-					"Email", "Kredit", "Postnummer", "Firmanavn", "Navn" };
+			activeColumns = new boolean[] { true, false, true, true, true, true, true, true, false };
+			columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
+					"Postnummer", "Telefonnummer", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.PRIVATE) {
@@ -304,12 +307,11 @@ public class CustomerOverview extends JFrame {
 				}
 			}
 		}
-		/*
-		 * activeColumns = new boolean[] { true, true, false, false, true, true, true,
-		 * false, false, false }; columns = new String[] { "Kundetype", "Adresse",
-		 * "Leveringsadresse", "Betalingsadresse", "Telefonnummer", "Email", "Kredit",
-		 * "Postnummer", "Firmanavn", "Navn" };
-		 */
+		if (chckBoxBusiness.isSelected() && chckBoxPrivate.isSelected()) {
+			activeColumns = new boolean[] { true, false, false, false, true, true, true, true, false };
+			columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
+					"Postnummer", "Telefonnummer", "Email", "Kredit" };
+		}
 		String[][] data = convertToStringArray(list);
 		table = new DefaultTable(data, columns, activeColumns);
 
@@ -327,11 +329,19 @@ public class CustomerOverview extends JFrame {
 	}
 
 	private void addCustomer() {
-
+		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog();
+		customerInformationDialog.setVisible(true);
 	}
 
 	private void deleteCustomer() {
-
+		int[] columnsToShow = new int[] { 0, 1 };
+		ArrayList<String> dataToDelete = table.deleteData("Telefonnummer", columnsToShow);
+		if (dataToDelete.size() != 0) {
+			CustomerController cC = new CustomerController();
+			for (int i = dataToDelete.size() - 1; i >= 0; i--) {
+				cC.removeCustomer(dataToDelete.get(i));
+			}
+		}
 	}
 
 	private void viewCustomerDetails() {
@@ -341,16 +351,16 @@ public class CustomerOverview extends JFrame {
 	private void tempCustomers() {
 		CustomerController cc = new CustomerController();
 
-		cc.createCustomer("Jacob", "Godsbanen 19", "Hobrovej 450", "Godsbanen 19", "24245482", "jacob@mail.dk", 0.5,
-				"9000", "Kyed Aps", customerType.PRIVATE);
-		cc.createCustomer("Marcus", "Abekatvej 12", "Jyllandsgade 10", "Abekatvej 12", "20926381", "marcus@mail.dk",
-				0.1, "9000", "Marcus Aps", customerType.PRIVATE);
-		cc.createCustomer("Mikkel", "Brenning 15", "Reberbahnsgade 2", "Brenning 15", "65748294", "mikkel@mail.dk", 0.9,
-				"9000", "Mikkel Aps", customerType.BUSINESS);
-		cc.createCustomer("Rasmus", "Støvringvej 248", "Hornevej 89", "Støvringvej 248", "25172085", "rasmus@mail.dk",
-				0.3, "9000", "Rasmus Aps", customerType.PRIVATE);
-		cc.createCustomer("Nicolai", "Idrætsvej 1", "Udsigten 90", "Idrætsvej 1", "62719283", "nicolai@mail.dk", 0.8,
-				"9000", "Niolai Aps", customerType.BUSINESS);
+		cc.createCustomer("Jacob", "Hobrovej 450", "Godsbanen 19", "24245482", "jacob@mail.dk", 0.5, "9000", "Kyed Aps",
+				customerType.PRIVATE);
+		cc.createCustomer("Marcus", "Jyllandsgade 10", "Abekatvej 12", "20926381", "marcus@mail.dk", 0.1, "9000",
+				"Marcus Aps", customerType.PRIVATE);
+		cc.createCustomer("Mikkel", "Reberbahnsgade 2", "Brenning 15", "65748294", "mikkel@mail.dk", 0.9, "9000",
+				"Mikkel Aps", customerType.BUSINESS);
+		cc.createCustomer("Rasmus", "Hornevej 89", "Støvringvej 248", "25172085", "rasmus@mail.dk", 0.3, "9000",
+				"Rasmus Aps", customerType.PRIVATE);
+		cc.createCustomer("Nicolai", "Udsigten 90", "Idrætsvej 1", "62719283", "nicolai@mail.dk", 0.8, "9000",
+				"Niolai Aps", customerType.BUSINESS);
 	}
 
 	private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
@@ -374,15 +384,14 @@ public class CustomerOverview extends JFrame {
 				typeName = "";
 			}
 			data[i][0] = typeName;
-			data[i][1] = current.getAddress();
-			data[i][2] = current.getDeliveryAddress();
-			data[i][3] = current.getPaymentAddress();
-			data[i][4] = current.getPhone();
-			data[i][5] = current.getEmail();
-			data[i][6] = current.getCredit() + "";
-			data[i][7] = current.getPostcode();
-			data[i][8] = current.getCompamyName();
-			data[i][9] = current.getName();
+			data[i][1] = current.getCompanyName();
+			data[i][2] = current.getName();
+			data[i][3] = current.getDeliveryAddress();
+			data[i][4] = current.getPaymentAddress();
+			data[i][5] = current.getPostcode();
+			data[i][6] = current.getPhone();
+			data[i][7] = current.getEmail();
+			data[i][8] = current.getCredit() + "";
 		}
 		return data;
 	}
@@ -391,15 +400,14 @@ public class CustomerOverview extends JFrame {
 		lblRowCounter.setText("Antal: " + table.getRowCount());
 	}
 
-	private void setTable() {
-		activeColumns = new boolean[] { true, true, false, false, true, true, true, false, false, false, false };
-		columns = new String[] { "Kundetype", "Adresse", "Leveringsadresse", "Betalingsadresse", "Telefonnummer",
-				"Email", "Kredit", "Postnummer", "Firmanavn", "Navn", "Postnummer" };
+	public void setTable() {
+		activeColumns = new boolean[] { true, false, false, false, true, true, true, true, false };
+		columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
+				"Postnummer", "Telefonnummer", "Email", "Kredit" };
 
 		ArrayList<Customer> dataArrayList = CustomerContainer.getInstance().getCustomers();
 		String[][] data = convertToStringArray(dataArrayList);
-		//Collections.sort(data);
-		//TODO implement sorting of everything with Erhverv først
+		Arrays.sort(data, Comparator.comparing(o -> o[0])); // Comparator to compare and sort in alphabetical order
 		scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 

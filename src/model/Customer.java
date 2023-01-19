@@ -4,8 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Customer {
+	private static int tempAccountNumber;
+	private String accountNumber;
 	private String name;
-	private String address;
 	private String deliveryAddress;
 	private String paymentAddress;
 	private String phone;
@@ -19,10 +20,9 @@ public class Customer {
 		PRIVATE, BUSINESS;
 	}
 
-	public Customer(String name, String address, String deliveryAddress, String paymentAddress,
+	public Customer(String name, String deliveryAddress, String paymentAddress,
 			String phone, String email, double credit, String postcode, String companyName, customerType type) {
 		this.name = name;
-		this.address = address;
 		this.deliveryAddress = deliveryAddress;
 		this.paymentAddress = paymentAddress;
 		this.phone = phone;
@@ -31,8 +31,14 @@ public class Customer {
 		this.postcode = postcode;
 		this.companyName = companyName;
 		this.accountType = type;
+		this.accountNumber = "8004-" + tempAccountNumber;
+		tempAccountNumber++;
 	}
 	
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+		
 	public customerType getCustomerType() {
 		return accountType;
 	}
@@ -47,14 +53,6 @@ public class Customer {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getDeliveryAddress() {
@@ -105,7 +103,7 @@ public class Customer {
 		this.postcode = postcode;
 	}
 
-	public String getCompamyName() {
+	public String getCompanyName() {
 		return companyName;
 	}
 
