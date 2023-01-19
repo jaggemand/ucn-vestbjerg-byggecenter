@@ -26,6 +26,8 @@ public class DialogDate extends JDialog {
 	
 	private Date dateFrom = new Date();
 	private Date dateTo = new Date();
+	
+	private boolean okPressed = true;
 
 	/**
 	 * Launch the application.
@@ -138,6 +140,7 @@ public class DialogDate extends JDialog {
 	}
 	
 	private void buttonCancelPressed() {
+		okPressed = false;
 		this.dispose();
 	}
 	
@@ -170,6 +173,10 @@ public class DialogDate extends JDialog {
 
 	public Date getDateTo() {
 		return dateTo;
+	}
+	
+	public boolean isOkPressed() {
+		return okPressed;
 	}
 
 }
