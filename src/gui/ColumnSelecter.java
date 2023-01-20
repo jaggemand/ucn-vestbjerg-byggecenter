@@ -30,6 +30,7 @@ public class ColumnSelecter extends JDialog {
 	public ColumnSelecter(boolean[] isVisible, String[] columns, DefaultTable table) {
 		checkBox = new ArrayList<>();
 		this.table = table;
+		setTitle("Tilføj kolonner");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -43,7 +44,7 @@ public class ColumnSelecter extends JDialog {
 		
 		this.isVisible = isVisible;
 		setModal(true);
-		
+		JPanel showAllButtonPanel = new JPanel();
 		
 		{
 			JButton btnNewButton = new JButton("Vis alt");
@@ -53,9 +54,12 @@ public class ColumnSelecter extends JDialog {
 					selectAll();
 				}
 			});
-			contentPanel.setLayout(new GridLayout(7,4));
+			contentPanel.setLayout(new GridLayout((columns.length/2), 5));
+			showAllButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
-			contentPanel.add(btnNewButton);
+			
+			showAllButtonPanel.add(btnNewButton);
+			contentPanel.add(showAllButtonPanel);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -83,10 +87,11 @@ public class ColumnSelecter extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		System.out.println(contentPanel.getX());
+		pack();
 		setCheckBoxes();
-		
-		
 	}
+	
 		private void setCheckBoxes() {
 			for(int i = 0; i < isVisible.length-1; i++) {
 				if (isVisible[i+1]) {

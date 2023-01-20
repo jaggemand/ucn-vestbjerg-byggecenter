@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Customer {
+	private static int tempAccountNumber;
+	private String accountNumber;
 	private String name;
-	private String sirname;
-	private String address;
 	private String deliveryAddress;
 	private String paymentAddress;
 	private String phone;
@@ -14,17 +14,15 @@ public class Customer {
 	private double credit;
 	private String postcode;
 	private String companyName;
-	private List<Customer> customerLines;
+	private customerType accountType;
 	
 	public enum customerType {
 		PRIVATE, BUSINESS;
 	}
 
-	public Customer(String name, String sirname, String address, String deliveryAddress, String paymentAddress,
-			String phone, String email, double credit, String postcode, String companyName) {
+	public Customer(String name, String deliveryAddress, String paymentAddress,
+			String phone, String email, double credit, String postcode, String companyName, customerType type) {
 		this.name = name;
-		this.sirname = sirname;
-		this.address = address;
 		this.deliveryAddress = deliveryAddress;
 		this.paymentAddress = paymentAddress;
 		this.phone = phone;
@@ -32,8 +30,22 @@ public class Customer {
 		this.credit = credit;
 		this.postcode = postcode;
 		this.companyName = companyName;
+		this.accountType = type;
+		this.accountNumber = "8004-" + tempAccountNumber;
+		tempAccountNumber++;
 	}
 	
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+		
+	public customerType getCustomerType() {
+		return accountType;
+	}
+	
+	public void setCustomerType(customerType type) {
+		this.accountType = type;
+	}
 
 	public String getName() {
 		return name;
@@ -41,22 +53,6 @@ public class Customer {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getSirname() {
-		return sirname;
-	}
-
-	public void setSirname(String sirname) {
-		this.sirname = sirname;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
 	}
 
 	public String getDeliveryAddress() {
@@ -107,7 +103,7 @@ public class Customer {
 		this.postcode = postcode;
 	}
 
-	public String getCompamyName() {
+	public String getCompanyName() {
 		return companyName;
 	}
 

@@ -5,75 +5,75 @@ import java.util.Iterator;
 import java.util.List;
 
 import model.Customer;
+import model.Customer.customerType;
 import model.CustomerContainer;
 
 public class CustomerController {
-	
+
 	private Customer currentCustomer;
-	
+
 	public CustomerController() {
 		currentCustomer = null;
 	}
-	
-	//TODO add functionality in customerContainer
+
+	// TODO add functionality in customerContainer
 	private boolean addCustomer(Customer c) {
 		boolean success = false;
-		if (currentCustomer != null) {
+		if (c != null) {
 			success = CustomerContainer.getInstance().addCustomer(c);
 		}
 		return success;
 	}
-	
-	//TODO add function to customerContainer
+
+	// TODO add function to customerContainer
 	public boolean removeCustomer(String phone) {
 		boolean success = false;
 		Customer c = findCustomerByInformation(phone);
-		
-		if(c != null) {
+
+		if (c != null) {
 			success = CustomerContainer.getInstance().removeCustomer(c);
 		}
 		return success;
 	}
-	
+
 	public void setCustomer(Customer c) {
 		this.currentCustomer = c;
 	}
-	
+
 	public Customer getCustomer() {
 		return this.currentCustomer;
 	}
-	
-	//TODO add functionality to customerContainer
-	public Customer findCustomerByInformation(String phone){
+
+	// TODO add functionality to customerContainer
+	public Customer findCustomerByInformation(String phone) {
 		Customer returnCustomer = null;
 		ArrayList<Customer> customers = CustomerContainer.getInstance().getCustomers();
 		boolean found = false;
 		Iterator<Customer> it = customers.iterator();
 		while (!found && it.hasNext()) {
 			returnCustomer = it.next();
-			if(returnCustomer.getPhone().equals(phone)) {
+			if (returnCustomer.getPhone().equals(phone)) {
 				found = true;
-			}
-			else {
+			} else {
 				returnCustomer = null;
 			}
 		}
 		return returnCustomer;
 	}
-	
+
 	public ArrayList<Customer> getAllCustomers() {
 		return CustomerContainer.getInstance().getCustomers();
 	}
-	
-	//TODO add functionality in container
-	public boolean createCustomer (String name, String sirname, String address, String deliveryAddress
-			, String paymentAddress, String phone, String email, double credit, String postCode, String companyName) {
+
+	// TODO add functionality in container
+	public boolean createCustomer(String name, String deliveryAddress, String paymentAddress,
+			String phone, String email, double credit, String postCode, String companyName, customerType type) {
 		boolean result = false;
-		
-		Customer c = new Customer(name, sirname, address, deliveryAddress,
-				paymentAddress, phone, email, credit, postCode, companyName);
-				
+
+		Customer c = new Customer(name, deliveryAddress, paymentAddress, phone, email, credit, postCode,
+				companyName, type);
+
 		result = addCustomer(c);
-		return result; 
+		return result;
 	}
 }
