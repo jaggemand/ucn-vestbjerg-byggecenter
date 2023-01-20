@@ -457,11 +457,7 @@ public class OrderOverview extends JFrame {
 	
 	private void deleteData() {
 		int[] columnsToShow = new int[]{0, 1};
-<<<<<<< HEAD
 		ArrayList<String> dataToDelete = table.deleteData("Ordrenummer", columnsToShow);
-=======
-		ArrayList<String> dataToDelete = table.deleteData("Ordernummer", columnsToShow);
->>>>>>> 1bb85e654d1435ff5efd2cbdf51155332c2a45fe
 		if(dataToDelete.size() != 0) {
 			for(int i = dataToDelete.size()-1; i >= 0; i--) {
 				orderController.removeOrder(dataToDelete.get(i));
@@ -516,7 +512,6 @@ public class OrderOverview extends JFrame {
 		orderOverview.setBounds(this.getBounds());
 	}
 	
-<<<<<<< HEAD
 	private void insertBlancFilterSearch() {
 		ArrayList<Order> orders = orderController.getAllOrders();
 		ArrayList<Order> orderResult = new ArrayList<>();
@@ -524,10 +519,7 @@ public class OrderOverview extends JFrame {
 		table.setNewData(convertToStringArray(orderResult));
 	}
 	
-private void search() {
-=======
 	private void search() {
->>>>>>> 1bb85e654d1435ff5efd2cbdf51155332c2a45fe
 		ArrayList<Order> orders = orderController.getAllOrders();
 		ArrayList<Order> orderResult = new ArrayList<>();
 		
