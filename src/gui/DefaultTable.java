@@ -47,6 +47,7 @@ public class DefaultTable extends JTable {
 		this.visibleColumns = visibleColumns;
 		initializeTable(data, columns, visibleColumns);
 	}
+	
 	public DefaultTable(String[][] data, String[] columns, boolean[] visibleColumns) {
 		this.data = data;
 		this.columns = columns;
@@ -78,10 +79,9 @@ public class DefaultTable extends JTable {
 			public void actionPerformed(ActionEvent e) {
 				
 				selectNewColumns();
-			}	
+			}
 		};
 		addColumn.addActionListener(alDetails);
-		
 		
 		MouseAdapter ma = new MouseAdapter() {
 			@Override
@@ -90,16 +90,17 @@ public class DefaultTable extends JTable {
 					showPopUp(e);
 				}
 			}
-		
 		};
 		getTableHeader().addMouseListener(ma);
 	}
+	
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		Component c = super.prepareRenderer(renderer, row, column);
 		if (!isRowSelected(row))
 			c.setBackground(row % 2 == 0 ? getBackground() : Color.LIGHT_GRAY);
 		return c;
 	}
+	
 	public void setNewData(String[][] data) {
 		tabelModel.setRowCount(0);
 		if(data == null) {
@@ -110,6 +111,7 @@ public class DefaultTable extends JTable {
 			tabelModel.addRow(data[i]);
 		}
 	}
+	
 	public ArrayList<String> deleteData(String column, int[] columnsConfirm) {
 		ArrayList<String> dataToDelete = new ArrayList<>();
 		if(rows.length != 0) {			
@@ -165,6 +167,7 @@ public class DefaultTable extends JTable {
 					
 		return input == 1;
 	}
+	
 	public int findElement() {
 		if(rows.length != 0) {
 			return this.getSelectedRows()[0];
@@ -178,13 +181,16 @@ public class DefaultTable extends JTable {
 	public void addRow(String[] data) {
 		tabelModel.addRow(data);
 	}
+	
 	public void clear() {
 		tabelModel.setRowCount(0);
 	}
+	
 	public void selectNewColumns() {
 		ColumnSelecter cs = new ColumnSelecter(visibleColumns, columns, this);
 		cs.setVisible(true);
 	}
+
 	public void setVisibleColumns(boolean[] newColumn) {
 		visibleColumns = newColumn;
 		for(int i = 0; i < visibleColumns.length; i++) {
@@ -192,23 +198,25 @@ public class DefaultTable extends JTable {
 				hideColumn(i);
 			}else if (visibleColumns[i]){
 				showColumn(i);
-		}
+			}
 		}
 	}
+	
 	private void hideColumn(int index) {
 		getColumnModel().getColumn(index).setMinWidth(0);
 		getColumnModel().getColumn(index).setMaxWidth(0);
 	}
+	
 	private void showColumn(int index) {
 		getColumnModel().getColumn(index).setMinWidth(10);
 		getColumnModel().getColumn(index).setMaxWidth(5000);
 		getColumnModel().getColumn(index).setWidth(50);
 		getColumnModel().getColumn(index).setPreferredWidth(0);
 	}
+	
 	private void showPopUp(MouseEvent e) {
 		if (e.isPopupTrigger()) {
 			popUp.show(e.getComponent(),e.getX(), e.getY());
 		}
 	}
-
 }

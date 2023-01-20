@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Customer {
-	private static int tempAccountNumber;
-	private String accountNumber;
 	private String name;
 	private String deliveryAddress;
 	private String paymentAddress;
@@ -31,12 +29,6 @@ public class Customer {
 		this.postcode = postcode;
 		this.companyName = companyName;
 		this.accountType = type;
-		this.accountNumber = "8004-" + tempAccountNumber;
-		tempAccountNumber++;
-	}
-	
-	public String getAccountNumber() {
-		return accountNumber;
 	}
 		
 	public customerType getCustomerType() {
@@ -110,6 +102,5 @@ public class Customer {
 	public void setCompamyName(String compamyName) {
 		this.companyName = companyName;
 	}
-	
 	
 }
