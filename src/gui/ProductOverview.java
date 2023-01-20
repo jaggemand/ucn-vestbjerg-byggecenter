@@ -37,20 +37,18 @@ public class ProductOverview extends JFrame {
 
 	private JPanel contentPane;
 	private DefaultTable table;
+	private String firstElement;
+	private JLabel lblRowCounter;
+	private JPopupMenu popUp;
+	private String[] columns;
+	private boolean[] activeColumns;
+
 	private JTextField txtProductName;
 	private JTextField txtMaxPrice;
 	private JTextField txtMinPrice;
 	private JComboBox<String> jcbCategories;
 	private JCheckBox jrbStoreLocation;
 	private JCheckBox jrbWarehouseLocation;
-	private String firstElement;
-	private JLabel lblRowCounter;
-
-	private JPopupMenu popUp;
-
-	private String[] columns;
-	private boolean[] activeColumns;
-
 	/**
 	 * Create the frame.
 	 */
@@ -93,14 +91,15 @@ public class ProductOverview extends JFrame {
 			}
 		}
 		/*
-		 * Collections.sort(categories);
 		 * 
 		 * for(String e : categories) { if(existingCategories.contains(e.toLowerCase()))
 		 * { jcbCategories.addItem(e); } }
 		 */
 		Collections.sort(existingCategories);
 		for (String e : existingCategories) {
-			jcbCategories.addItem(e);
+			if(e.length() >= 1) {
+				jcbCategories.addItem(e.substring(0,1).toUpperCase() + e.substring(1));
+			}	
 		}
 	}
 
@@ -288,6 +287,14 @@ public class ProductOverview extends JFrame {
 		};
 		table.addMouseListener(ma);
 	}
+	private void resetFilter() {
+		txtProductName.setText(null);
+		txtMaxPrice.setText(null);
+		txtMinPrice.setText(null);
+		jcbCategories.setSelectedIndex(0);
+		jrbStoreLocation.setSelected(true);
+		jrbWarehouseLocation.setSelected(true);
+	}
 
 	private void setButtons() {
 		JPanel panel = new JPanel();
@@ -422,7 +429,7 @@ public class ProductOverview extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String[][] data = convertToStringArray(ProductContainer.getInstance().getProducts());
 				table.setNewData(data);
-				rowCounter();
+				resetFilter();
 			}
 		});
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
@@ -508,9 +515,9 @@ public class ProductOverview extends JFrame {
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[] { 806, 30, 63, 59, 0, 0 };
+		gbl_panel_2.columnWidths = new int[] {700, 30, 63, 59, 0};
 		gbl_panel_2.rowHeights = new int[] { 21, 0 };
-		gbl_panel_2.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel_2.columnWeights = new double[] { 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE };
 		gbl_panel_2.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
 		panel_2.setLayout(gbl_panel_2);
 
@@ -531,7 +538,6 @@ public class ProductOverview extends JFrame {
 
 		GridBagConstraints gbc_btnClose = new GridBagConstraints();
 		gbc_btnClose.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnClose.insets = new Insets(0, 0, 0, 5);
 		gbc_btnClose.anchor = GridBagConstraints.NORTH;
 		gbc_btnClose.gridx = 3;
 		gbc_btnClose.gridy = 0;

@@ -2,28 +2,24 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import controller.ProductController;
-import model.Product;
-import model.ProductContainer;
-
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.awt.event.ActionEvent;
 
 public class DialogCategoryAdd extends JDialog {
 
@@ -146,7 +142,7 @@ public class DialogCategoryAdd extends JDialog {
 
 	public void init() {
 		ProductController productController = new ProductController();
-		HashSet<String> categories = productController.getCategoies();
+		List<String> categories = productController.getCategoies();
 		for (String element : categories) {
 			comboBox.addItem(element);
 		}

@@ -32,7 +32,7 @@ public class DefaultTable extends JTable {
 	private String[][] data;
 	private String[] columns;
 	private boolean[] visibleColumns;
-	
+	private CustomTableColumnManager tcm;
 	private JPopupMenu popUp;
 	/**
 	 * Create the panel.
@@ -56,6 +56,7 @@ public class DefaultTable extends JTable {
 	
 	private void initializeTable(String[][] data, String[] columns, boolean[] visibleColumns) {
 		tabelModel = new DefaultTableModel(data, columns);
+		tcm = new CustomTableColumnManager(this);
 		setModel(tabelModel);
 		setDefaultEditor(Object.class, null);
 		rows = new int[0];
@@ -68,31 +69,6 @@ public class DefaultTable extends JTable {
 			}
 		});
 		setVisibleColumns(visibleColumns);
-		popUp = new JPopupMenu();
-		JMenuItem addColumn = new JMenuItem("Tilføj kolonne");
-		popUp.add(addColumn);
-		
-		ActionListener alDetails = new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				selectNewColumns();
-			}	
-		};
-		addColumn.addActionListener(alDetails);
-		
-		
-		MouseAdapter ma = new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if (e.getButton() == 3) {
-					showPopUp(e);
-				}
-			}
-		
-		};
-		getTableHeader().addMouseListener(ma);
 	}
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		Component c = super.prepareRenderer(renderer, row, column);
@@ -116,7 +92,7 @@ public class DefaultTable extends JTable {
 			boolean check = deleteItems(rows.length, columnsConfirm);
 			if(check == true) {
 				for(int i = rows.length-1; i>= 0;i--) {
-					dataToDelete.add(tabelModel.getValueAt(rows[i],this.getColumn(column).getModelIndex()).toString());
+					dataToDelete.add(tabelModel.getValueAt(rows[i],tcm.getColumn(column).getModelIndex()).toString());
 					tabelModel.removeRow(rows[i]);
 				}
 			}
@@ -179,33 +155,12 @@ public class DefaultTable extends JTable {
 	public void clear() {
 		tabelModel.setRowCount(0);
 	}
-	public void selectNewColumns() {
-		ColumnSelecter cs = new ColumnSelecter(visibleColumns, columns, this);
-		cs.setVisible(true);
-	}
 	public void setVisibleColumns(boolean[] newColumn) {
 		visibleColumns = newColumn;
 		for(int i = 0; i < visibleColumns.length; i++) {
 			if(!visibleColumns[i]) {
-				hideColumn(i);
-			}else if (visibleColumns[i]){
-				showColumn(i);
-		}
-		}
-	}
-	private void hideColumn(int index) {
-		getColumnModel().getColumn(index).setMinWidth(0);
-		getColumnModel().getColumn(index).setMaxWidth(0);
-	}
-	private void showColumn(int index) {
-		getColumnModel().getColumn(index).setMinWidth(10);
-		getColumnModel().getColumn(index).setMaxWidth(5000);
-		getColumnModel().getColumn(index).setWidth(50);
-		getColumnModel().getColumn(index).setPreferredWidth(0);
-	}
-	private void showPopUp(MouseEvent e) {
-		if (e.isPopupTrigger()) {
-			popUp.show(e.getComponent(),e.getX(), e.getY());
+				tcm.hideColumn(columns[i]);
+			}
 		}
 	}
 

@@ -5,14 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * This class is a singleton class that holds a list of products
@@ -78,8 +75,10 @@ public class ProductContainer {
 		return new ArrayList<>(products);
 	}
 	
-	public HashSet<String> getCategories(){
-		return new HashSet<>(categories);
+	public List<String> getCategories(){
+		List<String> c = new ArrayList<>(categories);
+		Collections.sort(c);
+		return c;
 	}
 	public boolean addCategory(String newCategory) {
 		return categories.add(newCategory);
