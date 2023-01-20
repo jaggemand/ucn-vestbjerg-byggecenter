@@ -226,6 +226,7 @@ public class CashRegister extends JFrame {
 		ProductController pc = new ProductController();
 		Product p = pc.findProduct(itemNumber);
 		DecimalFormat df = new DecimalFormat("0.00");
+		
 		double totalItemSalesPrice = p.getSalesPrice() * amount;
 		return df.format(totalItemSalesPrice) + " DKK";
 	}

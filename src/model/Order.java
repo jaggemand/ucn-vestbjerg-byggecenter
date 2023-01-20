@@ -20,6 +20,7 @@ public class Order implements Serializable {
 	private boolean paid;
 	private LocalDate pickupDate;
 	private List<OrderLine> orderLines;
+	private Customer customer;
 
 	// An enum that is used to set the status of an order.
 	public enum OrderStatus {
@@ -30,6 +31,8 @@ public class Order implements Serializable {
 	public Order(boolean saleStatus) {
 		orderLines = new ArrayList<OrderLine>();
 		date = LocalDate.now();
+		customer = null;
+		
 		if (saleStatus) {
 			this.status = OrderStatus.SALE;
 			paid = true;
@@ -41,7 +44,6 @@ public class Order implements Serializable {
 
 		this.orderNumber = "352-" + tempOrderNumber;
 		tempOrderNumber++;
-
 	}
 
 	/**
@@ -237,6 +239,14 @@ public class Order implements Serializable {
 	
 	public Date getPickupDateAsDateType() {
 		return convLocalDateToDate(pickupDate);
+	}
+	
+	public Customer getCustomer() {
+		return customer;
+	}
+	
+	public void setCustomer(Customer c) {
+		this.customer = c;
 	}
 	
 	private Date convLocalDateToDate(LocalDate ld) {

@@ -150,9 +150,9 @@ public class ProductOverview extends JFrame {
 			txtMinPrice.setText(String.valueOf(minPrice));
 			txtMaxPrice.setText(String.valueOf(maxPrice));
 		}
-
+		
 		Iterator<Product> it = products.iterator();
-
+		
 		while (it.hasNext()) {
 			Product p = it.next();
 
@@ -181,7 +181,7 @@ public class ProductOverview extends JFrame {
 		table.setNewData(convertToStringArray(productResult));
 		table.setVisibleColumns(activeColumns);
 	}
-
+	
 	private String[][] convertToStringArray(ArrayList<Product> dataArrayList) {
 
 		int size = dataArrayList.size();
@@ -232,12 +232,12 @@ public class ProductOverview extends JFrame {
 		ArrayList<String> dataToDelete = table.deleteData("ProduktID", columnsToShow);
 		if(dataToDelete.size() != 0) {
 			ProductController pC = new ProductController();
-			for (int i = dataToDelete.size() - 1; i >= 0; i--) {
+			for(int i = dataToDelete.size() - 1; i >= 0; i--) {
 				pC.removeProduct(dataToDelete.get(i));
 			}
 		}
 	}
-
+	
 	private void setTable() {
 		activeColumns = new boolean[] { true, true, true, true, true, true, false, false, false, false, false, false };
 		columns = new String[] { "ProduktID", "Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning",
@@ -268,7 +268,6 @@ public class ProductOverview extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				popUpMenuAction(false, e);
 			}
 		};
@@ -283,7 +282,6 @@ public class ProductOverview extends JFrame {
 					showPopUp(e);
 				}
 			}
-
 		};
 		table.addMouseListener(ma);
 	}
@@ -353,7 +351,7 @@ public class ProductOverview extends JFrame {
 		gbc_lblMaxPrice.gridx = 4;
 		gbc_lblMaxPrice.gridy = 1;
 		panel.add(lblMaxPrice, gbc_lblMaxPrice);
-
+		
 		JLabel lblProductName = new JLabel("Produkt Navn");
 		lblProductName.setFont(new Font("Tahoma", Font.BOLD, 12));
 		GridBagConstraints gbc_lblProductName = new GridBagConstraints();
@@ -362,7 +360,7 @@ public class ProductOverview extends JFrame {
 		gbc_lblProductName.gridx = 6;
 		gbc_lblProductName.gridy = 1;
 		panel.add(lblProductName, gbc_lblProductName);
-
+		
 		jcbCategories = new JComboBox();
 		GridBagConstraints gbc_jcbCategories = new GridBagConstraints();
 		gbc_jcbCategories.anchor = GridBagConstraints.NORTHWEST;
@@ -372,7 +370,7 @@ public class ProductOverview extends JFrame {
 		panel.add(jcbCategories, gbc_jcbCategories);
 		firstElement = "Vælg kategori";
 		jcbCategories.addItem(firstElement);
-
+		
 		jrbWarehouseLocation = new JCheckBox("Lager");
 		jrbWarehouseLocation.setSelected(true);
 		GridBagConstraints gbc_jrbWarehouseLocation = new GridBagConstraints();
@@ -381,7 +379,7 @@ public class ProductOverview extends JFrame {
 		gbc_jrbWarehouseLocation.gridx = 2;
 		gbc_jrbWarehouseLocation.gridy = 2;
 		panel.add(jrbWarehouseLocation, gbc_jrbWarehouseLocation);
-
+		
 		txtMinPrice = new JTextField();
 		txtMinPrice.setColumns(10);
 		GridBagConstraints gbc_txtMinPrice = new GridBagConstraints();
@@ -390,7 +388,7 @@ public class ProductOverview extends JFrame {
 		gbc_txtMinPrice.gridx = 3;
 		gbc_txtMinPrice.gridy = 2;
 		panel.add(txtMinPrice, gbc_txtMinPrice);
-
+		
 		txtMaxPrice = new JTextField();
 		txtMaxPrice.setColumns(10);
 		GridBagConstraints gbc_txtMaxPrice = new GridBagConstraints();
@@ -399,7 +397,7 @@ public class ProductOverview extends JFrame {
 		gbc_txtMaxPrice.gridx = 4;
 		gbc_txtMaxPrice.gridy = 2;
 		panel.add(txtMaxPrice, gbc_txtMaxPrice);
-
+		
 		txtProductName = new JTextField();
 		txtProductName.setColumns(10);
 		GridBagConstraints gbc_txtProductName = new GridBagConstraints();
@@ -416,7 +414,7 @@ public class ProductOverview extends JFrame {
 				rowCounter();
 			}
 		});
-
+		
 		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
 		gbc_btnSearch.insets = new Insets(0, 0, 5, 5);
 		gbc_btnSearch.fill = GridBagConstraints.BOTH;
@@ -432,6 +430,7 @@ public class ProductOverview extends JFrame {
 				resetFilter();
 			}
 		});
+		
 		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
 		gbc_btnUpdate.insets = new Insets(0, 0, 5, 5);
 		gbc_btnUpdate.fill = GridBagConstraints.BOTH;
@@ -454,8 +453,8 @@ public class ProductOverview extends JFrame {
 				ProductInformation productInformation = new ProductInformation(null, true);
 				productInformation.setVisible(true);
 			}
-
 		});
+		
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
@@ -471,7 +470,7 @@ public class ProductOverview extends JFrame {
 				showProduct(true);
 			}
 		});
-
+		
 		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
 		gbc_btnEdit.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEdit.insets = new Insets(0, 0, 5, 0);

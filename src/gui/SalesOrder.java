@@ -433,8 +433,8 @@ public class SalesOrder extends JDialog {
 		int row = table.getSelectedRow();
 		
 		if(row != -1) {
-			//int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du slette dette product", "Bekræft slet", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
-			int result = GUIPopUpMessages.customBox("Vil du slette dette product", "Bekræft slet", new String[] {"Ja","Nej"}, JOptionPane.INFORMATION_MESSAGE);
+			//int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du slette dette produkt", "Bekræft slet", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
+			int result = GUIPopUpMessages.customBox("Vil du slette dette produkt", "Bekræft slet", new String[] {"Ja","Nej"}, JOptionPane.INFORMATION_MESSAGE);
 			if(result == 0) {
 				Product productToDelete = orderController.getCurrentOrder().getOrderLines().get(row).getProduct();
 				//Confirmed
