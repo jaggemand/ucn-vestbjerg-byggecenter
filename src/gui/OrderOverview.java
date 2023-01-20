@@ -419,6 +419,8 @@ public class OrderOverview extends JFrame {
 			datePickup.setDateTo(new Date(3000, 01, 01));
 		}
 		insertBlancFilterSearch();
+		dateCreated = new DialogDate(null, null);
+		datePickup = new DialogDate(null, null);
 	}
 	
 	private void initWindow() {
