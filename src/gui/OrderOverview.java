@@ -54,6 +54,10 @@ public class OrderOverview extends JFrame {
 	private JButton btnDateFilterCreated;
 	private JButton btnDateFilterPickup;
 	private String[] comboBoksDefaultText = new String[] {"Status"};
+	private Date parseDateTo;
+	private Date parseDateFrom;
+	private JCheckBox chckbxBusinessCustomer;
+	private JCheckBox chckbxPrivateCustomer;
 
 	/**
 	 * Launch the application.
@@ -189,7 +193,7 @@ public class OrderOverview extends JFrame {
 		panel_North.add(textFieldOrderNumber, gbc_textFieldOrderNumber);
 		textFieldOrderNumber.setColumns(10);
 		
-		JCheckBox chckbxBusinessCustomer = new JCheckBox("Erhvervskunde");
+		chckbxBusinessCustomer = new JCheckBox("Erhvervskunde");
 		GridBagConstraints gbc_chckbxBusinessCustomer = new GridBagConstraints();
 		gbc_chckbxBusinessCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxBusinessCustomer.insets = new Insets(0, 0, 5, 5);
@@ -226,6 +230,7 @@ public class OrderOverview extends JFrame {
 			}
 		});
 		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
+		gbc_btnSearch.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnSearch.insets = new Insets(0, 0, 5, 0);
 		gbc_btnSearch.gridx = 5;
 		gbc_btnSearch.gridy = 0;
@@ -268,17 +273,17 @@ public class OrderOverview extends JFrame {
 		comboBoxStatus.setModel(new DefaultComboBoxModel(comboBoksDefaultText));
 		comboBoxStatus.setToolTipText("Status på ordre");
 		GridBagConstraints gbc_comboBoxStatus = new GridBagConstraints();
-		gbc_comboBoxStatus.insets = new Insets(0, 0, 5, 5);
+		gbc_comboBoxStatus.insets = new Insets(0, 0, 0, 5);
 		gbc_comboBoxStatus.fill = GridBagConstraints.HORIZONTAL;
 		gbc_comboBoxStatus.gridx = 0;
 		gbc_comboBoxStatus.gridy = 2;
 		panel_North.add(comboBoxStatus, gbc_comboBoxStatus);
 		initComboBox();
 		
-		JCheckBox chckbxPrivateCustomer = new JCheckBox("Privatkunde");
+		chckbxPrivateCustomer = new JCheckBox("Privatkunde");
 		GridBagConstraints gbc_chckbxPrivateCustomer = new GridBagConstraints();
 		gbc_chckbxPrivateCustomer.fill = GridBagConstraints.BOTH;
-		gbc_chckbxPrivateCustomer.insets = new Insets(0, 0, 5, 5);
+		gbc_chckbxPrivateCustomer.insets = new Insets(0, 0, 0, 5);
 		gbc_chckbxPrivateCustomer.gridx = 1;
 		gbc_chckbxPrivateCustomer.gridy = 2;
 		panel_North.add(chckbxPrivateCustomer, gbc_chckbxPrivateCustomer);
@@ -286,13 +291,13 @@ public class OrderOverview extends JFrame {
 		chckbxOrderPickup = new JCheckBox("Afhentingsdato");
 		GridBagConstraints gbc_chckbxOrderPickup = new GridBagConstraints();
 		gbc_chckbxOrderPickup.fill = GridBagConstraints.BOTH;
-		gbc_chckbxOrderPickup.insets = new Insets(0, 0, 5, 5);
+		gbc_chckbxOrderPickup.insets = new Insets(0, 0, 0, 5);
 		gbc_chckbxOrderPickup.gridx = 2;
 		gbc_chckbxOrderPickup.gridy = 2;
 		panel_North.add(chckbxOrderPickup, gbc_chckbxOrderPickup);
 		GridBagConstraints gbc_btnDateFilterCreated = new GridBagConstraints();
 		gbc_btnDateFilterCreated.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDateFilterCreated.insets = new Insets(0, 0, 5, 5);
+		gbc_btnDateFilterCreated.insets = new Insets(0, 0, 0, 5);
 		gbc_btnDateFilterCreated.gridx = 3;
 		gbc_btnDateFilterCreated.gridy = 2;
 		panel_North.add(btnDateFilterCreated, gbc_btnDateFilterCreated);
@@ -305,10 +310,22 @@ public class OrderOverview extends JFrame {
 		});
 		GridBagConstraints gbc_btnDateFilterPickup = new GridBagConstraints();
 		gbc_btnDateFilterPickup.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDateFilterPickup.insets = new Insets(0, 0, 5, 5);
+		gbc_btnDateFilterPickup.insets = new Insets(0, 0, 0, 5);
 		gbc_btnDateFilterPickup.gridx = 4;
 		gbc_btnDateFilterPickup.gridy = 2;
 		panel_North.add(btnDateFilterPickup, gbc_btnDateFilterPickup);
+		
+		JButton btnResetFilters = new JButton("Nulstil filtre");
+		btnResetFilters.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonResetFiltersPressed();
+			}
+		});
+		GridBagConstraints gbc_btnResetFilters = new GridBagConstraints();
+		gbc_btnResetFilters.gridx = 5;
+		gbc_btnResetFilters.gridy = 2;
+		panel_North.add(btnResetFilters, gbc_btnResetFilters);
+		insertBlancFilterSearch();
 		updateTable();
 	}
 	
@@ -343,8 +360,20 @@ public class OrderOverview extends JFrame {
 		search();
 	}
 	
+	private void resetParseDates() {
+		parseDateFrom = null;
+		parseDateTo = null;
+	}
+	
 	private void buttonDateCreatedPressed() {
-		dateCreated = new DialogDate();
+		if(dateCreated != null) {
+			if(dateCreated.getDateFrom() != null && dateCreated.getDateTo() != null) {
+				parseDateFrom = dateCreated.getDateFrom();
+				parseDateTo = dateCreated.getDateTo();
+			}
+		}
+		dateCreated = new DialogDate(parseDateFrom, parseDateTo);
+		resetParseDates();
 		dateCreated.setVisible(true);
 		if(!dateCreated.isOkPressed()) {
 			//button text shouldn't change
@@ -355,7 +384,14 @@ public class OrderOverview extends JFrame {
 	}
 	
 	private void buttonDatePickupPressed() {
-		datePickup = new DialogDate();
+		if(datePickup != null) {
+			if(datePickup.getDateFrom() != null && datePickup.getDateTo() != null) {
+				parseDateFrom = datePickup.getDateFrom();
+				parseDateTo = datePickup.getDateTo();
+			}
+		}
+		datePickup = new DialogDate(parseDateFrom, parseDateTo);
+		resetParseDates();
 		datePickup.setVisible(true);
 		if(!datePickup.isOkPressed()) {
 			//button text shouldn't change
@@ -363,6 +399,26 @@ public class OrderOverview extends JFrame {
 		else {
 			btnDateFilterPickup.setText(setDateSelecterButtonFormat(datePickup.getDateFrom(), datePickup.getDateTo()));
 		}
+	}
+	
+	//TODO implement gray-out
+	//TODO implement a check in dialog date, that checks if the date is the large bounds date, and if so, sets the date to current date aka reset
+	private void buttonResetFiltersPressed() {
+		chckbxOrderCreated.setSelected(false);
+		chckbxOrderPickup.setSelected(false);
+		chckbxPrivateCustomer.setSelected(false);
+		chckbxBusinessCustomer.setSelected(false);
+		if(dateCreated != null) {
+			btnDateFilterCreated.setText("Vælg periode");
+			dateCreated.setDateFrom(new Date(0000, 01, 01));
+			dateCreated.setDateTo(new Date(3000, 01, 01));
+		}
+		if(datePickup != null) {
+			btnDateFilterPickup.setText("Vælg periode");
+			datePickup.setDateFrom(new Date(0000, 01, 01));
+			datePickup.setDateTo(new Date(3000, 01, 01));
+		}
+		insertBlancFilterSearch();
 	}
 	
 	private void initWindow() {
@@ -401,7 +457,7 @@ public class OrderOverview extends JFrame {
 	
 	private void deleteData() {
 		int[] columnsToShow = new int[]{0, 1};
-		ArrayList<String> dataToDelete = table.deleteData("Ordernummer", columnsToShow);
+		ArrayList<String> dataToDelete = table.deleteData("Ordrenummer", columnsToShow);
 		if(dataToDelete.size() != 0) {
 			for(int i = dataToDelete.size()-1; i >= 0; i--) {
 				orderController.removeOrder(dataToDelete.get(i));
@@ -456,6 +512,13 @@ public class OrderOverview extends JFrame {
 		orderOverview.setBounds(this.getBounds());
 	}
 	
+	private void insertBlancFilterSearch() {
+		ArrayList<Order> orders = orderController.getAllOrders();
+		ArrayList<Order> orderResult = new ArrayList<>();
+		orderResult.addAll(orders);
+		table.setNewData(convertToStringArray(orderResult));
+	}
+	
 	private void search() {
 		ArrayList<Order> orders = orderController.getAllOrders();
 		ArrayList<Order> orderResult = new ArrayList<>();
@@ -483,7 +546,7 @@ public class OrderOverview extends JFrame {
 			
 //		List<OrderStatus> status = Arrays.asList(o.getStatus());
 			
-			if(o.getOrderNumber().toLowerCase().equals(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0 || textFieldOrderNumber.getText().equals("Ordernummer")) {
+			if(o.getOrderNumber().toLowerCase().contains(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0 || textFieldOrderNumber.getText().equals("Ordernummer")) {
 				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickupDateAsDateType(), pickupFrom, pickupTo)) {
 					if(o.getStatus().equals(comboBoxStatus.getSelectedItem()) || comboBoxStatus.getSelectedIndex() == 0 || comboBoxStatus.getSelectedItem().equals("ALLE STATUSER")) {
 						orderResult.add(o);

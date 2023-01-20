@@ -24,8 +24,8 @@ public class DialogDate extends JDialog {
 	private JSpinner spnDateFrom;
 	private JSpinner spnDateTo;
 	
-	private Date dateFrom = new Date();
-	private Date dateTo = new Date();
+	private Date dateFrom;
+	private Date dateTo;
 	
 	private boolean okPressed = true;
 
@@ -34,7 +34,7 @@ public class DialogDate extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogDate dialog = new DialogDate();
+			DialogDate dialog = new DialogDate(new Date(), new Date());
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -45,7 +45,9 @@ public class DialogDate extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogDate() {
+	public DialogDate(Date presetDateFrom, Date presetDateTo) {
+		this.dateFrom = presetDateFrom;
+		this.dateTo = presetDateTo;
 		setModal(true);
 		setTitle("Vælg periode");
 		setBounds(100, 100, 196, 171);
@@ -92,7 +94,12 @@ public class DialogDate extends JDialog {
 				}
 				{
 					spnDateFrom = new JSpinner();
-					spnDateFrom.setModel(new SpinnerDateModel(new Date(1673823600000L), null, null, Calendar.DAY_OF_YEAR));
+					if(this.dateFrom != null) {
+						spnDateFrom.setModel(new SpinnerDateModel(this.dateFrom, null, null, Calendar.MILLISECOND));
+					}
+					else {
+						spnDateFrom.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.MILLISECOND));
+					}
 					GridBagConstraints gbc_spnDateFrom = new GridBagConstraints();
 					gbc_spnDateFrom.fill = GridBagConstraints.HORIZONTAL;
 					gbc_spnDateFrom.insets = new Insets(0, 0, 0, 5);
@@ -100,7 +107,14 @@ public class DialogDate extends JDialog {
 					gbc_spnDateFrom.gridy = 3;
 					panel.add(spnDateFrom, gbc_spnDateFrom);
 				}
-				spnDateTo.setModel(new SpinnerDateModel(new Date(1673823600000L), null, null, Calendar.MILLISECOND));
+				if(this.dateTo != null) {
+					spnDateTo.setModel(new SpinnerDateModel(this.dateTo, null, null, Calendar.MILLISECOND));
+				}
+				else {
+					spnDateTo.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.MILLISECOND));
+				}
+				//Just here for safe keeping in case a massively fuck this shit up :)
+//				spnDateTo.setModel(new SpinnerDateModel(new Date(1673823600000L), null, null, Calendar.MILLISECOND));
 				JSpinner.DateEditor de_spnDateTo = new JSpinner.DateEditor(spnDateTo, "dd-MM-yyyy");
 				spnDateTo.setEditor(de_spnDateTo);
 				GridBagConstraints gbc_spnDateTo = new GridBagConstraints();
@@ -177,6 +191,16 @@ public class DialogDate extends JDialog {
 	
 	public boolean isOkPressed() {
 		return okPressed;
+	}
+	
+	public void setDateFrom(Date date) {
+		dateFrom = new Date();
+		dateFrom = date;
+	}
+	
+	public void setDateTo(Date date) {
+		dateTo = new Date();
+		dateTo = date;
 	}
 
 }
