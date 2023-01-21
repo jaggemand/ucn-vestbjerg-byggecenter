@@ -65,18 +65,20 @@ public class MainMenu extends JFrame {
 //		cController = new CustomerController();
 //		cController.createCustomer("N/A", "N/A", "N/A", "0", "N/A", 0.0, "N/A", "N/A", customerType.PRIVATE);
 		
-		ProductController productController = new ProductController();
-		Product prod1 = productController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
-				"29:12", "42:13", 10, 50);
-		Order order1 = new Order(false);
-		order1.addProduct(prod1, 1);
-		order1.setDate(5); // subtracts date
-		OrderContainer.getInstance().addOrder(order1);
-		
 		setTitle("Hoved menu");
 		pController = new ProductController();
 		oController = new OrderController();
 		pController.loadFile();
+		
+		//Test order
+		Product testProduct = pController.findProduct("1234");
+		if(testProduct != null) {
+			Order order1 = new Order(false);
+			order1.addProduct(testProduct, 1);
+			order1.setDate(5); // subtracts date
+			OrderContainer.getInstance().addOrder(order1);
+		}
+		
 		
 		
 		setResizable(false);
