@@ -333,7 +333,7 @@ public class OrderOverview extends JFrame {
 	if(table.getSelectedRowCount() > 0) {
 			String selectedOrderNumber = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
 			Order selectedOrder = orderController.findOrder(selectedOrderNumber);
-			SalesOrder salesOrder = new SalesOrder(selectedOrder,false);
+			SalesOrder salesOrder = new SalesOrder(selectedOrder,false, this);
 			salesOrder.setVisible(true);
 		}
 		else {
@@ -342,7 +342,7 @@ public class OrderOverview extends JFrame {
 	}
 	
 	private void buttonCreateOrderPressed() {
-		SalesOrder salesOrder = new SalesOrder(null,true);
+		SalesOrder salesOrder = new SalesOrder(null,true, this);
 		salesOrder.setVisible(true);
 		updateTable();
 	}

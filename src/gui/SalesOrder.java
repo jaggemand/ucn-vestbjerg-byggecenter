@@ -63,10 +63,12 @@ public class SalesOrder extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public SalesOrder(Order o, boolean isModal) {
+	public SalesOrder(Order o, boolean isModal, JFrame frame) {
+		super(frame);
 		setTitle("Ordre");
 		orderController = new OrderController();
 		setModal(isModal);
+		setModalityType(JDialog.ModalityType.DOCUMENT_MODAL);
 		if(o != null) {
 			
 			orderController.setCurrentOrder(o);
