@@ -27,6 +27,7 @@ import controller.ProductController;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
+import model.Order.OrderStatus;
 
 public class MainMenu extends JFrame {
 
@@ -58,13 +59,19 @@ public class MainMenu extends JFrame {
 	 * @throws ClassNotFoundException 
 	 */
 	public MainMenu() throws IOException {
+		
+		
+		//-----TODO REMOVE BEFORE END OF PROJECT PERIOD---------------
 		ProductController productController = new ProductController();
 		Product prod1 = productController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
 				"29:12", "42:13", 10, 50);
 		Order order1 = new Order(false);
 		order1.addProduct(prod1, 1);
 		order1.setDate(5); // subtracts date
+		order1.setStatus(OrderStatus.DELIVERED);
 		OrderContainer.getInstance().addOrder(order1);
+		//-------------------------------------------------------------------------------
+		
 		
 		setTitle("Hoved menu");
 		pController = new ProductController();
