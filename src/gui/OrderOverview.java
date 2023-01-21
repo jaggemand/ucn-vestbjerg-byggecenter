@@ -457,7 +457,7 @@ public class OrderOverview extends JFrame {
 	
 	private void deleteData() {
 		int[] columnsToShow = new int[]{0, 1};
-		ArrayList<String> dataToDelete = table.deleteData("Ordrenummer", columnsToShow);
+		ArrayList<String> dataToDelete = table.deleteData("Ordernummer", columnsToShow);
 		if(dataToDelete.size() != 0) {
 			for(int i = dataToDelete.size()-1; i >= 0; i--) {
 				orderController.removeOrder(dataToDelete.get(i));

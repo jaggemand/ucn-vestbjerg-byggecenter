@@ -155,7 +155,7 @@ public class SaleMenu {
 	 */
 	private void completeSale() {
 		printInvoice(orderController.getCurrentOrder());
-		orderController.addOrder();
+		orderController.addOrder("0");
 	}
 
 	/**

@@ -22,8 +22,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.CustomerController;
 import controller.OrderController;
 import controller.ProductController;
+import model.Customer.customerType;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
@@ -34,6 +36,7 @@ public class MainMenu extends JFrame {
 	private static MainMenu frame;
 	private ProductController pController;
 	private OrderController oController;
+	private CustomerController cController;
 
 	/**
 	 * Launch the application.
@@ -58,6 +61,10 @@ public class MainMenu extends JFrame {
 	 * @throws ClassNotFoundException 
 	 */
 	public MainMenu() throws IOException {
+//		//Creates the Cashregister default customer
+//		cController = new CustomerController();
+//		cController.createCustomer("N/A", "N/A", "N/A", "0", "N/A", 0.0, "N/A", "N/A", customerType.PRIVATE);
+		
 		ProductController productController = new ProductController();
 		Product prod1 = productController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
 				"29:12", "42:13", 10, 50);

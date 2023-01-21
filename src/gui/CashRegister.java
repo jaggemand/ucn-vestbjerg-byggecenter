@@ -22,8 +22,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import controller.CustomerController;
 import controller.OrderController;
 import controller.ProductController;
+import model.Customer;
 import model.Order;
 import model.OrderLine;
 import model.Product;
@@ -36,6 +38,7 @@ public class CashRegister extends JFrame {
 	private static CashRegister frame;
 	private JScrollPane scrollPane;
 	private OrderController orderController;
+	private CustomerController customerController;
 	private JLabel lblStatus;
 	private JLabel lblTotal;
 	private JLabel lblVat;
@@ -60,6 +63,8 @@ public class CashRegister extends JFrame {
 	 */
 	public CashRegister() {
 		setTitle("Kassesalg");
+		
+		customerController = new CustomerController();
 		
 		orderController = new OrderController();
 		orderController.createOrder(true);
@@ -292,17 +297,25 @@ public class CashRegister extends JFrame {
 	}
 	
 	private void buttonPaymentPressed() {
+		Customer customer = customerController.findCustomerByInformation("0");
+		//Must have items in the table
 		if(table.getModel().getRowCount() > 0) {
-			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil gennemføre betalingen", "Betaling",
-					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-					new Object[] { "Betal", "Tilbage" }, JOptionPane.YES_OPTION);*/
-			int input = GUIPopUpMessages.customBox("Er du sikker på at du vil gennemføre betalingen", "Betaling",new Object[] { "Betal", "Tilbage" } , JOptionPane.QUESTION_MESSAGE);
-			if(input == 0) {
-				orderController.addOrder();
-				resetFrame();
+			//Must have added a customer
+			if(customer != null) {
+				/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil gennemføre betalingen", "Betaling",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				new Object[] { "Betal", "Tilbage" }, JOptionPane.YES_OPTION);*/
+				int input = GUIPopUpMessages.customBox("Er du sikker på at du vil gennemføre betalingen", "Betaling",new Object[] { "Betal", "Tilbage" } , JOptionPane.QUESTION_MESSAGE);
+				if(input == 0) {
+					orderController.addOrder(customer.getPhone());
+					resetFrame();
+				}
+			} else {
+				//Customer not found
 			}
-		}
-		else {
+			
+		} else {
+			//no items in the table
 			makeStatusMessage("Ingen produkter er scannet", true);
 		}
 	}
