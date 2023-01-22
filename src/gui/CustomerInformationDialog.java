@@ -366,23 +366,7 @@ public class CustomerInformationDialog extends JDialog {
 	}
 
 	private void init() {
-		if (currentCustomer != null) {
-			txtName.setText(currentCustomer.getName());
-			txtDeliveryAddress.setText(currentCustomer.getDeliveryAddress());
-			txtPaymentAddress.setText(currentCustomer.getPaymentAddress());
-			txtPostalCode.setText(currentCustomer.getPostcode());
-			txtPhoneNumber.setText(currentCustomer.getPhone());
-			txtEmail.setText(currentCustomer.getEmail());
-			txtCredit.setText(currentCustomer.getCredit()+"");
-			txtCompanyName.setText(currentCustomer.getCompanyName());
-			btnOK.setText("Gem");
-		}
-		chckBoxPrivate.setEnabled(editMode);
-		chckBoxBusiness.setEnabled(editMode);
-		chckBoxChangeAddress.setEnabled(editMode);
-		lblStatuslbl.setVisible(editMode);
-		lblStatusText.setVisible(editMode);
-		btnOK.setVisible(editMode);
+		btnCancel.setText("Tilbage");
 		txtName.setEnabled(false);
 		txtDeliveryAddress.setEnabled(false);
 		txtPaymentAddress.setEnabled(false);
@@ -391,26 +375,57 @@ public class CustomerInformationDialog extends JDialog {
 		txtEmail.setEnabled(false);
 		txtCredit.setEnabled(false);
 		txtCompanyName.setEnabled(false);
-		if (currentCustomer != null && currentCustomer.getCustomerType() == customerType.PRIVATE) {
-			chckBoxPrivate.setSelected(true);
-			chckBoxBusiness.setSelected(false);
-			handleSelectionChange(true);
-		} else if(currentCustomer != null && currentCustomer.getCustomerType() == customerType.BUSINESS) {
-			chckBoxBusiness.setSelected(true);
-			chckBoxPrivate.setSelected(false);
-			handleSelectionChange(false);
+		chckBoxPrivate.setEnabled(editMode);
+		chckBoxBusiness.setEnabled(editMode);
+		chckBoxChangeAddress.setEnabled(editMode);
+		lblStatuslbl.setVisible(editMode);
+		lblStatusText.setVisible(editMode);
+		btnOK.setVisible(editMode);
+
+		if (currentCustomer != null) {
+			txtName.setText(currentCustomer.getName());
+			txtDeliveryAddress.setText(currentCustomer.getDeliveryAddress());
+			txtPaymentAddress.setText(currentCustomer.getPaymentAddress());
+			txtPostalCode.setText(currentCustomer.getPostcode());
+			txtPhoneNumber.setText(currentCustomer.getPhone());
+			txtEmail.setText(currentCustomer.getEmail());
+			txtCredit.setText(currentCustomer.getCredit() + "");
+			txtCompanyName.setText(currentCustomer.getCompanyName());
+			btnOK.setText("Gem");
+			if (currentCustomer.getCustomerType() == customerType.PRIVATE) {
+				chckBoxPrivate.setSelected(true);
+				chckBoxBusiness.setSelected(false);
+				chckBoxPrivate.setEnabled(false);
+				chckBoxBusiness.setEnabled(false);
+				handleSelectionChange(true);
+			} else if (currentCustomer.getCustomerType() == customerType.BUSINESS) {
+				chckBoxBusiness.setSelected(true);
+				chckBoxPrivate.setSelected(false);
+				chckBoxPrivate.setEnabled(false);
+				chckBoxBusiness.setEnabled(false);
+				handleSelectionChange(false);
+
+			}
+			if (!editMode) {
+				btnCancel.setText("Tilbage");
+				txtName.setEnabled(false);
+				txtDeliveryAddress.setEnabled(false);
+				txtPaymentAddress.setEnabled(false);
+				txtPostalCode.setEnabled(false);
+				txtPhoneNumber.setEnabled(false);
+				txtEmail.setEnabled(false);
+				txtCredit.setEnabled(false);
+				txtCompanyName.setEnabled(false);
+			}
+			txtName.setDisabledTextColor(Color.gray);
+			txtDeliveryAddress.setDisabledTextColor(Color.gray);
+			txtPaymentAddress.setDisabledTextColor(Color.gray);
+			txtPostalCode.setDisabledTextColor(Color.gray);
+			txtPhoneNumber.setDisabledTextColor(Color.gray);
+			txtEmail.setDisabledTextColor(Color.gray);
+			txtCredit.setDisabledTextColor(Color.gray);
+			txtCompanyName.setDisabledTextColor(Color.gray);
 		}
-		if (!editMode) {
-			btnCancel.setText("Tilbage");
-		}
-		txtName.setDisabledTextColor(Color.gray);
-		txtDeliveryAddress.setDisabledTextColor(Color.gray);
-		txtPaymentAddress.setDisabledTextColor(Color.gray);
-		txtPostalCode.setDisabledTextColor(Color.gray);
-		txtPhoneNumber.setDisabledTextColor(Color.gray);
-		txtEmail.setDisabledTextColor(Color.gray);
-		txtCredit.setDisabledTextColor(Color.gray);
-		txtCompanyName.setDisabledTextColor(Color.gray);
 	}
 
 	private void addCustomer() {
@@ -430,13 +445,22 @@ public class CustomerInformationDialog extends JDialog {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 		if (!chckBoxChangeAddress.isSelected() && paymentAddress.isBlank()) {
 			paymentAddress = deliveryAddress;
 		}
-		
-		if(currentCustomer != null) {
+
+		if (currentCustomer != null && chckBoxPrivate.isSelected()) {
 			currentCustomer.setName(name);
+			currentCustomer.setDeliveryAddress(deliveryAddress);
+			currentCustomer.setPaymentAddress(paymentAddress);
+			currentCustomer.setPostcode(postalCode);
+			currentCustomer.setPhone(phone);
+			currentCustomer.setEmail(email);
+			currentCustomer.setCredit(0.0);
+			currentCustomer.setCompamyName("");
+		} else if (currentCustomer != null && chckBoxBusiness.isSelected()) {
+			currentCustomer.setName("");
 			currentCustomer.setDeliveryAddress(deliveryAddress);
 			currentCustomer.setPaymentAddress(paymentAddress);
 			currentCustomer.setPostcode(postalCode);
