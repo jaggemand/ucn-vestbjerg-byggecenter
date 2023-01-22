@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.CustomerController;
+import model.Customer;
 import model.Customer.customerType;
 
 import java.awt.GridBagLayout;
@@ -42,13 +43,19 @@ public class CustomerInformationDialog extends JDialog {
 	private JCheckBox chckBoxBusiness;
 	private JCheckBox chckBoxPrivate;
 	private JCheckBox chckBoxChangeAddress;
+	private Customer currentCustomer;
+	private boolean editMode;
+	private JButton btnOK;
+	private JButton btnCancel;
+	private JLabel lblStatusText;
+	private JLabel lblStatuslbl;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			CustomerInformationDialog dialog = new CustomerInformationDialog();
+			CustomerInformationDialog dialog = new CustomerInformationDialog(null, false);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -59,7 +66,7 @@ public class CustomerInformationDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public CustomerInformationDialog() {
+	public CustomerInformationDialog(Customer currentCustomer, boolean editMode) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle("Kundeinformation");
 		setBounds(100, 100, 650, 400);
@@ -258,16 +265,16 @@ public class CustomerInformationDialog extends JDialog {
 				buttonPane.add(lblNewLabel_10, gbc_lblNewLabel_10);
 			}
 			{
-				JLabel lblNewLabel_8 = new JLabel("Status:");
-				GridBagConstraints gbc_lblNewLabel_8 = new GridBagConstraints();
-				gbc_lblNewLabel_8.anchor = GridBagConstraints.WEST;
-				gbc_lblNewLabel_8.insets = new Insets(0, 0, 5, 5);
-				gbc_lblNewLabel_8.gridx = 1;
-				gbc_lblNewLabel_8.gridy = 0;
-				buttonPane.add(lblNewLabel_8, gbc_lblNewLabel_8);
+				lblStatuslbl = new JLabel("Status:");
+				GridBagConstraints gbc_lblStatuslbl = new GridBagConstraints();
+				gbc_lblStatuslbl.anchor = GridBagConstraints.WEST;
+				gbc_lblStatuslbl.insets = new Insets(0, 0, 5, 5);
+				gbc_lblStatuslbl.gridx = 1;
+				gbc_lblStatuslbl.gridy = 0;
+				buttonPane.add(lblStatuslbl, gbc_lblStatuslbl);
 			}
 			{
-				JLabel lblStatusText = new JLabel("OK");
+				lblStatusText = new JLabel("OK");
 				lblStatusText.setForeground(new Color(0, 179, 45));
 				GridBagConstraints gbc_lblStatusText = new GridBagConstraints();
 				gbc_lblStatusText.anchor = GridBagConstraints.WEST;
@@ -277,7 +284,7 @@ public class CustomerInformationDialog extends JDialog {
 				buttonPane.add(lblStatusText, gbc_lblStatusText);
 			}
 			{
-				JButton btnOK = new JButton("Opret Kunde");
+				btnOK = new JButton("Opret Kunde");
 				btnOK.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						addCustomer();
@@ -293,7 +300,7 @@ public class CustomerInformationDialog extends JDialog {
 				getRootPane().setDefaultButton(btnOK);
 			}
 			{
-				JButton btnCancel = new JButton("Afbryd");
+				btnCancel = new JButton("Afbryd");
 				btnCancel.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						closeWindow();
@@ -353,10 +360,29 @@ public class CustomerInformationDialog extends JDialog {
 				panel.add(chckBoxBusiness, gbc_chckBoxBusiness);
 			}
 		}
+		this.editMode = editMode;
+		this.currentCustomer = currentCustomer;
 		init();
 	}
 
 	private void init() {
+		if (currentCustomer != null) {
+			txtName.setText(currentCustomer.getName());
+			txtDeliveryAddress.setText(currentCustomer.getDeliveryAddress());
+			txtPaymentAddress.setText(currentCustomer.getPaymentAddress());
+			txtPostalCode.setText(currentCustomer.getPostcode());
+			txtPhoneNumber.setText(currentCustomer.getPhone());
+			txtEmail.setText(currentCustomer.getEmail());
+			txtCredit.setText(currentCustomer.getCredit()+"");
+			txtCompanyName.setText(currentCustomer.getCompanyName());
+			btnOK.setText("Gem");
+		}
+		chckBoxPrivate.setEnabled(editMode);
+		chckBoxBusiness.setEnabled(editMode);
+		chckBoxChangeAddress.setEnabled(editMode);
+		lblStatuslbl.setVisible(editMode);
+		lblStatusText.setVisible(editMode);
+		btnOK.setVisible(editMode);
 		txtName.setEnabled(false);
 		txtDeliveryAddress.setEnabled(false);
 		txtPaymentAddress.setEnabled(false);
@@ -365,6 +391,10 @@ public class CustomerInformationDialog extends JDialog {
 		txtEmail.setEnabled(false);
 		txtCredit.setEnabled(false);
 		txtCompanyName.setEnabled(false);
+		
+		if (!editMode) {
+			btnCancel.setText("Tilbage");
+		}
 	}
 
 	private void addCustomer() {
