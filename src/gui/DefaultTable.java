@@ -163,9 +163,9 @@ public class DefaultTable extends JTable {
 		
 		for(int i = 0; i < newColumn.length; i++) {
 			if(!visibleColumns[i] && newColumn[i] != visibleColumns[i]) {
-				tcm.hideColumn(columns[i]);
-			}else if(visibleColumns[i] && newColumn[i] != visibleColumns[i]){
 				tcm.showColumn(columns[i]);
+			}else if(visibleColumns[i] && newColumn[i] != visibleColumns[i]){
+				tcm.hideColumn(columns[i]);
 			}
 		}
 		visibleColumns = newColumn;
