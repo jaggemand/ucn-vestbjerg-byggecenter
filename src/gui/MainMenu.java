@@ -22,8 +22,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.CustomerController;
 import controller.OrderController;
 import controller.ProductController;
+import model.Customer.customerType;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
