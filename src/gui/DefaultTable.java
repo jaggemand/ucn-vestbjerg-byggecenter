@@ -68,7 +68,11 @@ public class DefaultTable extends JTable {
 				rows = getSelectedRows();
 			}
 		});
-		setVisibleColumns(visibleColumns);
+		for(int i = 0; i < visibleColumns.length; i++) {
+			if(!visibleColumns[i]) {
+				tcm.hideColumn(columns[i]);
+			}
+		}
 	}
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		Component c = super.prepareRenderer(renderer, row, column);
@@ -156,12 +160,15 @@ public class DefaultTable extends JTable {
 		tabelModel.setRowCount(0);
 	}
 	public void setVisibleColumns(boolean[] newColumn) {
-		visibleColumns = newColumn;
-		for(int i = 0; i < visibleColumns.length; i++) {
-			if(!visibleColumns[i]) {
+		
+		for(int i = 0; i < newColumn.length; i++) {
+			if(!visibleColumns[i] && newColumn[i] != visibleColumns[i]) {
+				tcm.showColumn(columns[i]);
+			}else if(visibleColumns[i] && newColumn[i] != visibleColumns[i]){
 				tcm.hideColumn(columns[i]);
 			}
 		}
+		visibleColumns = newColumn;
 	}
 
 }

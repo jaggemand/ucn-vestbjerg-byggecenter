@@ -283,8 +283,6 @@ public class CustomerOverview extends JFrame {
 
 		if (chckBoxBusiness.isSelected()) {
 			activeColumns = new boolean[] { true, true, false, true, true, true, true, true, true };
-			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Firmanavn", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.BUSINESS) {
@@ -301,8 +299,6 @@ public class CustomerOverview extends JFrame {
 		}
 		if (chckBoxPrivate.isSelected()) {
 			activeColumns = new boolean[] { true, true, true, true, true, true, false, true, false };
-			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Firmanavn", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.PRIVATE) {
@@ -318,13 +314,11 @@ public class CustomerOverview extends JFrame {
 			}
 		}
 		if (chckBoxBusiness.isSelected() && chckBoxPrivate.isSelected()) {
-			activeColumns = new boolean[] { true, true, false, false, true, true, true, true, false };
-			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Firmanavn", "Email", "Kredit" };
+			activeColumns = new boolean[] { true, true, false, false, true, true, false, true, false };
 		}
 		String[][] data = convertToStringArray(list);
-		// table.setNewData(data);
-		table = new DefaultTable(data, columns, activeColumns);
+		table.setNewData(data);
+		table.setVisibleColumns(activeColumns);
 
 		table.getTableHeader().setReorderingAllowed(false);
 
@@ -333,7 +327,10 @@ public class CustomerOverview extends JFrame {
 	}
 
 	private void resetFilters() {
-		setTable();
+		activeColumns = new boolean[] { true, true, false, false, true, true, false, true, false };
+		table.setVisibleColumns(activeColumns);
+		ArrayList<Customer> dataArrayList = CustomerContainer.getInstance().getCustomers();
+		table.setNewData(convertToStringArray(dataArrayList));
 		txtPhone.setText("");
 		chckBoxBusiness.setSelected(true);
 		chckBoxPrivate.setSelected(true);
@@ -404,6 +401,7 @@ public class CustomerOverview extends JFrame {
 			data[i][7] = current.getEmail();
 			data[i][8] = current.getCredit() + "";
 		}
+		Arrays.sort(data, Comparator.comparing(o -> o[0])); // Comparator to compare and sort in alphabetical order
 		return data;
 	}
 
@@ -418,7 +416,6 @@ public class CustomerOverview extends JFrame {
 
 		ArrayList<Customer> dataArrayList = CustomerContainer.getInstance().getCustomers();
 		String[][] data = convertToStringArray(dataArrayList);
-		Arrays.sort(data, Comparator.comparing(o -> o[0])); // Comparator to compare and sort in alphabetical order
 		scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 
