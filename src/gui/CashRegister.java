@@ -30,6 +30,10 @@ import model.Order;
 import model.OrderLine;
 import model.Product;
 import model.ProductContainer;
+import java.awt.Component;
+import javax.swing.Box;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CashRegister extends JFrame {
 
@@ -42,6 +46,11 @@ public class CashRegister extends JFrame {
 	private JLabel lblStatus;
 	private JLabel lblTotal;
 	private JLabel lblVat;
+	private JButton btnDetails;
+	private JButton btnAmount;
+	private JButton btnDelete;
+	private JButton btnPayment;
+	private JButton btnCancelCurrentSale;
 	/**
 	 * Launch the application.
 	 */
@@ -82,20 +91,21 @@ public class CashRegister extends JFrame {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		contentPane.add(panel, BorderLayout.SOUTH);
 		
-		JButton btnPayment = new JButton("Betaling");
+		btnPayment = new JButton("Betaling");
 		btnPayment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonPaymentPressed();
+				
 			}
 		});
 		
-		JButton btnCancleCurrentSale = new JButton("Afbryd salg");
-		btnCancleCurrentSale.addActionListener(new ActionListener() {
+		btnCancelCurrentSale = new JButton("Afbryd salg");
+		btnCancelCurrentSale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonCancleCurrentSalePressed();
 			}
 		});
-		panel.add(btnCancleCurrentSale);
+		panel.add(btnCancelCurrentSale);
 		panel.add(btnPayment);
 		
 		JButton btnCancle = new JButton("Afbryd");
@@ -110,23 +120,17 @@ public class CashRegister extends JFrame {
 		contentPane.add(panel_1, BorderLayout.EAST);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[]{0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
-		JButton btnAmount = new JButton("Antal");
+		btnAmount = new JButton("Antal");
 		btnAmount.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonAmountPressed();
 			}
 		});
-		GridBagConstraints gbc_btnAmount = new GridBagConstraints();
-		gbc_btnAmount.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnAmount.insets = new Insets(0, 0, 5, 0);
-		gbc_btnAmount.gridx = 0;
-		gbc_btnAmount.gridy = 1;
-		panel_1.add(btnAmount, gbc_btnAmount);
 		
 		JButton btnAdd = new JButton("Tilføj");
 		btnAdd.addActionListener(new ActionListener() {
@@ -134,27 +138,21 @@ public class CashRegister extends JFrame {
 				buttonAddPressed();
 			}
 		});
+		
+		Component verticalStrut = Box.createVerticalStrut(20);
+		GridBagConstraints gbc_verticalStrut = new GridBagConstraints();
+		gbc_verticalStrut.insets = new Insets(0, 0, 5, 0);
+		gbc_verticalStrut.gridx = 0;
+		gbc_verticalStrut.gridy = 0;
+		panel_1.add(verticalStrut, gbc_verticalStrut);
 		GridBagConstraints gbc_btnAdd = new GridBagConstraints();
 		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
 		gbc_btnAdd.gridx = 0;
-		gbc_btnAdd.gridy = 2;
+		gbc_btnAdd.gridy = 1;
 		panel_1.add(btnAdd, gbc_btnAdd);
 		
-		JButton btnDelete = new JButton("Slet");
-		btnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				buttonDeletePressed();
-			}
-		});
-		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
-		gbc_btnDelete.gridx = 0;
-		gbc_btnDelete.gridy = 3;
-		panel_1.add(btnDelete, gbc_btnDelete);
-		
-		JButton btnDetails = new JButton("Detaljer");
+		btnDetails = new JButton("Detaljer");
 		btnDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonDetailsPressed();
@@ -164,8 +162,27 @@ public class CashRegister extends JFrame {
 		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDetails.gridx = 0;
-		gbc_btnDetails.gridy = 4;
+		gbc_btnDetails.gridy = 2;
 		panel_1.add(btnDetails, gbc_btnDetails);
+		GridBagConstraints gbc_btnAmount = new GridBagConstraints();
+		gbc_btnAmount.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnAmount.insets = new Insets(0, 0, 5, 0);
+		gbc_btnAmount.gridx = 0;
+		gbc_btnAmount.gridy = 3;
+		panel_1.add(btnAmount, gbc_btnAmount);
+		
+		btnDelete = new JButton("Slet");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonDeletePressed();
+			}
+		});
+		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
+		gbc_btnDelete.gridx = 0;
+		gbc_btnDelete.gridy = 4;
+		panel_1.add(btnDelete, gbc_btnDelete);
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.CENTER);
@@ -197,13 +214,27 @@ public class CashRegister extends JFrame {
 		scrollPane = new JScrollPane();
 		panel_2.add(scrollPane, BorderLayout.CENTER);
 		initTable();
+		initWindow();
 	}
 	
+	private void initWindow() {
+		grayOutCheck();
+	}
+
 	private void initTable() {
 		String[] columns = { "Varenummer", "Navn", "Antal", "Pris", "Total"};
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				grayOutCheck();
+					
+				
+			}
+		});
+		
 		scrollPane.setViewportView(table);
 		//Only allows user to select single a single row at the time
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -279,7 +310,7 @@ public class CashRegister extends JFrame {
 		int row = table.getSelectedRow();
 		
 		if(row != -1) {
-			//int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du slette dette product", "Bekræft slet", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
+			//int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du slette dette produkt", "Bekræft slet", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
 			int result = GUIPopUpMessages.customBox("Vil du slette dette product", "Bekræft slet",new String[] {"Ja","Nej"},JOptionPane.INFORMATION_MESSAGE );
 			if(result == 0) {
 				Product productToDelete = orderController.getCurrentOrder().getOrderLines().get(row).getProduct();
@@ -336,6 +367,7 @@ public class CashRegister extends JFrame {
 	}
 	
 	private void buttonDetailsPressed() {
+		
 		int row = table.getSelectedRow();
 		
 		if(row != -1) {
@@ -376,6 +408,7 @@ public class CashRegister extends JFrame {
 		}
 		calculateRowTotals();
 		updateTotal();
+		grayOutCheck();
 	}
 	
 	private void makeStatusMessage(String message, boolean isCorrelatedWithError) {
@@ -426,5 +459,26 @@ public class CashRegister extends JFrame {
 		CashRegister cashRegister = new CashRegister();
 		cashRegister.setVisible(true);
 		cashRegister.setBounds(this.getBounds());
+	}
+	
+	public void grayOutCheck() {
+		if (table.getSelectedRow() != -1) {
+			btnAmount.setEnabled(true);
+			btnDelete.setEnabled(true);
+			btnDetails.setEnabled(true);
+		}
+		else {
+			btnAmount.setEnabled(false);
+			btnDelete.setEnabled(false);
+			btnDetails.setEnabled(false);
+		}
+		if (table.getRowCount() > 0) {
+			btnPayment.setEnabled(true);
+			btnCancelCurrentSale.setEnabled(true);
+		}
+		else {
+			btnPayment.setEnabled(false);
+			btnCancelCurrentSale.setEnabled(false);
+		}
 	}
 }
