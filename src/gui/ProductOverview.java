@@ -14,8 +14,10 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -79,34 +81,23 @@ public class ProductOverview extends JFrame {
 	}
 
 	private void initializeWindow() {
-		// Fill categories into the combobox
-		// ArrayList<String> categories = new
-		// ArrayList<>(ProductContainer.getInstance().getCategories());
 		pc = new ProductController();
-
 		ArrayList<Product> products = pc.getAllProducts();
-		ArrayList<String> existingCategories = new ArrayList<>();
+		Set<String> categories = new HashSet<String>();
 		for (int i = 0; i < products.size(); i++) {
 			String[] productCategories = products.get(i).getCategory();
 			for (int x = 0; x < productCategories.length; x++) {
-				if (!existingCategories.contains(productCategories[x].toLowerCase())) {
-					existingCategories.add(productCategories[x].toLowerCase());
-				}
+				categories.add(productCategories[x]);
 			}
 		}
-		/*
-		 * 
-		 * for(String e : categories) { if(existingCategories.contains(e.toLowerCase()))
-		 * { jcbCategories.addItem(e); } }
-		 */
-		Collections.sort(existingCategories);
-		for (String e : existingCategories) {
+		ArrayList<String> categoriesAsList= new ArrayList<String>(categories);
+		Collections.sort(categoriesAsList);
+		for (String e : categoriesAsList) {
 			if(e.length() >= 1) {
-				jcbCategories.addItem(e.substring(0,1).toUpperCase() + e.substring(1));
+				jcbCategories.addItem(e);
 			}
 		}
 	}
-	//TODO Remove function? Greyout are currently in use for delete, details and edit
 	private void showProduct(boolean edit) {
 		int index = table.findElement();
 
@@ -468,7 +459,6 @@ public class ProductOverview extends JFrame {
 		            	if(result == 0) {
 		            		search();
 		            	}
-		                System.out.println("B has closed");
 		            }
 
 		        });
