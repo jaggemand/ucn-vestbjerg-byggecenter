@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -49,6 +52,7 @@ public class ProductOverview extends JFrame {
 	private JComboBox<String> jcbCategories;
 	private JCheckBox jrbStoreLocation;
 	private JCheckBox jrbWarehouseLocation;
+	private ProductController pc;
 	/**
 	 * Create the frame.
 	 */
@@ -78,7 +82,7 @@ public class ProductOverview extends JFrame {
 		// Fill categories into the combobox
 		// ArrayList<String> categories = new
 		// ArrayList<>(ProductContainer.getInstance().getCategories());
-		ProductController pc = new ProductController();
+		pc = new ProductController();
 
 		ArrayList<Product> products = pc.getAllProducts();
 		ArrayList<String> existingCategories = new ArrayList<>();
@@ -179,7 +183,7 @@ public class ProductOverview extends JFrame {
 			}
 		}
 		table.setNewData(convertToStringArray(productResult));
-		table.setVisibleColumns(activeColumns);
+		rowCounter();
 	}
 	
 	private String[][] convertToStringArray(ArrayList<Product> dataArrayList) {
@@ -292,6 +296,7 @@ public class ProductOverview extends JFrame {
 		jcbCategories.setSelectedIndex(0);
 		jrbStoreLocation.setSelected(true);
 		jrbWarehouseLocation.setSelected(true);
+		rowCounter();
 	}
 
 	private void setButtons() {
@@ -411,7 +416,7 @@ public class ProductOverview extends JFrame {
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
-				rowCounter();
+				
 			}
 		});
 		
@@ -450,8 +455,24 @@ public class ProductOverview extends JFrame {
 		JButton btnAdd = new JButton("Tilføj");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ProductInformation productInformation = new ProductInformation(null, true);
-				productInformation.setVisible(true);
+				ProductInformation pi = new ProductInformation(null, true);
+				pi.setVisible(true);
+				int size = pc.getAllProducts().size();
+				pi.addWindowListener(new WindowAdapter() {
+		            @Override
+		            public void windowClosed(WindowEvent e) {
+		            	int newSize = pc.getAllProducts().size();
+		            	if(size == newSize) return;
+		            	int result = GUIPopUpMessages.customBox("Vil du opdatere produktoversigten?", "Opdater Produktoversigt",
+		            			new Object[] {"Ja", "Nej"}, JOptionPane.QUESTION_MESSAGE);
+		            	if(result == 0) {
+		            		search();
+		            	}
+		                System.out.println("B has closed");
+		            }
+
+		        });
+				
 			}
 		});
 		
