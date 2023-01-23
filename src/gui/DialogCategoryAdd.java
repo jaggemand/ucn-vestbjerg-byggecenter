@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -34,7 +35,7 @@ public class DialogCategoryAdd extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogCategoryAdd dialog = new DialogCategoryAdd(null);
+			DialogCategoryAdd dialog = new DialogCategoryAdd(null, null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -45,7 +46,8 @@ public class DialogCategoryAdd extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogCategoryAdd(ArrayList<String> categoryList) {
+	public DialogCategoryAdd(JFrame frame,ArrayList<String> categoryList) {
+		super(frame);
 		setResizable(false);
 		setTitle("Tilføj kategorier");
 		setModal(true);

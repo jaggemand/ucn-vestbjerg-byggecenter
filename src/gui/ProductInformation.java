@@ -768,7 +768,7 @@ public class ProductInformation extends JFrame {
 	 * a list of categories
 	 */
 	public void addCategoryWindow() {
-		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd(tempCategoryList);
+		DialogCategoryAdd dialogCategoryAdd = new DialogCategoryAdd(this, tempCategoryList);
 		dialogCategoryAdd.setVisible(true);
 	}
 

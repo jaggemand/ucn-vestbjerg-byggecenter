@@ -387,6 +387,12 @@ public class OrderOverview extends JFrame {
 			Order selectedOrder = orderController.findOrder(selectedOrderNumber);
 			SalesOrder salesOrder = new SalesOrder(selectedOrder,false, this);
 			salesOrder.setVisible(true);
+			if(salesOrder.gotSaved()) {
+				makeStatusMessage("Ændringer gemt", false);
+			}
+			else {
+				makeStatusMessage("Detaljevindue lukket", false);
+			}
 		}
 		else {
 			makeStatusMessage("Ingen ordre valgt", true);
@@ -402,6 +408,12 @@ public class OrderOverview extends JFrame {
 		SalesOrder salesOrder = new SalesOrder(null,true, this);
 		salesOrder.setVisible(true);
 		updateTable();
+		if(salesOrder.gotCancled()) {
+			makeStatusMessage("Ordre oprettelse afbrudt", false);
+		}
+		else {
+			makeStatusMessage("Ordre oprettet", false);
+		}
 	}
 	
 	private void buttonDeleteOrderPressed() {
@@ -436,14 +448,15 @@ public class OrderOverview extends JFrame {
 				parseDateTo = dateCreated.getDateTo();
 			}
 		}
-		dateCreated = new DialogDate(parseDateFrom, parseDateTo);
+		dateCreated = new DialogDate(this, parseDateFrom, parseDateTo);
 		resetParseDates();
 		dateCreated.setVisible(true);
 		if(!dateCreated.isOkPressed()) {
-			//button text shouldn't change
+			makeStatusMessage("oprettelsesperiode valg afbrudt", false);
 		}
 		else {
 			btnDateFilterCreated.setText(setDateSelecterButtonFormat(dateCreated.getDateFrom(), dateCreated.getDateTo()));
+			makeStatusMessage(statusDateChangedFormatted(true, dateCreated), false);
 		}
 	}
 	
@@ -454,14 +467,15 @@ public class OrderOverview extends JFrame {
 				parseDateTo = datePickup.getDateTo();
 			}
 		}
-		datePickup = new DialogDate(parseDateFrom, parseDateTo);
+		datePickup = new DialogDate(this, parseDateFrom, parseDateTo);
 		resetParseDates();
 		datePickup.setVisible(true);
 		if(!datePickup.isOkPressed()) {
-			//button text shouldn't change
+			makeStatusMessage("afhentningsperiode valg afbrudt", false);
 		}
 		else {
 			btnDateFilterPickup.setText(setDateSelecterButtonFormat(datePickup.getDateFrom(), datePickup.getDateTo()));
+			makeStatusMessage(statusDateChangedFormatted(false, datePickup), false);
 		}
 	}
 	
@@ -483,8 +497,8 @@ public class OrderOverview extends JFrame {
 			datePickup.setDateTo(new Date(3000, 01, 01));
 		}
 		insertBlancFilterSearch();
-		dateCreated = new DialogDate(null, null);
-		datePickup = new DialogDate(null, null);
+		dateCreated = new DialogDate(this, null, null);
+		datePickup = new DialogDate(this, null, null);
 		makeStatusMessage("Filtre nulstillet", false);
 	}
 	
@@ -590,6 +604,19 @@ public class OrderOverview extends JFrame {
 		else {
 			lblStatus.setForeground(Color.BLACK);
 		}
+	}
+	
+	private String statusDateChangedFormatted(boolean createdWindow, DialogDate dialog) {
+		SimpleDateFormat sdf = new SimpleDateFormat("DD-MM-YYYY");
+		String periodType = "";
+		if(createdWindow) {
+			periodType = "Oprettelses ";
+		}
+		else {
+			periodType = "Afhentnings ";
+		}
+		String returnString = periodType + "periode sat til: Fra " + sdf.format(dialog.getDateFrom()) + " Til " + sdf.format(dialog.getDateTo());
+		return returnString;
 	}
 	
 	//opens new window with same dimensions and location as old one

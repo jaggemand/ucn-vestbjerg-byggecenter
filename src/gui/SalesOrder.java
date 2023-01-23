@@ -48,7 +48,7 @@ public class SalesOrder extends JDialog {
 
 	private JPanel contentPane;
 	private DefaultTable table;
-	private static SalesOrder frame;
+	private JFrame frame;
 	private JScrollPane scrollPane;
 	private OrderController orderController;
 	private JLabel lblStatus;
@@ -59,6 +59,8 @@ public class SalesOrder extends JDialog {
 	private JSpinner spnCreatedDate;
 	private JSpinner spnPickupDate;
 	private JComboBox<String> jcbStatus;
+	private boolean cancled = false;
+	private boolean changesSaved = false;
 	private JButton btnSave;
 	private JButton btnAmount;
 	private JButton btnDelete;
@@ -69,6 +71,7 @@ public class SalesOrder extends JDialog {
 	 */
 	public SalesOrder(Order o, boolean isModal, JFrame frame) {
 		super(frame);
+		this.frame = frame;
 		setTitle("Salgsordre");
 		orderController = new OrderController();
 		setModal(isModal);
@@ -413,7 +416,7 @@ public class SalesOrder extends JDialog {
 	
 	private void buttonAddCustomerPressed() {
 		
-		DialogCustomerAddAlternative dca = new DialogCustomerAddAlternative();
+		DialogCustomerAddAlternative dca = new DialogCustomerAddAlternative(frame);
 		dca.setVisible(true);
 		customer = dca.getNewCustomer();
 		
@@ -436,6 +439,7 @@ public class SalesOrder extends JDialog {
 				orderController.getCurrentOrder().setStatus((OrderStatus) jcbStatus.getSelectedItem());
 				orderController.getCurrentOrder().setPickupDate((Date) spnPickupDate.getModel().getValue());
 				orderController.getCurrentOrder().setCustomer(customer);
+				changesSaved = true;
 				
 				if(newOrder) {
 					orderController.addOrder(customer.getPhone());
@@ -457,7 +461,7 @@ public class SalesOrder extends JDialog {
 
 	private void buttonAddPressed() {
 		//displays an error message if the product inserted does not exist
-		DialogItemAdd newItem = new DialogItemAdd();
+		DialogItemAdd newItem = new DialogItemAdd(frame);
 		newItem.setVisible(true);
 		
 		if (newItem.getNewProduct() == null) {
@@ -472,7 +476,7 @@ public class SalesOrder extends JDialog {
 	private void buttonAmountPressed() {
 			int row = table.getSelectedRow();
 			if(row != -1) {
-				DialogAmount newAmountDialog = new DialogAmount(orderController.getCurrentOrder().getOrderLines().get(row));
+				DialogAmount newAmountDialog = new DialogAmount(frame, orderController.getCurrentOrder().getOrderLines().get(row));
 				newAmountDialog.setVisible(true);
 				updateTable();
 			}
@@ -534,6 +538,7 @@ public class SalesOrder extends JDialog {
 	private void buttonCanclePressed() {
 		if(table.getModel().getRowCount() < 1) {
 			dispose();
+			cancled = true;
 		}
 		else {
 			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg og lukke modulet", "Afbryd salg og luk modul?",
@@ -543,6 +548,7 @@ public class SalesOrder extends JDialog {
 			
 			if(input == 0) {
 				dispose();
+				cancled = true;
 			}
 		}
 	}
@@ -622,5 +628,13 @@ public class SalesOrder extends JDialog {
 	
 	private void updateVAT(double price) {
 		lblVat.setText("moms: " + getPriceFormatted(price / 5));
-	}	
+	}
+	
+	public boolean gotCancled() {
+		return this.cancled;
+	}
+	
+	public boolean gotSaved() {
+		return this.changesSaved;
+	}
 }

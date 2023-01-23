@@ -2,21 +2,22 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.GridBagLayout;
-import javax.swing.JSpinner;
-import java.awt.GridBagConstraints;
-import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.Calendar;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import javax.swing.border.EmptyBorder;
 
 public class DialogDate extends JDialog {
 
@@ -34,7 +35,7 @@ public class DialogDate extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogDate dialog = new DialogDate(new Date(), new Date());
+			DialogDate dialog = new DialogDate(null, new Date(), new Date());
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -45,7 +46,8 @@ public class DialogDate extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogDate(Date presetDateFrom, Date presetDateTo) {
+	public DialogDate(JFrame frame, Date presetDateFrom, Date presetDateTo) {
+		super(frame);
 		this.dateFrom = presetDateFrom;
 		this.dateTo = presetDateTo;
 		setModal(true);

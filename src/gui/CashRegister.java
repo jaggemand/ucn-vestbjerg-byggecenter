@@ -282,7 +282,7 @@ public class CashRegister extends JFrame {
 
 	private void buttonAddPressed() {
 		//displays an error message if the product inserted does not exist
-		DialogItemAdd newItem = new DialogItemAdd();
+		DialogItemAdd newItem = new DialogItemAdd(this);
 		newItem.setVisible(true);
 		
 		if (newItem.getNewProduct() == null) {
@@ -297,7 +297,7 @@ public class CashRegister extends JFrame {
 	private void buttonAmountPressed() {
 			int row = table.getSelectedRow();
 			if(row != -1) {
-				DialogAmount newAmountDialog = new DialogAmount(orderController.getCurrentOrder().getOrderLines().get(row));
+				DialogAmount newAmountDialog = new DialogAmount(this, orderController.getCurrentOrder().getOrderLines().get(row));
 				newAmountDialog.setVisible(true);
 				updateTable();
 			}
