@@ -147,6 +147,25 @@ public class MainMenu extends JFrame {
 				cashRegister.setVisible(true);
 			}
 		});
+		
+		JButton btnCreateOrder = new JButton("Opret ordre");
+		btnCreateOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SalesOrder salesOrder = new SalesOrder(null, rootPaneCheckingEnabled, frame);
+				salesOrder.setVisible(true);
+			}
+		});
+		btnCreateOrder.setPreferredSize(new Dimension(65, 40));
+		btnCreateOrder.setMinimumSize(new Dimension(140, 40));
+		btnCreateOrder.setMaximumSize(new Dimension(140, 40));
+		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCreateOrder.setBounds(new Rectangle(0, 0, 15, 15));
+		GridBagConstraints gbc_btnCreateOrder = new GridBagConstraints();
+		gbc_btnCreateOrder.fill = GridBagConstraints.BOTH;
+		gbc_btnCreateOrder.insets = new Insets(0, 0, 5, 5);
+		gbc_btnCreateOrder.gridx = 2;
+		gbc_btnCreateOrder.gridy = 4;
+		panel.add(btnCreateOrder, gbc_btnCreateOrder);
 		btnCashRegister.setBounds(new Rectangle(0, 0, 15, 15));
 		btnCashRegister.setMaximumSize(new Dimension(140, 40));
 		btnCashRegister.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -159,7 +178,25 @@ public class MainMenu extends JFrame {
 		gbc_btnCashRegister.gridy = 5;
 		panel.add(btnCashRegister, gbc_btnCashRegister);
 		
-		JButton btnStock = new JButton("Lager");
+		JButton btnCustomer = new JButton("Kundeoversigt");
+		btnCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openCustomerOverview();
+			}
+		});
+		btnCustomer.setPreferredSize(new Dimension(65, 40));
+		btnCustomer.setMinimumSize(new Dimension(140, 40));
+		btnCustomer.setMaximumSize(new Dimension(140, 40));
+		btnCustomer.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCustomer.setBounds(new Rectangle(0, 0, 15, 15));
+		GridBagConstraints gbc_btnCustomer = new GridBagConstraints();
+		gbc_btnCustomer.fill = GridBagConstraints.BOTH;
+		gbc_btnCustomer.insets = new Insets(0, 0, 5, 5);
+		gbc_btnCustomer.gridx = 2;
+		gbc_btnCustomer.gridy = 6;
+		panel.add(btnCustomer, gbc_btnCustomer);
+		
+		JButton btnStock = new JButton("Produktoversigt");
 		btnStock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ProductOverview productOverview = new ProductOverview();
@@ -177,24 +214,6 @@ public class MainMenu extends JFrame {
 		gbc_btnStock.gridx = 2;
 		gbc_btnStock.gridy = 7;
 		panel.add(btnStock, gbc_btnStock);
-		
-		JButton btnCustomer = new JButton("Kundeoversigt");
-		btnCustomer.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				openCustomerOverview();
-			}
-		});
-		btnCustomer.setPreferredSize(new Dimension(65, 40));
-		btnCustomer.setMinimumSize(new Dimension(140, 40));
-		btnCustomer.setMaximumSize(new Dimension(140, 40));
-		btnCustomer.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnCustomer.setBounds(new Rectangle(0, 0, 15, 15));
-		GridBagConstraints gbc_btnCustomer = new GridBagConstraints();
-		gbc_btnCustomer.fill = GridBagConstraints.BOTH;
-		gbc_btnCustomer.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCustomer.gridx = 2;
-		gbc_btnCustomer.gridy = 9;
-		panel.add(btnCustomer, gbc_btnCustomer);
 		
 		JPanel panel_1 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_1.getLayout();

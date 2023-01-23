@@ -47,6 +47,7 @@ public class DefaultTable extends JTable {
 		this.visibleColumns = visibleColumns;
 		initializeTable(data, columns, visibleColumns);
 	}
+	
 	public DefaultTable(String[][] data, String[] columns, boolean[] visibleColumns) {
 		this.data = data;
 		this.columns = columns;
@@ -70,12 +71,14 @@ public class DefaultTable extends JTable {
 		});
 		setVisibleColumns(visibleColumns);
 	}
+	
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		Component c = super.prepareRenderer(renderer, row, column);
 		if (!isRowSelected(row))
 			c.setBackground(row % 2 == 0 ? getBackground() : Color.LIGHT_GRAY);
 		return c;
 	}
+	
 	public void setNewData(String[][] data) {
 		tabelModel.setRowCount(0);
 		if(data == null) {
@@ -86,6 +89,7 @@ public class DefaultTable extends JTable {
 			tabelModel.addRow(data[i]);
 		}
 	}
+	
 	public ArrayList<String> deleteData(String column, int[] columnsConfirm) {
 		ArrayList<String> dataToDelete = new ArrayList<>();
 		if(rows.length != 0) {			
@@ -152,9 +156,11 @@ public class DefaultTable extends JTable {
 	public void addRow(String[] data) {
 		tabelModel.addRow(data);
 	}
+	
 	public void clear() {
 		tabelModel.setRowCount(0);
 	}
+	
 	public void setVisibleColumns(boolean[] newColumn) {
 		visibleColumns = newColumn;
 		for(int i = 0; i < visibleColumns.length; i++) {
@@ -163,5 +169,4 @@ public class DefaultTable extends JTable {
 			}
 		}
 	}
-
 }
