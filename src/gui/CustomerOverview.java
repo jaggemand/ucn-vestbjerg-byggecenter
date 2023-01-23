@@ -324,8 +324,8 @@ public class CustomerOverview extends JFrame {
 					"Postnummer", "Firmanavn", "Email", "Kredit" };
 		}
 		String[][] data = convertToStringArray(list);
-		// table.setNewData(data);
-		table = new DefaultTable(data, columns, activeColumns);
+		table.setNewData(data);
+		table.setVisibleColumns(activeColumns);
 
 		table.getTableHeader().setReorderingAllowed(false);
 
