@@ -24,9 +24,11 @@ import javax.swing.border.EmptyBorder;
 
 import controller.OrderController;
 import controller.ProductController;
+import model.Customer;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
+import model.Customer.customerType;
 import model.Order.OrderStatus;
 
 public class MainMenu extends JFrame {
@@ -69,6 +71,7 @@ public class MainMenu extends JFrame {
 		order1.addProduct(prod1, 1);
 		order1.setDate(5); // subtracts date
 		order1.setStatus(OrderStatus.DELIVERED);
+		order1.setCustomer(new Customer("Erik", "Gåsevangen 60", "Gåsevangen 60", "75438901", "Eriksoernsen@gmail.com", 0.0, "", "", customerType.PRIVATE));
 		OrderContainer.getInstance().addOrder(order1);
 		//-------------------------------------------------------------------------------
 		
