@@ -106,7 +106,7 @@ public class OrderOverview extends JFrame {
 		panel_South.add(panel, BorderLayout.WEST);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 		
-		lblStatus = new JLabel("Status");
+		lblStatus = new JLabel("");
 		panel.add(lblStatus);
 		
 		JPanel panel_1 = new JPanel();
@@ -243,6 +243,7 @@ public class OrderOverview extends JFrame {
 				checkButtonGrayout(chckbxOrderPickup, lblDatePickup, btnDateFilterPickup);
 			}
 		});
+		
 		GridBagConstraints gbc_chckbxOrderPickup = new GridBagConstraints();
 		gbc_chckbxOrderPickup.fill = GridBagConstraints.VERTICAL;
 		gbc_chckbxOrderPickup.insets = new Insets(0, 0, 5, 5);
@@ -291,7 +292,7 @@ public class OrderOverview extends JFrame {
 				
 			}
 		
-			
+		
 		});
 		
 		JButton btnResetFilters = new JButton("Nulstil filtre");
@@ -371,6 +372,7 @@ public class OrderOverview extends JFrame {
 		panel_North.add(lblOrders, gbc_lblOrders);
 		insertBlancFilterSearch();
 		updateTable();
+		grayoutCheck();
 	}
 	
 	private void buttonShowOrderPressed() {
@@ -385,6 +387,10 @@ public class OrderOverview extends JFrame {
 		}
 	}
 	
+	private void grayoutCheck() {
+		checkButtonGrayout(chckbxOrderCreated,lblDateCreated, btnDateFilterCreated);
+		checkButtonGrayout(chckbxOrderPickup, lblDatePickup, btnDateFilterPickup);
+	}
 	private void buttonCreateOrderPressed() {
 		SalesOrder salesOrder = new SalesOrder(null,true);
 		salesOrder.setVisible(true);
@@ -636,7 +642,7 @@ public class OrderOverview extends JFrame {
 			lbl.setForeground(Color.GRAY);
 		}
 		else {
-			box.setEnabled(true);
+			btn.setEnabled(true);
 			lbl.setForeground(Color.BLACK);
 		}
 	}
