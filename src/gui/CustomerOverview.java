@@ -260,7 +260,6 @@ public class CustomerOverview extends JFrame {
 		panel_2.add(btnReset, gbc_btnReset);
 
 		init();
-		tempCustomers(); // remove fast after
 		setTable();
 		rowCounter();
 	}
@@ -284,8 +283,6 @@ public class CustomerOverview extends JFrame {
 
 		if (chckBoxBusiness.isSelected()) {
 			activeColumns = new boolean[] { true, true, false, true, true, true, true, true, true };
-			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Firmanavn", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.BUSINESS) {
@@ -302,8 +299,6 @@ public class CustomerOverview extends JFrame {
 		}
 		if (chckBoxPrivate.isSelected()) {
 			activeColumns = new boolean[] { true, true, true, true, true, true, false, true, false };
-			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Firmanavn", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.PRIVATE) {
@@ -319,13 +314,11 @@ public class CustomerOverview extends JFrame {
 			}
 		}
 		if (chckBoxBusiness.isSelected() && chckBoxPrivate.isSelected()) {
-			activeColumns = new boolean[] { true, true, false, false, true, true, true, true, false };
-			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Firmanavn", "Email", "Kredit" };
+			activeColumns = new boolean[] { true, true, false, false, true, true, false, true, false };
 		}
 		String[][] data = convertToStringArray(list);
-		// table.setNewData(data);
-		table = new DefaultTable(data, columns, activeColumns);
+		table.setNewData(data);
+		table.setVisibleColumns(activeColumns);
 
 		table.getTableHeader().setReorderingAllowed(false);
 
@@ -334,7 +327,10 @@ public class CustomerOverview extends JFrame {
 	}
 
 	private void resetFilters() {
-		setTable();
+		activeColumns = new boolean[] { true, true, false, false, true, true, false, true, false };
+		table.setVisibleColumns(activeColumns);
+		ArrayList<Customer> dataArrayList = CustomerContainer.getInstance().getCustomers();
+		table.setNewData(convertToStringArray(dataArrayList));
 		txtPhone.setText("");
 		chckBoxBusiness.setSelected(true);
 		chckBoxPrivate.setSelected(true);
@@ -375,21 +371,6 @@ public class CustomerOverview extends JFrame {
 		return customer;
 	}
 
-	private void tempCustomers() {
-		CustomerController cc = new CustomerController();
-
-		cc.createCustomer("Jacob", "Hobrovej 450", "Godsbanen 19", "24245482", "jacob@mail.dk", 0.5, "9000", "Kyed Aps",
-				customerType.PRIVATE);
-		cc.createCustomer("Marcus", "Jyllandsgade 10", "Abekatvej 12", "20926381", "marcus@mail.dk", 0.1, "9000",
-				"Marcus Aps", customerType.PRIVATE);
-		cc.createCustomer("Mikkel", "Reberbahnsgade 2", "Brenning 15", "65748294", "mikkel@mail.dk", 0.9, "9000",
-				"Mikkel Aps", customerType.BUSINESS);
-		cc.createCustomer("Rasmus", "Hornevej 89", "Støvringvej 248", "25172085", "rasmus@mail.dk", 0.3, "9000",
-				"Rasmus Aps", customerType.PRIVATE);
-		cc.createCustomer("Nicolai", "Udsigten 90", "Idrætsvej 1", "62719283", "nicolai@mail.dk", 0.8, "9000",
-				"Niolai Aps", customerType.BUSINESS);
-	}
-
 	private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
 
 		int size = dataArrayList.size();
@@ -420,6 +401,7 @@ public class CustomerOverview extends JFrame {
 			data[i][7] = current.getEmail();
 			data[i][8] = current.getCredit() + "";
 		}
+		Arrays.sort(data, Comparator.comparing(o -> o[0])); // Comparator to compare and sort in alphabetical order
 		return data;
 	}
 
@@ -434,7 +416,6 @@ public class CustomerOverview extends JFrame {
 
 		ArrayList<Customer> dataArrayList = CustomerContainer.getInstance().getCustomers();
 		String[][] data = convertToStringArray(dataArrayList);
-		Arrays.sort(data, Comparator.comparing(o -> o[0])); // Comparator to compare and sort in alphabetical order
 		scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 

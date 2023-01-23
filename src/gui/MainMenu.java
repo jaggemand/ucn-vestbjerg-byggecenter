@@ -22,13 +22,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import controller.CustomerController;
 import controller.OrderController;
 import controller.ProductController;
-import model.Customer.customerType;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
+import model.Order.OrderStatus;
 
 public class MainMenu extends JFrame {
 
@@ -36,7 +35,6 @@ public class MainMenu extends JFrame {
 	private static MainMenu frame;
 	private ProductController pController;
 	private OrderController oController;
-	private CustomerController cController;
 
 	/**
 	 * Launch the application.
@@ -61,24 +59,25 @@ public class MainMenu extends JFrame {
 	 * @throws ClassNotFoundException 
 	 */
 	public MainMenu() throws IOException {
-//		//Creates the Cashregister default customer
-//		cController = new CustomerController();
-//		cController.createCustomer("N/A", "N/A", "N/A", "0", "N/A", 0.0, "N/A", "N/A", customerType.PRIVATE);
+		
+		
+		//-----TODO REMOVE BEFORE END OF PROJECT PERIOD---------------
+		ProductController productController = new ProductController();
+		Product prod1 = productController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
+				"29:12", "42:13", 10, 50);
+		Order order1 = new Order(false);
+		order1.addProduct(prod1, 1);
+		order1.setDate(5); // subtracts date
+		order1.setStatus(OrderStatus.DELIVERED);
+		OrderContainer.getInstance().addOrder(order1);
+		//-------------------------------------------------------------------------------
+		
 		
 		setTitle("Hoved menu");
 		pController = new ProductController();
 		oController = new OrderController();
+		tempCustomers();
 		pController.loadFile();
-		
-		//Test order
-		Product testProduct = pController.findProduct("1234");
-		if(testProduct != null) {
-			Order order1 = new Order(false);
-			order1.addProduct(testProduct, 1);
-			order1.setDate(5); // subtracts date
-			OrderContainer.getInstance().addOrder(order1);
-		}
-		
 		
 		
 		setResizable(false);
@@ -247,5 +246,20 @@ public class MainMenu extends JFrame {
 	private void openCustomerOverview() {
 		CustomerOverview customerOverview = new CustomerOverview();
 		customerOverview.setVisible(true);
+	}
+	
+	private void tempCustomers() {
+		CustomerController cc = new CustomerController();
+
+		cc.createCustomer("Jacob", "Hobrovej 450", "Godsbanen 19", "24245482", "jacob@mail.dk", 0.5, "9000", "Kyed Aps",
+				customerType.PRIVATE);
+		cc.createCustomer("Marcus", "Jyllandsgade 10", "Abekatvej 12", "20926381", "marcus@mail.dk", 0.1, "9000",
+				"Marcus Aps", customerType.PRIVATE);
+		cc.createCustomer("Mikkel", "Reberbahnsgade 2", "Brenning 15", "65748294", "mikkel@mail.dk", 0.9, "9000",
+				"Mikkel Aps", customerType.BUSINESS);
+		cc.createCustomer("Rasmus", "Hornevej 89", "Støvringvej 248", "25172085", "rasmus@mail.dk", 0.3, "9000",
+				"Rasmus Aps", customerType.PRIVATE);
+		cc.createCustomer("Nicolai", "Udsigten 90", "Idrætsvej 1", "62719283", "nicolai@mail.dk", 0.8, "9000",
+				"Niolai Aps", customerType.BUSINESS);
 	}
 }
