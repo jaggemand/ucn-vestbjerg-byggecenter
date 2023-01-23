@@ -20,51 +20,59 @@ public class ColumnSelecter extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<JCheckBox> checkBox;
-	private boolean[] isVisible;
-	private DefaultTable table;
+	private ArrayList<Boolean> isVisible;
+	private ArrayList<String> columns;
+	private CustomTableColumnManager manager;
 
 	/**
 	 * Create the dialog.
 	 * 
 	 */
-	public ColumnSelecter(boolean[] isVisible, String[] columns, DefaultTable table) {
+	public ColumnSelecter(CustomTableColumnManager manager) {
+		this.manager = manager;
+	}
+	public void newWindow(ArrayList<Boolean> isVisible, ArrayList<String> columns) {
 		checkBox = new ArrayList<>();
-		this.table = table;
-		setTitle("Tilføj kolonner");
+		setTitle("Aktive kolonner");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		for(int i = 1; i < columns.length;i++) {
-			JCheckBox temp = new JCheckBox(columns[i]);
+		for(int i = 0; i < columns.size();i++) {
+			JCheckBox temp = new JCheckBox(columns.get(i));
 			contentPanel.add(temp);
 			checkBox.add(temp);
 		}
 		
-		
+		this.columns = columns;
 		this.isVisible = isVisible;
 		setModal(true);
-		JPanel showAllButtonPanel = new JPanel();
+		
 		
 		{
-			JButton btnNewButton = new JButton("Vis alt");
-			btnNewButton.setMaximumSize(new Dimension(20, 20));
-			btnNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					selectAll();
-				}
-			});
-			contentPanel.setLayout(new GridLayout((columns.length/2), 5));
-			showAllButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-			btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
 			
-			showAllButtonPanel.add(btnNewButton);
-			contentPanel.add(showAllButtonPanel);
+			int rowCount = 5;
+			if(columns.size() > 5) {
+				rowCount = columns.size()/2;
+			}
+			contentPanel.setLayout(new GridLayout(rowCount,4));
 		}
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				JButton btnNewButton = new JButton("Vis alt");
+				btnNewButton.setMaximumSize(new Dimension(20, 20));
+				btnNewButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						selectAll();
+					}
+				});
+				;
+				btnNewButton.setHorizontalAlignment(SwingConstants.LEFT);
+				buttonPane.add(btnNewButton);
+			}
 			{
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
@@ -87,35 +95,33 @@ public class ColumnSelecter extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-		System.out.println(contentPanel.getX());
 		pack();
 		setCheckBoxes();
 	}
 	
 		private void setCheckBoxes() {
-			for(int i = 0; i < isVisible.length-1; i++) {
-				if (isVisible[i+1]) {
-					checkBox.get(i).setSelected(true);
-				}
+			for(int i = 0; i < isVisible.size(); i++) {
+					checkBox.get(i).setSelected(isVisible.get(i));
 			}
 			
 		}
 		
 		private void selectAll() {
-			for(int i = 0; i < isVisible.length-1; i++) {
+			for(int i = 0; i < isVisible.size(); i++) {
 					checkBox.get(i).setSelected(true);
 			}
 		}
 		
 		private void setColumnFromcheckBoxes() {
-			for(int i = 0; i < isVisible.length-1; i++) {
-				if (checkBox.get(i).isSelected()) {
-					isVisible[i+1] = true;
-				} else {
-					isVisible[i+1] = false;
+			for(int i = 0; i < isVisible.size(); i++) {
+				if(checkBox.get(i).isSelected() != isVisible.get(i)) {
+					if (checkBox.get(i).isSelected()) {
+						manager.showColumn(columns.get(i));
+					} else {
+						manager.hideColumn(columns.get(i));
+					}
 				}
 			}
-			table.setVisibleColumns(isVisible);
 			this.dispose();
 		}
 		

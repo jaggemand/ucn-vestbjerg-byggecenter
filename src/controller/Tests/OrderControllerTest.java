@@ -1,6 +1,7 @@
 package controller.Tests;
 
 import controller.*;
+import model.Customer;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
@@ -42,7 +43,7 @@ public class OrderControllerTest {
 		assertNotEquals(2, OrderContainer.getInstance().getOrders().size());
 		//adds new order to orderContainer through OrderController
 		oController.createOrder(true);
-		oController.addOrder();
+		oController.addOrder("0");
 		//test to see if the orders list in orderContainer has increased in size
 		assertEquals(2, OrderContainer.getInstance().getOrders().size());
 	}
@@ -101,7 +102,7 @@ public class OrderControllerTest {
 	public void removeOrderTest() {
 		//adds order to attributes, and adds order to OrderContainer
 		oController.createOrder(true);
-		oController.addOrder();
+		oController.addOrder("0");
 		//Stores orderNumber
 		int containerSize = OrderContainer.getInstance().getOrders().size();
 		String id = oController.getCurrentOrder().getOrderNumber();

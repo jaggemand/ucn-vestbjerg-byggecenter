@@ -135,6 +135,11 @@ public class CustomerOverview extends JFrame {
 		panel_1.add(btnAdd, gbc_btnAdd);
 
 		btnEdit = new JButton("Rediger");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				editCustomerDetails();
+			}
+		});
 		GridBagConstraints gbc_btnEdit = new GridBagConstraints();
 		gbc_btnEdit.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEdit.insets = new Insets(0, 0, 5, 0);
@@ -264,6 +269,12 @@ public class CustomerOverview extends JFrame {
 
 	}
 
+	private void editCustomerDetails() {
+		Customer customer = getIndexValueInTable();
+		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(customer, true);
+		customerInformationDialog.setVisible(true);
+	}
+
 	private void search() {
 		CustomerController customerController = new CustomerController();
 		ArrayList<Customer> list = new ArrayList<>();
@@ -273,8 +284,8 @@ public class CustomerOverview extends JFrame {
 
 		if (chckBoxBusiness.isSelected()) {
 			activeColumns = new boolean[] { true, true, false, true, true, true, true, true, true };
-			columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Telefonnummer", "Email", "Kredit" };
+			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
+					"Postnummer", "Firmanavn", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.BUSINESS) {
@@ -290,9 +301,9 @@ public class CustomerOverview extends JFrame {
 			}
 		}
 		if (chckBoxPrivate.isSelected()) {
-			activeColumns = new boolean[] { true, false, true, true, true, true, true, true, false };
-			columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Telefonnummer", "Email", "Kredit" };
+			activeColumns = new boolean[] { true, true, true, true, true, true, false, true, false };
+			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
+					"Postnummer", "Firmanavn", "Email", "Kredit" };
 			if (!phone.isBlank()) {
 				Customer foundCustomer = customerController.findCustomerByInformation(phone);
 				if (foundCustomer != null && foundCustomer.getCustomerType() == customerType.PRIVATE) {
@@ -308,18 +319,19 @@ public class CustomerOverview extends JFrame {
 			}
 		}
 		if (chckBoxBusiness.isSelected() && chckBoxPrivate.isSelected()) {
-			activeColumns = new boolean[] { true, false, false, false, true, true, true, true, false };
-			columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
-					"Postnummer", "Telefonnummer", "Email", "Kredit" };
+			activeColumns = new boolean[] { true, true, false, false, true, true, true, true, false };
+			columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
+					"Postnummer", "Firmanavn", "Email", "Kredit" };
 		}
 		String[][] data = convertToStringArray(list);
+		// table.setNewData(data);
 		table = new DefaultTable(data, columns, activeColumns);
 
 		table.getTableHeader().setReorderingAllowed(false);
 
 		scrollPane.setViewportView(table);
+		// TODO Få Marcus til at fikse det her med opdatering af Data
 	}
-	// }
 
 	private void resetFilters() {
 		setTable();
@@ -329,7 +341,7 @@ public class CustomerOverview extends JFrame {
 	}
 
 	private void addCustomer() {
-		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog();
+		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(null, true);
 		customerInformationDialog.setVisible(true);
 	}
 
@@ -345,7 +357,22 @@ public class CustomerOverview extends JFrame {
 	}
 
 	private void viewCustomerDetails() {
+		Customer customer = getIndexValueInTable();
+		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(customer, false);
+		customerInformationDialog.setVisible(true);
+	}
 
+	private Customer getIndexValueInTable() {
+		int index = table.findElement();
+		Customer customer = null;
+
+		if (index == -1) {
+			GUIPopUpMessages.informationMessage("Ingen kunde valgt", "Fejl");
+		} else {
+			CustomerController customerController = new CustomerController();
+			customer = customerController.findCustomerByInformation(table.getValueAt(index, 1).toString());
+		}
+		return customer;
 	}
 
 	private void tempCustomers() {
@@ -384,12 +411,12 @@ public class CustomerOverview extends JFrame {
 				typeName = "";
 			}
 			data[i][0] = typeName;
-			data[i][1] = current.getCompanyName();
+			data[i][1] = current.getPhone();
 			data[i][2] = current.getName();
 			data[i][3] = current.getDeliveryAddress();
 			data[i][4] = current.getPaymentAddress();
 			data[i][5] = current.getPostcode();
-			data[i][6] = current.getPhone();
+			data[i][6] = current.getCompanyName();
 			data[i][7] = current.getEmail();
 			data[i][8] = current.getCredit() + "";
 		}
@@ -401,9 +428,9 @@ public class CustomerOverview extends JFrame {
 	}
 
 	public void setTable() {
-		activeColumns = new boolean[] { true, false, false, false, true, true, true, true, false };
-		columns = new String[] { "Kundetype", "Firmanavn", "Navn", "Leveringsadresse", "Faktureringsadresse",
-				"Postnummer", "Telefonnummer", "Email", "Kredit" };
+		activeColumns = new boolean[] { true, true, false, false, true, true, false, true, false };
+		columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
+				"Postnummer", "Firmanavn", "Email", "Kredit" };
 
 		ArrayList<Customer> dataArrayList = CustomerContainer.getInstance().getCustomers();
 		String[][] data = convertToStringArray(dataArrayList);

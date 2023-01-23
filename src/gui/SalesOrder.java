@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import controller.OrderController;
 import controller.ProductController;
+import model.Customer;
 import model.Order;
 import model.Order.OrderStatus;
 import model.OrderLine;
@@ -37,10 +38,13 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import java.util.Date;
 import java.util.Calendar;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SalesOrder extends JDialog {
 	
 	private boolean newOrder;
+	private Customer customer;
 
 	private JPanel contentPane;
 	private DefaultTable table;
@@ -59,10 +63,12 @@ public class SalesOrder extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public SalesOrder(Order o, boolean isModal) {
+	public SalesOrder(Order o, boolean isModal, JFrame frame) {
+		super(frame);
 		setTitle("Ordre");
 		orderController = new OrderController();
 		setModal(isModal);
+		setModalityType(JDialog.ModalityType.DOCUMENT_MODAL);
 		if(o != null) {
 			
 			orderController.setCurrentOrder(o);
@@ -70,7 +76,7 @@ public class SalesOrder extends JDialog {
 			
 		}
 		else {
-			orderController.addOrder();
+			orderController.addOrder("0");
 			newOrder = true;
 		}
 		
@@ -274,6 +280,13 @@ public class SalesOrder extends JDialog {
 		panel_4.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
 		txtCustomerID = new JTextField();
+		txtCustomerID.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				buttonAddCustomerPressed();
+			}
+		});
+		txtCustomerID.setEditable(false);
 		GridBagConstraints gbc_txtCustomerID = new GridBagConstraints();
 		gbc_txtCustomerID.insets = new Insets(0, 0, 5, 5);
 		gbc_txtCustomerID.fill = GridBagConstraints.HORIZONTAL;
@@ -326,7 +339,7 @@ public class SalesOrder extends JDialog {
 		spnPickupDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getPickupDateAsDateType(), orderController.getCurrentOrder().getDateAsDateType(), null, Calendar.DAY_OF_YEAR));
 		
 		txtOrderNumber.setText(orderController.getCurrentOrder().getOrderNumber());
-		txtCustomerID.setText("TODO");
+		txtCustomerID.setText("Tilføj Kunde");
 		jcbStatus.setSelectedItem(orderController.getCurrentOrder().getStatus());
 		
 		
@@ -383,23 +396,50 @@ public class SalesOrder extends JDialog {
 		return o;
 	}
 	
-	private void buttonSavePressed() {
-		int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du gemme ændringerne", "Bekræft gem", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
-		if(result == 0) {
-			//Save the changes
-			orderController.getCurrentOrder().setStatus((OrderStatus) jcbStatus.getSelectedItem());
-			orderController.getCurrentOrder().setPickupDate((Date) spnPickupDate.getModel().getValue());
-			//TODO: add customerID here when implemented
-			
-			if(newOrder) {
-				orderController.addOrder();
-			}
-			else {
-				orderController.updateOrder();
-			}
-			
-			this.dispose();
+	private void buttonAddCustomerPressed() {
+		
+		DialogCustomerAdd dca = new DialogCustomerAdd();
+		dca.setVisible(true);
+		customer = dca.getNewCustomer();
+		
+		if(customer != null) {
+			//Customer is found
+			txtCustomerID.setText(customer.getPhone());
 		}
+		else {
+			//Customer not found
+			txtCustomerID.setText("Tilføj kunde");
+		}
+		
+		
+		
+		
+	}
+	
+	private void buttonSavePressed() {
+		if(customer != null) {
+			//Customer is found
+			int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du gemme ændringerne", "Bekræft gem", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
+			if(result == 0) {
+				//Save the changes
+				orderController.getCurrentOrder().setStatus((OrderStatus) jcbStatus.getSelectedItem());
+				orderController.getCurrentOrder().setPickupDate((Date) spnPickupDate.getModel().getValue());
+				orderController.getCurrentOrder().setCustomer(customer);
+				
+				if(newOrder) {
+					orderController.addOrder(customer.getPhone());
+				}
+				else {
+					orderController.updateOrder();
+				}
+				
+				this.dispose();
+			}
+		}
+		else {
+			//Customer not found
+		}
+		
 		
 	}
 

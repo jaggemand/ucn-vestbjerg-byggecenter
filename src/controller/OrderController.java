@@ -13,10 +13,13 @@ import model.Order.OrderStatus;
 public class OrderController {
 	private Order currentOrder;
 	private ProductController productController;
+	private CustomerController customerController;
 
 	// Creating a new instance of the ProductController class.
 	public OrderController() {
+		currentOrder = null;
 		productController = new ProductController();
+		customerController = new CustomerController();
 	}
 
 	/**
@@ -24,10 +27,14 @@ public class OrderController {
 	 * 
 	 * @return A boolean value true if successful
 	 */
-	public boolean addOrder() {
+	//TODO: new doc
+	public boolean addOrder(String phone) {
 		boolean success = false;
 		if (currentOrder != null) {
-			success = OrderContainer.getInstance().addOrder(getCurrentOrder());
+			if(addCustomer(phone)) {
+				success = OrderContainer.getInstance().addOrder(getCurrentOrder());
+			}
+			
 		}
 		return success;
 	}
@@ -54,7 +61,19 @@ public class OrderController {
 	public void setCurrentOrder(Order o) {
 		currentOrder = o;
 	}
-
+	
+	//Add customer
+	private boolean addCustomer (String phone) {
+		boolean success = false;
+		
+		Customer toAdd = customerController.findCustomerByInformation(phone);
+		if (toAdd != null) {
+			success = true;
+			currentOrder.setCustomer(toAdd);
+		}
+		return success;
+	}
+	
 	/**
 	 * This method takes two input parameters search and quantity, searches for a
 	 * product if product exists, the method will add the product to current order

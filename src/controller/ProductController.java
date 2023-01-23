@@ -1,9 +1,11 @@
  package controller;
 
-import model.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+
+import model.Product;
+import model.ProductContainer;
 
 /**
  * It's a controller class for the Product class
@@ -161,7 +163,7 @@ public class ProductController {
 		}
 	}
 	
-	public HashSet<String> getCategoies() {
+	public List<String> getCategoies() {
 		return ProductContainer.getInstance().getCategories();
 	}
 	
