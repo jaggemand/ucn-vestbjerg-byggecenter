@@ -459,6 +459,8 @@ public class CustomerInformationDialog extends JDialog {
 			currentCustomer.setEmail(email);
 			currentCustomer.setCredit(0.0);
 			currentCustomer.setCompamyName("");
+			GUIPopUpMessages.informationMessage("Privatkunden er blevet opdateret", "Succes!");
+			closeWindow();
 		} else if (currentCustomer != null && chckBoxBusiness.isSelected()) {
 			currentCustomer.setName("");
 			currentCustomer.setDeliveryAddress(deliveryAddress);
@@ -468,22 +470,24 @@ public class CustomerInformationDialog extends JDialog {
 			currentCustomer.setEmail(email);
 			currentCustomer.setCredit(credit);
 			currentCustomer.setCompamyName(companyName);
-		}
-
-		if (chckBoxPrivate.isSelected() && !name.isBlank() && !deliveryAddress.isBlank() && !postalCode.isBlank()
-				&& !phone.isBlank() && !email.isBlank()) {
-			success = true;
-		} else if (chckBoxBusiness.isSelected() && !deliveryAddress.isBlank() && !postalCode.isBlank()
-				&& !phone.isBlank() && !email.isBlank() && !credit.isNaN() && !companyName.isBlank()) {
-			success = true;
-		}
-		if (success) {
-			customerController.createCustomer(name, deliveryAddress, paymentAddress, phone, email, credit, postalCode,
-					companyName, accountType);
-			GUIPopUpMessages.informationMessage("Kunden er blevet oprettet", "Succes!");
+			GUIPopUpMessages.informationMessage("Erhverskunden er blevet opdateret", "Succes!");
 			closeWindow();
 		} else {
-			GUIPopUpMessages.warningMessage("Kunden er ikke blevet oprettet", "Fejl!");
+			if (chckBoxPrivate.isSelected() && !name.isBlank() && !deliveryAddress.isBlank() && !postalCode.isBlank()
+					&& !phone.isBlank() && !email.isBlank()) {
+				success = true;
+			} else if (chckBoxBusiness.isSelected() && !deliveryAddress.isBlank() && !postalCode.isBlank()
+					&& !phone.isBlank() && !email.isBlank() && !credit.isNaN() && !companyName.isBlank()) {
+				success = true;
+			}
+			if (success) {
+				customerController.createCustomer(name, deliveryAddress, paymentAddress, phone, email, credit,
+						postalCode, companyName, accountType);
+				GUIPopUpMessages.informationMessage("Kunden er blevet oprettet", "Succes!");
+				closeWindow();
+			} else {
+				GUIPopUpMessages.warningMessage("Kunden er ikke blevet oprettet", "Fejl!");
+			}
 		}
 	}
 
