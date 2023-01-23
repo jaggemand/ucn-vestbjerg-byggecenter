@@ -436,7 +436,7 @@ public class OrderOverview extends JFrame {
 				parseDateTo = dateCreated.getDateTo();
 			}
 		}
-		dateCreated = new DialogDate(parseDateFrom, parseDateTo);
+		dateCreated = new DialogDate(this, parseDateFrom, parseDateTo);
 		resetParseDates();
 		dateCreated.setVisible(true);
 		if(!dateCreated.isOkPressed()) {
@@ -454,7 +454,7 @@ public class OrderOverview extends JFrame {
 				parseDateTo = datePickup.getDateTo();
 			}
 		}
-		datePickup = new DialogDate(parseDateFrom, parseDateTo);
+		datePickup = new DialogDate(this, parseDateFrom, parseDateTo);
 		resetParseDates();
 		datePickup.setVisible(true);
 		if(!datePickup.isOkPressed()) {
@@ -483,8 +483,8 @@ public class OrderOverview extends JFrame {
 			datePickup.setDateTo(new Date(3000, 01, 01));
 		}
 		insertBlancFilterSearch();
-		dateCreated = new DialogDate(null, null);
-		datePickup = new DialogDate(null, null);
+		dateCreated = new DialogDate(this, null, null);
+		datePickup = new DialogDate(this, null, null);
 		makeStatusMessage("Filtre nulstillet", false);
 	}
 	

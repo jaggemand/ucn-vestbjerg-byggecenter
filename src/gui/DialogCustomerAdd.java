@@ -2,29 +2,24 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import controller.CustomerController;
-import controller.ProductController;
 import model.Customer;
-import model.Product;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JLabel;
-import java.awt.Insets;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SwingConstants;
-import javax.swing.SpinnerNumberModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class DialogCustomerAdd extends JDialog {
 	private JTextField textFieldPhone;
@@ -38,7 +33,7 @@ public class DialogCustomerAdd extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogCustomerAdd dialog = new DialogCustomerAdd();
+			DialogCustomerAdd dialog = new DialogCustomerAdd(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -49,8 +44,8 @@ public class DialogCustomerAdd extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogCustomerAdd() {
-		
+	public DialogCustomerAdd(JFrame frame) {
+		super(frame);
 		cController = new CustomerController();
 		newCustomer = null;
 		

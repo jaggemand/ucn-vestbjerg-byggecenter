@@ -43,7 +43,8 @@ public class DialogAmount extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogAmount(OrderLine orderLine) {
+	public DialogAmount(JFrame frame, OrderLine orderLine) {
+		super(frame);
 		this.orderLine = orderLine;
 		newAmount = 0;
 		setTitle("Vælg total antal");

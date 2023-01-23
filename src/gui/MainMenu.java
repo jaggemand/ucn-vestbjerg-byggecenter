@@ -237,7 +237,7 @@ public class MainMenu extends JFrame {
 		panel_1.add(btnClose);
 	}
 	private void closeWindow() throws IOException {
-		int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikkert på at du vil lukke programmet?", "Afslut program",
+		int input = JOptionPane.showOptionDialog(this, "Er du sikkert på at du vil lukke programmet?", "Afslut program",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 				new Object[] { "Ja", "Nej" }, JOptionPane.YES_OPTION);
 		if(input == 0) {

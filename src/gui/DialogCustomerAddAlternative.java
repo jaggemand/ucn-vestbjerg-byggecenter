@@ -2,44 +2,25 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import controller.CustomerController;
-import controller.ProductController;
 import model.Customer;
-import model.CustomerContainer;
-import model.OrderLine;
-import model.Product;
-import model.ProductContainer;
 import model.Customer.customerType;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JLabel;
-import java.awt.Insets;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JSpinner;
-import javax.swing.SwingConstants;
-import javax.swing.SpinnerNumberModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class DialogCustomerAddAlternative extends JDialog {
 	private Customer newCustomer;
@@ -59,7 +40,7 @@ public class DialogCustomerAddAlternative extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogCustomerAddAlternative dialog = new DialogCustomerAddAlternative();
+			DialogCustomerAddAlternative dialog = new DialogCustomerAddAlternative(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -70,8 +51,8 @@ public class DialogCustomerAddAlternative extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogCustomerAddAlternative() {
-		
+	public DialogCustomerAddAlternative(JFrame frame) {
+		super(frame);
 		cController = new CustomerController();
 		newCustomer = null;
 		list = new ArrayList<>();

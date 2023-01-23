@@ -48,7 +48,7 @@ public class SalesOrder extends JDialog {
 
 	private JPanel contentPane;
 	private DefaultTable table;
-	private static SalesOrder frame;
+	private JFrame frame;
 	private JScrollPane scrollPane;
 	private OrderController orderController;
 	private JLabel lblStatus;
@@ -69,6 +69,7 @@ public class SalesOrder extends JDialog {
 	 */
 	public SalesOrder(Order o, boolean isModal, JFrame frame) {
 		super(frame);
+		this.frame = frame;
 		setTitle("Salgsordre");
 		orderController = new OrderController();
 		setModal(isModal);
@@ -414,7 +415,7 @@ public class SalesOrder extends JDialog {
 	
 	private void buttonAddCustomerPressed() {
 		
-		DialogCustomerAddAlternative dca = new DialogCustomerAddAlternative();
+		DialogCustomerAddAlternative dca = new DialogCustomerAddAlternative(frame);
 		dca.setVisible(true);
 		customer = dca.getNewCustomer();
 		
@@ -458,7 +459,7 @@ public class SalesOrder extends JDialog {
 
 	private void buttonAddPressed() {
 		//displays an error message if the product inserted does not exist
-		DialogItemAdd newItem = new DialogItemAdd();
+		DialogItemAdd newItem = new DialogItemAdd(frame);
 		newItem.setVisible(true);
 		
 		if (newItem.getNewProduct() == null) {
@@ -473,7 +474,7 @@ public class SalesOrder extends JDialog {
 	private void buttonAmountPressed() {
 			int row = table.getSelectedRow();
 			if(row != -1) {
-				DialogAmount newAmountDialog = new DialogAmount(orderController.getCurrentOrder().getOrderLines().get(row));
+				DialogAmount newAmountDialog = new DialogAmount(frame, orderController.getCurrentOrder().getOrderLines().get(row));
 				newAmountDialog.setVisible(true);
 				updateTable();
 			}

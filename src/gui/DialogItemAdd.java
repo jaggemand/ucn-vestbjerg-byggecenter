@@ -2,27 +2,26 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
 import controller.ProductController;
 import model.Product;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JLabel;
-import java.awt.Insets;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SwingConstants;
-import javax.swing.SpinnerNumberModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class DialogItemAdd extends JDialog {
 	private JTextField textFieldBarcode;
@@ -38,7 +37,7 @@ public class DialogItemAdd extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			DialogItemAdd dialog = new DialogItemAdd();
+			DialogItemAdd dialog = new DialogItemAdd(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -49,8 +48,8 @@ public class DialogItemAdd extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DialogItemAdd() {
-		
+	public DialogItemAdd(JFrame frame) {
+		super(frame);
 		pController = new ProductController();
 		amount = 0;
 		
