@@ -26,6 +26,7 @@ import controller.CustomerController;
 import controller.OrderController;
 import controller.ProductController;
 import model.Customer.customerType;
+import model.Customer;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
@@ -71,6 +72,7 @@ public class MainMenu extends JFrame {
 		order1.addProduct(prod1, 1);
 		order1.setDate(5); // subtracts date
 		order1.setStatus(OrderStatus.DELIVERED);
+		order1.setCustomer(new Customer("Erik", "Gåsevangen60", "Gåsevangen 60", "95734901", "eriksoerensen@gmail.com", 0.0, "7540", "", customerType.PRIVATE));
 		OrderContainer.getInstance().addOrder(order1);
 		//-------------------------------------------------------------------------------
 		
