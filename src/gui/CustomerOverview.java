@@ -33,6 +33,8 @@ import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CustomerOverview extends JFrame {
 
@@ -265,13 +267,17 @@ public class CustomerOverview extends JFrame {
 	}
 
 	private void init() {
-
+		btnEdit.setEnabled(false);
+		btnDetails.setEnabled(false);
+		btnDelete.setEnabled(false);
 	}
 
 	private void editCustomerDetails() {
 		Customer customer = getIndexValueInTable();
-		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(customer, true);
-		customerInformationDialog.setVisible(true);
+		if (customer != null) {
+			CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(customer, true);
+			customerInformationDialog.setVisible(true);
+		}
 	}
 
 	private void search() {
@@ -354,8 +360,10 @@ public class CustomerOverview extends JFrame {
 
 	private void viewCustomerDetails() {
 		Customer customer = getIndexValueInTable();
-		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(customer, false);
-		customerInformationDialog.setVisible(true);
+		if (customer != null) {
+			CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(customer, false);
+			customerInformationDialog.setVisible(true);
+		}
 	}
 
 	private Customer getIndexValueInTable() {
@@ -420,6 +428,17 @@ public class CustomerOverview extends JFrame {
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 
 		table = new DefaultTable(data, columns, activeColumns);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Customer customer = getIndexValueInTable();
+				if (customer != null) {
+					btnEdit.setEnabled(true);
+					btnDetails.setEnabled(true);
+					btnDelete.setEnabled(true);
+				}
+			}
+		});
 
 		table.getTableHeader().setReorderingAllowed(false);
 

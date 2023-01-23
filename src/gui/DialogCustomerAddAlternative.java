@@ -38,6 +38,8 @@ import java.util.Comparator;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class DialogCustomerAddAlternative extends JDialog {
 	private Customer newCustomer;
@@ -82,10 +84,6 @@ public class DialogCustomerAddAlternative extends JDialog {
 		{
 			scrollPane = new JScrollPane();
 			getContentPane().add(scrollPane, BorderLayout.CENTER);
-			{
-				table = new DefaultTable(null, columns);
-				scrollPane.setViewportView(table);
-			}
 		}
 		{
 			JPanel panel = new JPanel();
@@ -136,85 +134,141 @@ public class DialogCustomerAddAlternative extends JDialog {
 			}
 		}
 		
-//		initTable();
+		initTable();
+		initWindow();
 	}
 	
-	private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
-
-		int size = dataArrayList.size();
-		String[][] data = new String[size][10];
-		for (int i = 0; i < size; i++) {
-			Customer current = dataArrayList.get(i);
-			customerType type = current.getCustomerType();
-			String typeName = "";
-
-			switch (type) {
-			case BUSINESS:
-				typeName = "Erhverv";
-				break;
-
-			case PRIVATE:
-				typeName = "Privat";
-				break;
-			default:
-				typeName = "";
-			}
-			data[i][0] = typeName;
-			data[i][1] = current.getPhone();
-			data[i][2] = current.getName();
-			data[i][3] = current.getDeliveryAddress();
-			data[i][4] = current.getPaymentAddress();
-			data[i][5] = current.getPostcode();
-			data[i][6] = current.getCompanyName();
-			data[i][7] = current.getEmail();
-			data[i][8] = current.getCredit() + "";
-		}
-		return data;
-	}
-	
-//	private void initTable() {
-//		String[] columns = { "Telefon", "Navn", "Adresse", "Email"};
-//		list = cController.getAllCustomers();
-//		String[][] data = null;
-//		table = new DefaultTable(data, columns);
-//		scrollPane.setViewportView(table);
-//		//Only allows user to select single a single row at the time
-//		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		//User cannot change the ordering of the columns
-//		table.getTableHeader().setReorderingAllowed(false);
-//		//Make custom cellRenderer and give column 3, 4, 5 the new renderer
-//		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
-//		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
-//		table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
-//		table.getColumnModel().getColumn(1).setCellRenderer(cellRenderer);
-//		table.getColumnModel().getColumn(2).setCellRenderer(cellRenderer);
-//		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
-//		updateTable();
-//	}
-	
-//	private void updateTable() {
-//		table.clear();
-//		for(OrderLine ol : orderController.getCurrentOrder().getOrderLines()) {
-//			String[] metaData = new String[5];
-//			metaData[0] = ol.getProduct().getBarcode();
-//			metaData[1] = ol.getProduct().getName();
-//			metaData[2] = "" + ol.getQuantity();
-//			metaData[3] = ol.getProduct().getSalesPriceFormatted();
-//			metaData[4] = "Wait for format";
-//			table.addRow(metaData);
+//	private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
+//
+//		int size = dataArrayList.size();
+//		String[][] data = new String[size][10];
+//		for (int i = 0; i < size; i++) {
+//			Customer current = dataArrayList.get(i);
+//			customerType type = current.getCustomerType();
+//			String typeName = "";
+//
+//			switch (type) {
+//			case BUSINESS:
+//				typeName = "Erhverv";
+//				break;
+//
+//			case PRIVATE:
+//				typeName = "Privat";
+//				break;
+//			default:
+//				typeName = "";
+//			}
+//			data[i][0] = typeName;
+//			data[i][1] = current.getPhone();
+//			data[i][2] = current.getName();
+//			data[i][3] = current.getDeliveryAddress();
+//			data[i][4] = current.getPaymentAddress();
+//			data[i][5] = current.getPostcode();
+//			data[i][6] = current.getCompanyName();
+//			data[i][7] = current.getEmail();
+//			data[i][8] = current.getCredit() + "";
 //		}
+//		return data;
 //	}
+	private void initWindow() {
+		btnAdd.setEnabled(false);
+	}
+	private void initTable() {
+		list = cController.getAllCustomers();
+		String[][] data = null;
+		table = new DefaultTable(data, columns);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(table.getSelectedRow() != -1) {
+					btnAdd.setEnabled(true);
+				}
+			}
+		});
+		scrollPane.setViewportView(table);
+		//Only allows user to select single a single row at the time
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//User cannot change the ordering of the columns
+		table.getTableHeader().setReorderingAllowed(false);
+		//Make custom cellRenderer and give column 3, 4, 5 the new renderer
+		DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
+		cellRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(cellRenderer);
+		table.getColumnModel().getColumn(1).setCellRenderer(cellRenderer);
+		table.getColumnModel().getColumn(2).setCellRenderer(cellRenderer);
+		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
+		updateTable();
+	}
+	
+	private void updateTable() {
+//		private String[] columns = { "Telefon", "Navn", "Adresse", "Email"};
+		table.clear();
+		for(Customer c : list) {
+			String[] metaData = new String[4];
+			metaData[0] = c.getPhone();
+			if(c.getCustomerType().equals(customerType.PRIVATE)) {
+				metaData[1] = c.getName();
+			}
+			else {
+				metaData[1] = c.getCompanyName();
+			}
+			
+			metaData[2] = c.getDeliveryAddress();
+			metaData[3] = c.getEmail();
+			table.addRow(metaData);
+		}
+	}
 	
 	private void buttonSearchPressed() {
-		
+		String search = textFieldSearch.getText().toLowerCase();
+		if(search.isBlank()){
+			//Show all
+			list = cController.getAllCustomers();
+		} else {
+			//Show selection if a customer contains the searchString
+			list = new ArrayList<>();
+			for(Customer c : cController.getAllCustomers()) {
+				boolean found = false;
+				if(c.getCompanyName().toLowerCase().contains(search)) {
+					found = true;
+				} else if(c.getDeliveryAddress().toLowerCase().contains(search)) {
+					found = true;
+				} else if(c.getEmail().toLowerCase().contains(search)) {
+					found = true;
+				} else if(c.getName().toLowerCase().contains(search)) {
+					found = true;
+				} else if(c.getPaymentAddress().toLowerCase().contains(search)) {
+					found = true;
+				} else if(c.getPhone().toLowerCase().contains(search)) {
+					found = true;
+				} else if(c.getPostcode().toLowerCase().contains(search)) {
+					found = true;
+				}
+				if(found) {
+					list.add(c);
+				}
+			}
+		}
+		updateTable();
 	}
 	
 	private void buttonAddPressed() {
-		
+		int row = table.getSelectedRow();
+		if(row != -1) {
+			//A row has been selected
+			newCustomer = list.get(row);
+			this.dispose();
+		} else {
+			//No row has been selected
+		}
 	}
 	
 	private void buttonCancelPressed() {
-		
+		this.dispose();
+	}
+
+	public Customer getNewCustomer() {
+		return newCustomer;
 	}
 	
 }

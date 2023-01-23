@@ -64,6 +64,9 @@ Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
+Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
+Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
+Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Søm;13E;45B;1000;600;45.0;26.3;45.0
@@ -106,4 +109,3 @@ Røgalarm;bc-2000-66;Røgalarm med optisk sensor;Bolig,Sikkerhed;2A;2A;10;100;0.
 Kabelkanal;bc-2000-67;Kabelkanal buet - 2 meter - hvid;Bolig,Lamper,Ledninger;2A;2A;10;100;0.0;0.0;0.0
 Universalbukke;bc-2000-68;Universalbukke 2 stk. 65-90 cm;Hobby,Konstruktion,Diverse;2A;2A;5;50;0.0;0.0;0.0
 Værkstedsgulv;bc-2000-69;Værkstedsgulv 61 x 61 cm - 6 stk.;Skum,Gulve,Bolig;2A;2A;50;1000;0.0;0.0;0.0
-Viskestykke;888888888888;Rent;;H12;B12;500;200;0.0;0.0;0.0
