@@ -5,16 +5,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -93,7 +88,6 @@ public class DefaultTable extends JTable {
 			tabelModel.addRow(data[i]);
 		}
 	}
-	
 	public ArrayList<String> deleteData(String column, int[] columnsConfirm) {
 		ArrayList<String> dataToDelete = new ArrayList<>();
 		if(rows.length != 0) {			
@@ -155,7 +149,6 @@ public class DefaultTable extends JTable {
 			return -1;
 		}
 	}
-
 	
 	public void addRow(String[] data) {
 		tabelModel.addRow(data);

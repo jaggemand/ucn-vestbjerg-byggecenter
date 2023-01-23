@@ -105,8 +105,7 @@ public class ProductOverview extends JFrame {
 			GUIPopUpMessages.informationMessage("Intet produkt valgt", "Fejl");
 		} else {
 			ProductController productController = new ProductController();
-			Product product = productController.findProduct(table.getValueAt(index, 0).toString());
-
+			Product product = productController.findProduct(table.getModel().getValueAt(index, 0).toString());
 			ProductInformation productInformation = new ProductInformation(product, edit);
 			productInformation.setVisible(true);
 		}

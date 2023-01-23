@@ -159,6 +159,7 @@ public class DialogCustomerAdd extends JDialog {
 			}
 		}
 	}
+	
 	private void buttonSearchPressed() {
 		String phone = textFieldPhone.getText();
 		newCustomer = cController.findCustomerByInformation(phone);
@@ -174,9 +175,11 @@ public class DialogCustomerAdd extends JDialog {
 			textFieldCustomerName.setText("Kunde ikke fundet");
 		}
 	}
+	
 	private void buttonAddPressed() {
 		this.dispose();
 	}
+	
 	private void buttonCancelPressed() {
 		newCustomer = null;
 		this.dispose();
@@ -185,5 +188,4 @@ public class DialogCustomerAdd extends JDialog {
 	public Customer getNewCustomer() {
 		return newCustomer;
 	}
-	
 }

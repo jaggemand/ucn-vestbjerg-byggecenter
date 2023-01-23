@@ -133,7 +133,6 @@ public class DialogCustomerAddAlternative extends JDialog {
 				panel.add(btnCancel);
 			}
 		}
-		
 		initTable();
 		initWindow();
 	}
@@ -173,6 +172,7 @@ public class DialogCustomerAddAlternative extends JDialog {
 	private void initWindow() {
 		btnAdd.setEnabled(false);
 	}
+	
 	private void initTable() {
 		list = cController.getAllCustomers();
 		String[][] data = null;
