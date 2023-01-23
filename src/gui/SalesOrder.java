@@ -165,6 +165,7 @@ public class SalesOrder extends JDialog {
 				buttonDetailsPressed();
 			}
 		});
+		
 		GridBagConstraints gbc_btnDetails = new GridBagConstraints();
 		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
@@ -208,8 +209,6 @@ public class SalesOrder extends JDialog {
 		
 		lblStatus = new JLabel("");
 		panel_UnderTableWest.add(lblStatus);
-		
-		
 		
 		scrollPane = new JScrollPane();
 		panel_2.add(scrollPane, BorderLayout.CENTER);
