@@ -37,10 +37,14 @@ import controller.ProductController;
 import model.Order;
 import model.Order.OrderStatus;
 import model.OrderLine;
+import model.Customer.customerType;
+
 import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class OrderOverview extends JFrame {
 
@@ -65,8 +69,6 @@ public class OrderOverview extends JFrame {
 	private JTextField textFieldPhoneNumber;
 	private JLabel lblOrders;
 	private Component verticalStrut;
-	private JLabel lblDateCreated;
-	private JLabel lblDatePickup;
 
 	/**
 	 * Launch the application.
@@ -200,6 +202,15 @@ public class OrderOverview extends JFrame {
 		panel_North.setLayout(gbl_panel_North);
 		
 		textFieldOrderNumber = new JTextField();
+		textFieldOrderNumber.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(textFieldOrderNumber.getText().equals("Ordernummer")) {
+					textFieldOrderNumber.setText("");
+				}
+			}
+		});
+		textFieldOrderNumber.setToolTipText("Indsæt et Ordrenummer systemet skal søge efter");
 		textFieldOrderNumber.setText("Ordernummer");
 		GridBagConstraints gbc_textFieldOrderNumber = new GridBagConstraints();
 		gbc_textFieldOrderNumber.insets = new Insets(0, 0, 5, 5);
@@ -227,7 +238,7 @@ public class OrderOverview extends JFrame {
 		chckbxOrderCreated = new JCheckBox("Oprettelsesdato");
 		chckbxOrderCreated.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				checkButtonGrayout(chckbxOrderCreated,lblDateCreated, btnDateFilterCreated);
+				checkButtonGrayout(chckbxOrderCreated, btnDateFilterCreated);
 			}
 		});
 		GridBagConstraints gbc_chckbxOrderCreated = new GridBagConstraints();
@@ -240,7 +251,7 @@ public class OrderOverview extends JFrame {
 		chckbxOrderPickup = new JCheckBox("Afhentingsdato");
 		chckbxOrderPickup.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				checkButtonGrayout(chckbxOrderPickup, lblDatePickup, btnDateFilterPickup);
+				checkButtonGrayout(chckbxOrderPickup, btnDateFilterPickup);
 			}
 		});
 		
@@ -258,6 +269,15 @@ public class OrderOverview extends JFrame {
 		panel_North.add(btnSearch, gbc_btnSearch);
 		
 		textFieldPhoneNumber = new JTextField();
+		textFieldPhoneNumber.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(textFieldPhoneNumber.getText().equals("Telefonnummer")) {
+					textFieldPhoneNumber.setText("");
+				}
+			}
+		});
+		textFieldPhoneNumber.setToolTipText("Indsæt et telefonnummer som systemtet skal søge efter");
 		textFieldPhoneNumber.setText("Telefonnummer");
 		GridBagConstraints gbc_textFieldPhoneNumber = new GridBagConstraints();
 		gbc_textFieldPhoneNumber.insets = new Insets(0, 0, 5, 5);
@@ -310,19 +330,31 @@ public class OrderOverview extends JFrame {
 		gbc_chckbxPrivateCustomer.gridy = 2;
 		panel_North.add(chckbxPrivateCustomer, gbc_chckbxPrivateCustomer);
 		
-		lblDateCreated = new JLabel("Oprettelsesdato");
-		GridBagConstraints gbc_lblDateCreated = new GridBagConstraints();
-		gbc_lblDateCreated.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDateCreated.gridx = 4;
-		gbc_lblDateCreated.gridy = 2;
-		panel_North.add(lblDateCreated, gbc_lblDateCreated);
+		btnDateFilterCreated = new JButton("Vælg periode");
+		btnDateFilterCreated.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonDateCreatedPressed();
+			}
+		});
+		GridBagConstraints gbc_btnDateFilterCreated = new GridBagConstraints();
+		gbc_btnDateFilterCreated.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDateFilterCreated.insets = new Insets(0, 0, 5, 5);
+		gbc_btnDateFilterCreated.gridx = 4;
+		gbc_btnDateFilterCreated.gridy = 2;
+		panel_North.add(btnDateFilterCreated, gbc_btnDateFilterCreated);
 		
-		lblDatePickup = new JLabel("Afhentningsdato");
-		GridBagConstraints gbc_lblDatePickup = new GridBagConstraints();
-		gbc_lblDatePickup.insets = new Insets(0, 0, 5, 5);
-		gbc_lblDatePickup.gridx = 5;
-		gbc_lblDatePickup.gridy = 2;
-		panel_North.add(lblDatePickup, gbc_lblDatePickup);
+		btnDateFilterPickup = new JButton("Vælg periode");
+		btnDateFilterPickup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonDatePickupPressed();
+			}
+		});
+		GridBagConstraints gbc_btnDateFilterPickup = new GridBagConstraints();
+		gbc_btnDateFilterPickup.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDateFilterPickup.insets = new Insets(0, 0, 5, 5);
+		gbc_btnDateFilterPickup.gridx = 5;
+		gbc_btnDateFilterPickup.gridy = 2;
+		panel_North.add(btnDateFilterPickup, gbc_btnDateFilterPickup);
 		GridBagConstraints gbc_btnResetFilters = new GridBagConstraints();
 		gbc_btnResetFilters.insets = new Insets(0, 0, 5, 0);
 		gbc_btnResetFilters.gridx = 6;
@@ -336,32 +368,6 @@ public class OrderOverview extends JFrame {
 		gbc_comboBoxStatus.gridx = 0;
 		gbc_comboBoxStatus.gridy = 3;
 		panel_North.add(comboBoxStatus, gbc_comboBoxStatus);
-		
-		btnDateFilterPickup = new JButton("Vælg periode");
-		btnDateFilterPickup.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				buttonDatePickupPressed();
-			}
-		});
-		
-		btnDateFilterCreated = new JButton("Vælg periode");
-		btnDateFilterCreated.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				buttonDateCreatedPressed();
-			}
-		});
-		GridBagConstraints gbc_btnDateFilterCreated = new GridBagConstraints();
-		gbc_btnDateFilterCreated.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDateFilterCreated.insets = new Insets(0, 0, 5, 5);
-		gbc_btnDateFilterCreated.gridx = 4;
-		gbc_btnDateFilterCreated.gridy = 3;
-		panel_North.add(btnDateFilterCreated, gbc_btnDateFilterCreated);
-		GridBagConstraints gbc_btnDateFilterPickup = new GridBagConstraints();
-		gbc_btnDateFilterPickup.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDateFilterPickup.insets = new Insets(0, 0, 5, 5);
-		gbc_btnDateFilterPickup.gridx = 5;
-		gbc_btnDateFilterPickup.gridy = 3;
-		panel_North.add(btnDateFilterPickup, gbc_btnDateFilterPickup);
 		
 		lblOrders = new JLabel("Ordre:");
 		GridBagConstraints gbc_lblOrders = new GridBagConstraints();
@@ -388,9 +394,10 @@ public class OrderOverview extends JFrame {
 	}
 	
 	private void grayoutCheck() {
-		checkButtonGrayout(chckbxOrderCreated,lblDateCreated, btnDateFilterCreated);
-		checkButtonGrayout(chckbxOrderPickup, lblDatePickup, btnDateFilterPickup);
+		checkButtonGrayout(chckbxOrderCreated, btnDateFilterCreated);
+		checkButtonGrayout(chckbxOrderPickup, btnDateFilterPickup);
 	}
+	
 	private void buttonCreateOrderPressed() {
 		SalesOrder salesOrder = new SalesOrder(null,true, this);
 		salesOrder.setVisible(true);
@@ -517,7 +524,7 @@ public class OrderOverview extends JFrame {
 	}
 	
 	private void initTable() {
-		String[] columns = { "Ordernummer", "Status", "Kundetype", "Dato oprettet", "Opsamlingsdato", "Størrelse"};
+		String[] columns = { "Ordernummer", "Status", "Kundetype", "Telefon", "Dato oprettet", "Opsamlingsdato", "Størrelse"};
 //		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
@@ -549,16 +556,17 @@ public class OrderOverview extends JFrame {
 		int orderSize = 0;
 		table.clear();
 		for(Order o : orderController.getAllOrders()) {
-			String[] metaData = new String[6];
+			String[] metaData = new String[7];
 			metaData[0] = o.getOrderNumber();
-			metaData[1] = o.getStatusAsString();
-			metaData[2] = "Kunde not specified yet";
-			metaData[3] = o.getDate().toString();
-			metaData[4] = o.getPickup().toString();
+			metaData[1] = o.getStatus().toString();
+			metaData[2] = o.getCustomer().getCustomerType().toString();
+			metaData[3] = o.getCustomer().getPhone();
+			metaData[4] = o.getDate().toString();
+			metaData[5] = o.getPickup().toString();
 			for(OrderLine ol: o.getOrderLines()) {
 				orderSize += ol.getQuantity();
 			}
-			metaData[5] = String.valueOf(orderSize);
+			metaData[6] = String.valueOf(orderSize);
 			orderSize = 0;
 			table.addRow(metaData);
 		}
@@ -618,10 +626,22 @@ public class OrderOverview extends JFrame {
 		while(it.hasNext()) {
 			Order o = it.next();
 //		List<OrderStatus> status = Arrays.asList(o.getStatus());
-			if(o.getOrderNumber().toLowerCase().contains(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().length() == 0 || textFieldOrderNumber.getText().equals("Ordernummer")) {
-				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickupDateAsDateType(), pickupFrom, pickupTo)) {
-					if(o.getStatus().equals(comboBoxStatus.getSelectedItem()) || comboBoxStatus.getSelectedIndex() == 0 || comboBoxStatus.getSelectedItem().equals("ALLE STATUSER")) {
-						orderResult.add(o);
+			if(o.getOrderNumber().toLowerCase().contains(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().isBlank() || textFieldOrderNumber.getText().equals("Ordernummer")) {
+				System.out.println("if1");
+				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickupDateAsDateType(), pickupFrom, pickupTo) || (!chckbxOrderCreated.isSelected() && !chckbxOrderPickup.isSelected())) {
+					System.out.println("if2");
+					if(o.getStatus().toString().equals(comboBoxStatus.getSelectedItem().toString()) || comboBoxStatus.getSelectedIndex() == 0 || comboBoxStatus.getSelectedItem().equals("ALLE STATUSER")) {
+						System.out.println("if3");
+						if(o.getCustomer().getPhone().contains(textFieldPhoneNumber.getText().toLowerCase()) || textFieldPhoneNumber.getText().isBlank() || textFieldPhoneNumber.getText().equals("Telefonnummer")) {
+							System.out.println("if4");
+							if((chckbxBusinessCustomer.isSelected() && o.getCustomer().getCustomerType().equals(customerType.BUSINESS)) || !chckbxBusinessCustomer.isSelected()) {
+								System.out.println("if5");
+								if((chckbxPrivateCustomer.isSelected() && o.getCustomer().getCustomerType().equals(customerType.PRIVATE)) || !chckbxPrivateCustomer.isSelected()) {
+									System.out.println("if6");
+									orderResult.add(o);
+								}
+							}
+						}
 					}
 				}
 			}
@@ -636,14 +656,12 @@ public class OrderOverview extends JFrame {
 	}
 	
 	
-	private void checkButtonGrayout(JCheckBox box, JLabel lbl, JButton btn) {
+	private void checkButtonGrayout(JCheckBox box, JButton btn) {
 		if(box.isSelected() == false) {
 			btn.setEnabled(false);
-			lbl.setForeground(Color.GRAY);
 		}
 		else {
 			btn.setEnabled(true);
-			lbl.setForeground(Color.BLACK);
 		}
 	}
 
@@ -670,10 +688,11 @@ public class OrderOverview extends JFrame {
 			Order current = dataArrayList.get(i);
 			data[i][0] = current.getOrderNumber();
 			data[i][1] = current.getStatus().toString();
-			data[i][2] = "Ingen kundetype";
-			data[i][3] = current.getDate().toString();
-			data[i][4] = current.getPickup().toString();
-			data[i][5] = String.valueOf(current.getAmountOfProducts());
+			data[i][2] = current.getCustomer().getCustomerType().toString();
+			data[i][3] = current.getCustomer().getPhone();
+			data[i][4] = current.getDate().toString();
+			data[i][5] = current.getPickup().toString();
+			data[i][6] = String.valueOf(current.getAmountOfProducts());
 		}
 		return data;
 	}
