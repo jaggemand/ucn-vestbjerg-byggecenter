@@ -398,18 +398,18 @@ public class SalesOrder extends JDialog {
 	
 	private void buttonAddCustomerPressed() {
 		
-		DialogCustomerAdd dca = new DialogCustomerAdd();
+		DialogCustomerAddAlternative dca = new DialogCustomerAddAlternative();
 		dca.setVisible(true);
-		customer = dca.getNewCustomer();
-		
-		if(customer != null) {
-			//Customer is found
-			txtCustomerID.setText(customer.getPhone());
-		}
-		else {
-			//Customer not found
-			txtCustomerID.setText("Tilføj kunde");
-		}
+//		customer = dca.getNewCustomer();
+//		
+//		if(customer != null) {
+//			//Customer is found
+//			txtCustomerID.setText(customer.getPhone());
+//		}
+//		else {
+//			//Customer not found
+//			txtCustomerID.setText("Tilføj kunde");
+//		}
 		
 		
 		

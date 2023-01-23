@@ -260,7 +260,6 @@ public class CustomerOverview extends JFrame {
 		panel_2.add(btnReset, gbc_btnReset);
 
 		init();
-		tempCustomers(); // remove fast after
 		setTable();
 		rowCounter();
 	}
@@ -373,21 +372,6 @@ public class CustomerOverview extends JFrame {
 			customer = customerController.findCustomerByInformation(table.getValueAt(index, 1).toString());
 		}
 		return customer;
-	}
-
-	private void tempCustomers() {
-		CustomerController cc = new CustomerController();
-
-		cc.createCustomer("Jacob", "Hobrovej 450", "Godsbanen 19", "24245482", "jacob@mail.dk", 0.5, "9000", "Kyed Aps",
-				customerType.PRIVATE);
-		cc.createCustomer("Marcus", "Jyllandsgade 10", "Abekatvej 12", "20926381", "marcus@mail.dk", 0.1, "9000",
-				"Marcus Aps", customerType.PRIVATE);
-		cc.createCustomer("Mikkel", "Reberbahnsgade 2", "Brenning 15", "65748294", "mikkel@mail.dk", 0.9, "9000",
-				"Mikkel Aps", customerType.BUSINESS);
-		cc.createCustomer("Rasmus", "Hornevej 89", "Støvringvej 248", "25172085", "rasmus@mail.dk", 0.3, "9000",
-				"Rasmus Aps", customerType.PRIVATE);
-		cc.createCustomer("Nicolai", "Udsigten 90", "Idrætsvej 1", "62719283", "nicolai@mail.dk", 0.8, "9000",
-				"Niolai Aps", customerType.BUSINESS);
 	}
 
 	private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
