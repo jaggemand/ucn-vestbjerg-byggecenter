@@ -59,6 +59,10 @@ public class SalesOrder extends JDialog {
 	private JSpinner spnCreatedDate;
 	private JSpinner spnPickupDate;
 	private JComboBox<String> jcbStatus;
+	private JButton btnSave;
+	private JButton btnAmount;
+	private JButton btnDelete;
+	private JButton btnDetails;
 
 	/**
 	 * Create the frame.
@@ -101,7 +105,7 @@ public class SalesOrder extends JDialog {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		contentPane.add(panel, BorderLayout.SOUTH);
 		
-		JButton btnSave = new JButton("Gem");
+		btnSave = new JButton("Gem");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonSavePressed();
@@ -126,19 +130,6 @@ public class SalesOrder extends JDialog {
 		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
-		JButton btnAmount = new JButton("Antal");
-		btnAmount.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				buttonAmountPressed();
-			}
-		});
-		GridBagConstraints gbc_btnAmount = new GridBagConstraints();
-		gbc_btnAmount.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnAmount.insets = new Insets(0, 0, 5, 0);
-		gbc_btnAmount.gridx = 0;
-		gbc_btnAmount.gridy = 1;
-		panel_1.add(btnAmount, gbc_btnAmount);
-		
 		JButton btnAdd = new JButton("Tilføj");
 		btnAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -149,23 +140,24 @@ public class SalesOrder extends JDialog {
 		gbc_btnAdd.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAdd.insets = new Insets(0, 0, 5, 0);
 		gbc_btnAdd.gridx = 0;
-		gbc_btnAdd.gridy = 2;
+		gbc_btnAdd.gridy = 1;
 		panel_1.add(btnAdd, gbc_btnAdd);
 		
-		JButton btnDelete = new JButton("Slet");
+		btnDelete = new JButton("Slet");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonDeletePressed();
 			}
 		});
-		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
-		gbc_btnDelete.gridx = 0;
-		gbc_btnDelete.gridy = 3;
-		panel_1.add(btnDelete, gbc_btnDelete);
 		
-		JButton btnDetails = new JButton("Detaljer");
+		btnAmount = new JButton("Antal");
+		btnAmount.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				buttonAmountPressed();
+			}
+		});
+		
+		btnDetails = new JButton("Detaljer");
 		btnDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonDetailsPressed();
@@ -175,8 +167,20 @@ public class SalesOrder extends JDialog {
 		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDetails.gridx = 0;
-		gbc_btnDetails.gridy = 4;
+		gbc_btnDetails.gridy = 2;
 		panel_1.add(btnDetails, gbc_btnDetails);
+		GridBagConstraints gbc_btnAmount = new GridBagConstraints();
+		gbc_btnAmount.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnAmount.insets = new Insets(0, 0, 5, 0);
+		gbc_btnAmount.gridx = 0;
+		gbc_btnAmount.gridy = 3;
+		panel_1.add(btnAmount, gbc_btnAmount);
+		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
+		gbc_btnDelete.gridx = 0;
+		gbc_btnDelete.gridy = 4;
+		panel_1.add(btnDelete, gbc_btnDelete);
 		
 		JPanel panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.CENTER);
@@ -322,8 +326,7 @@ public class SalesOrder extends JDialog {
 		
 		//Non windows-builder
 		//Does order exist
-		
-		
+	
 		initTable();
 		initialize();
 	}
@@ -342,7 +345,10 @@ public class SalesOrder extends JDialog {
 		txtCustomerID.setText("Tilføj Kunde");
 		jcbStatus.setSelectedItem(orderController.getCurrentOrder().getStatus());
 		
-		
+		btnSave.setEnabled(false);
+		btnAmount.setEnabled(false);
+		btnDelete.setEnabled(false);
+		btnDetails.setEnabled(false);
 	}
 	
 	private void initTable() {
@@ -350,6 +356,16 @@ public class SalesOrder extends JDialog {
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (table.getSelectedRow() != -1) {
+					btnAmount.setEnabled(true);
+					btnDelete.setEnabled(true);
+					btnDetails.setEnabled(true);
+				}
+			}
+		});
 		scrollPane.setViewportView(table);
 		//Only allows user to select single a single row at the time
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -410,10 +426,6 @@ public class SalesOrder extends JDialog {
 			//Customer not found
 			txtCustomerID.setText("Tilføj kunde");
 		}
-		
-		
-		
-		
 	}
 	
 	private void buttonSavePressed() {
@@ -438,9 +450,10 @@ public class SalesOrder extends JDialog {
 		}
 		else {
 			//Customer not found
+			GUIPopUpMessages popUpMessages = new GUIPopUpMessages();
+			
+			popUpMessages.informationMessage("Der skal tilføjes en kunde til ordren", "Ingen kunde");
 		}
-		
-		
 	}
 
 	private void buttonAddPressed() {
@@ -548,6 +561,25 @@ public class SalesOrder extends JDialog {
 		}
 		calculateRowTotals();
 		updateTotal();
+		if (table.getRowCount() > 0) {
+			btnSave.setEnabled(true);
+			if(table.getSelectedRow() != -1) {
+				btnAmount.setEnabled(true);
+				btnDelete.setEnabled(true);
+				btnDetails.setEnabled(true);
+			}
+			else {
+				btnAmount.setEnabled(false);
+				btnDelete.setEnabled(false);
+				btnDetails.setEnabled(false);
+			}
+		}
+		else {
+			btnSave.setEnabled(false);
+			btnAmount.setEnabled(false);
+			btnDelete.setEnabled(false);
+			btnDetails.setEnabled(false);
+		}
 	}
 	
 	private void makeStatusMessage(String message, boolean isCorrelatedWithError) {
@@ -591,5 +623,5 @@ public class SalesOrder extends JDialog {
 	
 	private void updateVAT(double price) {
 		lblVat.setText("moms: " + getPriceFormatted(price / 5));
-	}
+	}	
 }
