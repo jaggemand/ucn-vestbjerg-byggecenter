@@ -22,13 +22,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.CustomerController;
 import controller.OrderController;
 import controller.ProductController;
-import model.Customer;
+import model.Customer.customerType;
 import model.Order;
 import model.OrderContainer;
 import model.Product;
-import model.Customer.customerType;
 import model.Order.OrderStatus;
 
 public class MainMenu extends JFrame {
@@ -71,7 +71,6 @@ public class MainMenu extends JFrame {
 		order1.addProduct(prod1, 1);
 		order1.setDate(5); // subtracts date
 		order1.setStatus(OrderStatus.DELIVERED);
-		order1.setCustomer(new Customer("Erik", "Gåsevangen 60", "Gåsevangen 60", "75438901", "Eriksoernsen@gmail.com", 0.0, "", "", customerType.PRIVATE));
 		OrderContainer.getInstance().addOrder(order1);
 		//-------------------------------------------------------------------------------
 		
@@ -79,6 +78,7 @@ public class MainMenu extends JFrame {
 		setTitle("Hoved menu");
 		pController = new ProductController();
 		oController = new OrderController();
+		tempCustomers();
 		pController.loadFile();
 		
 		
@@ -148,6 +148,25 @@ public class MainMenu extends JFrame {
 				cashRegister.setVisible(true);
 			}
 		});
+		
+		JButton btnCreateOrder = new JButton("Opret ordre");
+		btnCreateOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				SalesOrder salesOrder = new SalesOrder(null, rootPaneCheckingEnabled, frame);
+				salesOrder.setVisible(true);
+			}
+		});
+		btnCreateOrder.setPreferredSize(new Dimension(65, 40));
+		btnCreateOrder.setMinimumSize(new Dimension(140, 40));
+		btnCreateOrder.setMaximumSize(new Dimension(140, 40));
+		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCreateOrder.setBounds(new Rectangle(0, 0, 15, 15));
+		GridBagConstraints gbc_btnCreateOrder = new GridBagConstraints();
+		gbc_btnCreateOrder.fill = GridBagConstraints.BOTH;
+		gbc_btnCreateOrder.insets = new Insets(0, 0, 5, 5);
+		gbc_btnCreateOrder.gridx = 2;
+		gbc_btnCreateOrder.gridy = 4;
+		panel.add(btnCreateOrder, gbc_btnCreateOrder);
 		btnCashRegister.setBounds(new Rectangle(0, 0, 15, 15));
 		btnCashRegister.setMaximumSize(new Dimension(140, 40));
 		btnCashRegister.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -160,7 +179,25 @@ public class MainMenu extends JFrame {
 		gbc_btnCashRegister.gridy = 5;
 		panel.add(btnCashRegister, gbc_btnCashRegister);
 		
-		JButton btnStock = new JButton("Lager");
+		JButton btnCustomer = new JButton("Kundeoversigt");
+		btnCustomer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				openCustomerOverview();
+			}
+		});
+		btnCustomer.setPreferredSize(new Dimension(65, 40));
+		btnCustomer.setMinimumSize(new Dimension(140, 40));
+		btnCustomer.setMaximumSize(new Dimension(140, 40));
+		btnCustomer.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		btnCustomer.setBounds(new Rectangle(0, 0, 15, 15));
+		GridBagConstraints gbc_btnCustomer = new GridBagConstraints();
+		gbc_btnCustomer.fill = GridBagConstraints.BOTH;
+		gbc_btnCustomer.insets = new Insets(0, 0, 5, 5);
+		gbc_btnCustomer.gridx = 2;
+		gbc_btnCustomer.gridy = 6;
+		panel.add(btnCustomer, gbc_btnCustomer);
+		
+		JButton btnStock = new JButton("Produktoversigt");
 		btnStock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ProductOverview productOverview = new ProductOverview();
@@ -178,24 +215,6 @@ public class MainMenu extends JFrame {
 		gbc_btnStock.gridx = 2;
 		gbc_btnStock.gridy = 7;
 		panel.add(btnStock, gbc_btnStock);
-		
-		JButton btnCustomer = new JButton("Kundeoversigt");
-		btnCustomer.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				openCustomerOverview();
-			}
-		});
-		btnCustomer.setPreferredSize(new Dimension(65, 40));
-		btnCustomer.setMinimumSize(new Dimension(140, 40));
-		btnCustomer.setMaximumSize(new Dimension(140, 40));
-		btnCustomer.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		btnCustomer.setBounds(new Rectangle(0, 0, 15, 15));
-		GridBagConstraints gbc_btnCustomer = new GridBagConstraints();
-		gbc_btnCustomer.fill = GridBagConstraints.BOTH;
-		gbc_btnCustomer.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCustomer.gridx = 2;
-		gbc_btnCustomer.gridy = 9;
-		panel.add(btnCustomer, gbc_btnCustomer);
 		
 		JPanel panel_1 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_1.getLayout();
@@ -229,5 +248,20 @@ public class MainMenu extends JFrame {
 	private void openCustomerOverview() {
 		CustomerOverview customerOverview = new CustomerOverview();
 		customerOverview.setVisible(true);
+	}
+	
+	private void tempCustomers() {
+		CustomerController cc = new CustomerController();
+
+		cc.createCustomer("Jacob", "Hobrovej 450", "Godsbanen 19", "24245482", "jacob@mail.dk", 0.5, "9000", "Kyed Aps",
+				customerType.PRIVATE);
+		cc.createCustomer("Marcus", "Jyllandsgade 10", "Abekatvej 12", "20926381", "marcus@mail.dk", 0.1, "9000",
+				"Marcus Aps", customerType.PRIVATE);
+		cc.createCustomer("Mikkel", "Reberbahnsgade 2", "Brenning 15", "65748294", "mikkel@mail.dk", 0.9, "9000",
+				"Mikkel Aps", customerType.BUSINESS);
+		cc.createCustomer("Rasmus", "Hornevej 89", "Støvringvej 248", "25172085", "rasmus@mail.dk", 0.3, "9000",
+				"Rasmus Aps", customerType.PRIVATE);
+		cc.createCustomer("Nicolai", "Udsigten 90", "Idrætsvej 1", "62719283", "nicolai@mail.dk", 0.8, "9000",
+				"Niolai Aps", customerType.BUSINESS);
 	}
 }

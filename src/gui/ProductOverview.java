@@ -103,10 +103,10 @@ public class ProductOverview extends JFrame {
 		for (String e : existingCategories) {
 			if(e.length() >= 1) {
 				jcbCategories.addItem(e.substring(0,1).toUpperCase() + e.substring(1));
-			}	
+			}
 		}
 	}
-
+	//TODO Remove function? Greyout are currently in use for delete, details and edit
 	private void showProduct(boolean edit) {
 		int index = table.findElement();
 
