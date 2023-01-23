@@ -90,6 +90,7 @@ public class OrderOverview extends JFrame {
 	 * Create the frame.
 	 */
 	public OrderOverview() {
+		setTitle("Ordreoversigt");
 		initWindow();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
