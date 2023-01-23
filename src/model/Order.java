@@ -36,12 +36,12 @@ public class Order implements Serializable {
 		if (saleStatus) {
 			this.status = OrderStatus.SALE;
 			paid = true;
+			this.pickupDate = date;
 		} else {
 			this.status = OrderStatus.CONFIRMATION;
 			paid = false;
+			this.pickupDate = LocalDate.now().plusDays(2); // Default 2 day deliverytime value
 		}
-		this.pickupDate = LocalDate.now().plusDays(2); // Default 2 day deliverytime value
-
 		this.orderNumber = "352-" + tempOrderNumber;
 		tempOrderNumber++;
 	}

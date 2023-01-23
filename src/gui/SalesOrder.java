@@ -59,6 +59,8 @@ public class SalesOrder extends JDialog {
 	private JSpinner spnCreatedDate;
 	private JSpinner spnPickupDate;
 	private JComboBox<String> jcbStatus;
+	private boolean cancled = false;
+	private boolean changesSaved = false;
 	private JButton btnSave;
 	private JButton btnAmount;
 	private JButton btnDelete;
@@ -164,6 +166,7 @@ public class SalesOrder extends JDialog {
 				buttonDetailsPressed();
 			}
 		});
+		
 		GridBagConstraints gbc_btnDetails = new GridBagConstraints();
 		gbc_btnDetails.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDetails.fill = GridBagConstraints.HORIZONTAL;
@@ -207,8 +210,6 @@ public class SalesOrder extends JDialog {
 		
 		lblStatus = new JLabel("");
 		panel_UnderTableWest.add(lblStatus);
-		
-		
 		
 		scrollPane = new JScrollPane();
 		panel_2.add(scrollPane, BorderLayout.CENTER);
@@ -438,6 +439,7 @@ public class SalesOrder extends JDialog {
 				orderController.getCurrentOrder().setStatus((OrderStatus) jcbStatus.getSelectedItem());
 				orderController.getCurrentOrder().setPickupDate((Date) spnPickupDate.getModel().getValue());
 				orderController.getCurrentOrder().setCustomer(customer);
+				changesSaved = true;
 				
 				if(newOrder) {
 					orderController.addOrder(customer.getPhone());
@@ -536,6 +538,7 @@ public class SalesOrder extends JDialog {
 	private void buttonCanclePressed() {
 		if(table.getModel().getRowCount() < 1) {
 			dispose();
+			cancled = true;
 		}
 		else {
 			/*int input = JOptionPane.showOptionDialog(new JFrame(), "Er du sikker på at du vil afbryde nuværende salg og lukke modulet", "Afbryd salg og luk modul?",
@@ -545,6 +548,7 @@ public class SalesOrder extends JDialog {
 			
 			if(input == 0) {
 				dispose();
+				cancled = true;
 			}
 		}
 	}
@@ -624,5 +628,13 @@ public class SalesOrder extends JDialog {
 	
 	private void updateVAT(double price) {
 		lblVat.setText("moms: " + getPriceFormatted(price / 5));
-	}	
+	}
+	
+	public boolean gotCancled() {
+		return this.cancled;
+	}
+	
+	public boolean gotSaved() {
+		return this.changesSaved;
+	}
 }
