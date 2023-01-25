@@ -31,6 +31,7 @@ import java.beans.PropertyChangeEvent;
 
 public class CustomerInformationDialog extends JDialog {
 
+	//Windowbuilder components
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtName;
 	private JTextField txtDeliveryAddress;
@@ -43,30 +44,30 @@ public class CustomerInformationDialog extends JDialog {
 	private JCheckBox chckBoxBusiness;
 	private JCheckBox chckBoxPrivate;
 	private JCheckBox chckBoxChangeAddress;
-	private Customer currentCustomer;
-	private boolean editMode;
 	private JButton btnOK;
 	private JButton btnCancel;
 	private JLabel lblStatusText;
 	private JLabel lblStatuslbl;
+	
+	//Other
+	private Customer currentCustomer;
+	private boolean editMode;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			CustomerInformationDialog dialog = new CustomerInformationDialog(null, false);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
+	 * This is the constructor of the CustomerInformationDialog-Object
+	 * 
+	 * @param currentCustomer This is the customer that will be shown in this window
+	 * @param editMode This boolean determines if the customer data will be editable, true means yes.
 	 */
 	public CustomerInformationDialog(Customer currentCustomer, boolean editMode) {
+		windowSetup();
+		initializeFields(currentCustomer, editMode);
+		initializeWindow();
+	}
+	/**
+	 * This method will setup all the windowbuilder-components
+	 */
+	private void windowSetup() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle("Kundeinformation");
 		setBounds(100, 100, 650, 400);
@@ -360,12 +361,21 @@ public class CustomerInformationDialog extends JDialog {
 				panel.add(chckBoxBusiness, gbc_chckBoxBusiness);
 			}
 		}
+	}	 
+	 /** This method will initialize the fields with there initial values
+	 * 
+	 * @param currentCustomer This is the customer that will be shown in this window
+	 * @param editMode This boolean determines if the customer data will be editable, true means yes.
+	 */
+	private void initializeFields(Customer currentCustomer, boolean editMode) {
 		this.editMode = editMode;
 		this.currentCustomer = currentCustomer;
-		init();
 	}
 
-	private void init() {
+	/**
+	 * 
+	 */
+	private void initializeWindow() {
 		btnCancel.setText("Tilbage");
 		txtName.setEnabled(false);
 		txtDeliveryAddress.setEnabled(false);
