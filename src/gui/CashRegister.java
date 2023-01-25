@@ -451,7 +451,12 @@ public class CashRegister extends JFrame {
 			table.getModel().setValueAt(rowTotal, i, 4);
 		}
 	}
-	//TODO: this method is not needed, as we already got that functionality in the model.product.getSalesPriceFormatted()
+	/**
+	 * This method will format the input double as a string to resemble a price with two decimals
+	 * 
+	 * @param price A double representing a price
+	 * @return A formatted String-Object
+	 */
 	private String getPriceFormatted(double price) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		return df.format(price);
@@ -475,14 +480,18 @@ public class CashRegister extends JFrame {
 	private void updateVAT(double price) {
 		lblVat.setText("moms: " + getPriceFormatted(price / 5));
 	}
-	
+	/**
+	 * This method will close the window and create a new empty one ready to be used.
+	 */
 	private void resetFrame() {
 		dispose();
 		CashRegister cashRegister = new CashRegister();
 		cashRegister.setVisible(true);
 		cashRegister.setBounds(this.getBounds());
 	}
-	
+	/**
+	 * This method will check if some conditions are met, for some components to be enabled/disabled
+	 */
 	public void grayOutCheck() {
 		if (table.getSelectedRow() != -1) {
 			btnAmount.setEnabled(true);
