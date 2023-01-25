@@ -18,7 +18,10 @@ import javax.swing.border.EmptyBorder;
 
 public class ColumnSelecter extends JDialog {
 
+	//Windowbuilder components
 	private final JPanel contentPanel = new JPanel();
+	
+	//Other
 	private ArrayList<JCheckBox> checkBox;
 	private ArrayList<Boolean> isVisible;
 	private ArrayList<String> columns;
@@ -31,7 +34,24 @@ public class ColumnSelecter extends JDialog {
 	public ColumnSelecter(CustomTableColumnManager manager) {
 		this.manager = manager;
 	}
+	/**
+	 * The constructor of the ColumnSelecter-Object
+	 * 
+	 * @param isVisible an ArrayList of equal size to the columns parameter, that will describe if that index will be shown
+	 * @param columns an ArrayList of equal size to the isVisible parameter, that will contain the headers of the columns
+	 */
 	public void newWindow(ArrayList<Boolean> isVisible, ArrayList<String> columns) {
+		windowSetup(isVisible, columns);
+		pack();
+		setCheckBoxes();
+	}
+	/**
+	 * This method will setup all the windowbuilder components
+	 * 
+	 * @param isVisible isVisible an ArrayList of equal size to the columns parameter, that will describe if that index will be shown
+	 * @param columns an ArrayList of equal size to the isVisible parameter, that will contain the headers of the columns
+	 */
+	private void windowSetup(ArrayList<Boolean> isVisible, ArrayList<String> columns) {
 		checkBox = new ArrayList<>();
 		setTitle("Aktive kolonner");
 		setBounds(100, 100, 450, 300);
@@ -95,24 +115,28 @@ public class ColumnSelecter extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-		pack();
-		setCheckBoxes();
 	}
-	
-		private void setCheckBoxes() {
+	/**
+	 * This method will loop through a list of checkboxes and will set each element true/false according to a list of booleans of equal size
+	 */
+	private void setCheckBoxes() {
 			for(int i = 0; i < isVisible.size(); i++) {
 					checkBox.get(i).setSelected(isVisible.get(i));
 			}
 			
 		}
-		
-		private void selectAll() {
+	/**
+	 * This method will loop through a list of checkboxes and set all to true
+	 */
+	private void selectAll() {
 			for(int i = 0; i < isVisible.size(); i++) {
 					checkBox.get(i).setSelected(true);
 			}
 		}
-		
-		private void setColumnFromcheckBoxes() {
+	/**
+	 * This method will show or hide a column, depending on the state of the checkboxes
+	 */
+	private void setColumnFromcheckBoxes() {
 			for(int i = 0; i < isVisible.size(); i++) {
 				if(checkBox.get(i).isSelected() != isVisible.get(i)) {
 					if (checkBox.get(i).isSelected()) {
@@ -124,8 +148,10 @@ public class ColumnSelecter extends JDialog {
 			}
 			this.dispose();
 		}
-		
-		private void closeWindow() {
+	/**
+	 * This method will close the current window
+	 */
+	private void closeWindow() {
 			this.dispose();
 		}
 }
