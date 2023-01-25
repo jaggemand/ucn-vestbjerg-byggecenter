@@ -37,12 +37,11 @@ import java.awt.event.MouseEvent;
 
 public class CashRegister extends JFrame {
 
+	//Windowbuilder components
 	private JPanel contentPane;
 	private DefaultTable table;
 	private static CashRegister frame;
 	private JScrollPane scrollPane;
-	private OrderController orderController;
-	private CustomerController customerController;
 	private JLabel lblStatus;
 	private JLabel lblTotal;
 	private JLabel lblVat;
@@ -51,32 +50,37 @@ public class CashRegister extends JFrame {
 	private JButton btnDelete;
 	private JButton btnPayment;
 	private JButton btnCancelCurrentSale;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					frame = new CashRegister();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
+	//Controllers
+	private OrderController orderController;
+	private CustomerController customerController;
+	
+	//Other
+	private String[] columns;
 
 	/**
-	 * Create the frame.
+	 * Constructor for the cashregister-window
 	 */
 	public CashRegister() {
+		//Windowbuilder code
+		windowSetup();
+		
+		//Initialize Fields
+		initializeFields();
+		
+		//Initialize the product-table
+		initializeTable();
+		
+		//Initialize the window
+		initializeWindow();
+	}
+
+	//Initializing methods
+	/**
+	 * All the windowbuilder generated code
+	 */
+	private void windowSetup() {
 		setTitle("Kassesalg");
-		
-		customerController = new CustomerController();
-		
-		orderController = new OrderController();
-		orderController.createOrder(true);
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 622, 398);
@@ -102,7 +106,7 @@ public class CashRegister extends JFrame {
 		btnCancelCurrentSale = new JButton("Afbryd salg");
 		btnCancelCurrentSale.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonCancleCurrentSalePressed();
+				buttonCancelCurrentSalePressed();
 			}
 		});
 		panel.add(btnCancelCurrentSale);
@@ -111,7 +115,7 @@ public class CashRegister extends JFrame {
 		JButton btnCancle = new JButton("Afbryd");
 		btnCancle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonCanclePressed();
+				buttonCancelPressed();
 			}
 		});
 		panel.add(btnCancle);
@@ -213,16 +217,19 @@ public class CashRegister extends JFrame {
 		
 		scrollPane = new JScrollPane();
 		panel_2.add(scrollPane, BorderLayout.CENTER);
-		initTable();
-		initWindow();
 	}
-	
-	private void initWindow() {
+	/**
+	 * This method will initialize the window.
+	 * Add Listeners, greyout checks.
+	 */
+	private void initializeWindow() {
 		grayOutCheck();
 	}
-
-	private void initTable() {
-		String[] columns = { "Varenummer", "Navn", "Antal", "Pris", "Total"};
+	/**
+	 * This method will initialize the main table
+	 */
+	private void initializeTable() {
+		
 		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
@@ -247,39 +254,23 @@ public class CashRegister extends JFrame {
 		table.getColumnModel().getColumn(3).setCellRenderer(cellRenderer);
 		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
 	}
-	
-	private void updateCartTable(String[] data) {
-		table.addRow(data);
-	}
-	
 	/**
-	 * Given a itemNumber and an amount, the function returns a formatted string where individual item salesPrices is multiplied by amount
-	 * @param itemNumber
-	 * @param amount
-	 * @return String formatted to Danish currency 
+	 * This method will initialize the fields of the class.
+	 * Initialize the controllers and create an order, ready to be filled out.
 	 */
-	private String changeItemPriceTotal(String itemNumber, int amount) {
-		ProductController pc = new ProductController();
-		Product p = pc.findProduct(itemNumber);
-		DecimalFormat df = new DecimalFormat("0.00");
+	private void initializeFields() {
+		customerController = new CustomerController();
 		
-		double totalItemSalesPrice = p.getSalesPrice() * amount;
-		return df.format(totalItemSalesPrice) + " DKK";
+		orderController = new OrderController();
+		orderController.createOrder(true);
+		
+		columns = new String[] { "Varenummer", "Navn", "Antal", "Pris", "Total"};
 	}
 	
-	private Order addItemsToOrder(Order o) {
-		int itemCount = table.getModel().getRowCount();
-		int productAmount = 1;
-		ProductController p = new ProductController();
-		Product tempProduct = null;
-		for(int i = 0; i < itemCount; i++) {
-			tempProduct = p.findProduct((String) table.getModel().getValueAt(i, 0));
-			productAmount = Integer.parseInt(((String) table.getModel().getValueAt(i, 2)));
-			o.addProduct(tempProduct, productAmount);
-		}
-		return o;
-	}
-
+	//Button methods
+	/**
+	 * This method will be called when the button called "Add" is activated
+	 */
 	private void buttonAddPressed() {
 		//displays an error message if the product inserted does not exist
 		DialogItemAdd newItem = new DialogItemAdd(this);
@@ -294,6 +285,9 @@ public class CashRegister extends JFrame {
 			updateTable();
 		}
 	}
+	/**
+	 * This method will be called when the button called "Amount" is activated
+	 */
 	private void buttonAmountPressed() {
 			int row = table.getSelectedRow();
 			if(row != -1) {
@@ -305,7 +299,9 @@ public class CashRegister extends JFrame {
 				makeStatusMessage("Ingen række valgt", true);
 			}
 	}
-	
+	/**
+	 * This method will be called when the button called "Delete" is activated
+	 */
 	private void buttonDeletePressed() {
 		int row = table.getSelectedRow();
 		
@@ -326,7 +322,9 @@ public class CashRegister extends JFrame {
 			makeStatusMessage("Ingen række valgt", true);
 		}
 	}
-	
+	/**
+	 * This method will be called when the button called "Payment" is activated
+	 */
 	private void buttonPaymentPressed() {
 		Customer customer = customerController.findCustomerByInformation("0");
 		//Must have items in the table
@@ -350,8 +348,10 @@ public class CashRegister extends JFrame {
 			makeStatusMessage("Ingen produkter er scannet", true);
 		}
 	}
-	
-	private void buttonCancleCurrentSalePressed() {
+	/**
+	 * This method will be called when the button called "CancelCurrentSale" is activated
+	 */
+	private void buttonCancelCurrentSalePressed() {
 		if(table.getModel().getRowCount() < 1) {
 			resetFrame();
 		}
@@ -365,7 +365,9 @@ public class CashRegister extends JFrame {
 			}
 		}
 	}
-	
+	/**
+	 * This method will be called when the button called "Details" is activated
+	 */
 	private void buttonDetailsPressed() {
 		
 		int row = table.getSelectedRow();
@@ -379,8 +381,10 @@ public class CashRegister extends JFrame {
 			//No row selected
 		}
 	}
-	
-	private void buttonCanclePressed() {
+	/**
+	 * This method will be called when the button called "Cancel" is activated
+	 */
+	private void buttonCancelPressed() {
 		if(table.getModel().getRowCount() < 1) {
 			dispose();
 		}
@@ -395,6 +399,10 @@ public class CashRegister extends JFrame {
 		}
 	}
 	
+	//Other Methods
+	/**
+	 * This method is used to update the table to display the current order in the main table
+	 */
 	private void updateTable() {
 		table.clear();
 		for(OrderLine ol : orderController.getCurrentOrder().getOrderLines()) {
@@ -410,7 +418,14 @@ public class CashRegister extends JFrame {
 		updateTotal();
 		grayOutCheck();
 	}
-	
+	/**
+	 * This method is used to change the displayed message in the status label
+	 * 
+	 * The labeltext will be displayed as either Red or Black determined by the boolean
+	 * 
+	 * @param message The string that will be displayed as the label
+	 * @param isCorrelatedWithError is a boolean that is true if the message giving is an error
+	 */
 	private void makeStatusMessage(String message, boolean isCorrelatedWithError) {
 		lblStatus.setText(message);
 		if(isCorrelatedWithError) {
@@ -420,7 +435,9 @@ public class CashRegister extends JFrame {
 			lblStatus.setBackground(Color.BLACK);
 		}
 	}
-	
+	/**
+	 * The method is used to calculate the total price of the orderline and apply the result to the table
+	 */
 	private void calculateRowTotals() {
 		int rowsToCalculate = orderController.getCurrentOrder().getOrderLines().size();
 		ArrayList<OrderLine> ol = orderController.getCurrentOrder().getOrderLines();
@@ -434,12 +451,14 @@ public class CashRegister extends JFrame {
 			table.getModel().setValueAt(rowTotal, i, 4);
 		}
 	}
-	
+	//TODO: this method is not needed, as we already got that functionality in the model.product.getSalesPriceFormatted()
 	private String getPriceFormatted(double price) {
 		DecimalFormat df = new DecimalFormat("0.00");
 		return df.format(price);
 	}
-	
+	/**
+	 * This Method will calculate the total price of the order and update the label displaying the total price
+	 */
 	private void updateTotal() {
 		double total = 0;
 		ArrayList<OrderLine> ol = orderController.getCurrentOrder().getOrderLines();
@@ -449,7 +468,10 @@ public class CashRegister extends JFrame {
 		lblTotal.setText("Total: " + getPriceFormatted(total));
 		updateVAT(total);
 	}
-	
+	/**
+	 * This method will calculate the VAT of the total price and set the correct label to display it.
+	 * @param price A double that will be the total price.
+	 */
 	private void updateVAT(double price) {
 		lblVat.setText("moms: " + getPriceFormatted(price / 5));
 	}

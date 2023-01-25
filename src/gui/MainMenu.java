@@ -64,25 +64,22 @@ public class MainMenu extends JFrame {
 	public MainMenu() throws IOException {
 		
 		
-		//-----TODO REMOVE BEFORE END OF PROJECT PERIOD---------------
-		ProductController productController = new ProductController();
-		Product prod1 = productController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
-				"29:12", "42:13", 10, 50);
-		Order order1 = new Order(false);
-		order1.addProduct(prod1, 1);
-		order1.setDate(5); // subtracts date
-		order1.setStatus(OrderStatus.DELIVERED);
-		order1.setCustomer(new Customer("Erik", "Gåsevangen60", "Gåsevangen 60", "95734901", "eriksoerensen@gmail.com", 0.0, "7540", "", customerType.PRIVATE));
-		OrderContainer.getInstance().addOrder(order1);
-		//-------------------------------------------------------------------------------
-		
 		
 		setTitle("Hoved menu");
 		pController = new ProductController();
 		oController = new OrderController();
-		tempCustomers();
+		
 		pController.loadFile();
 		
+		//TODO: Remove
+		if(pController.getAllProducts().size() == 0) {
+			Product prod1 = pController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
+					"29:12", "42:13", 10, 50);
+		}
+				tempOrders(pController.getAllProducts().get(0));
+				tempCustomers();
+		//-------------------------------------------------------------------------------
+				
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //TODO JFrame.DO_NOTHING_ON_CLOSE
@@ -235,6 +232,15 @@ public class MainMenu extends JFrame {
 			}
 		});
 		panel_1.add(btnClose);
+	}
+
+	private void tempOrders(Product prod1) {
+		Order order1 = new Order(false);
+		order1.addProduct(prod1, 1);
+		order1.setDate(5); // subtracts date
+		order1.setStatus(OrderStatus.DELIVERED);
+		order1.setCustomer(new Customer("Erik", "Gåsevangen60", "Gåsevangen 60", "95734901", "eriksoerensen@gmail.com", 0.0, "7540", "", customerType.PRIVATE));
+		OrderContainer.getInstance().addOrder(order1);
 	}
 	private void closeWindow() throws IOException {
 		int input = JOptionPane.showOptionDialog(this, "Er du sikkert på at du vil lukke programmet?", "Afslut program",
