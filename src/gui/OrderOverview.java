@@ -48,12 +48,10 @@ import java.awt.event.MouseEvent;
 
 public class OrderOverview extends JFrame {
 
+	//WindowBuilder elements
 	private JPanel contentPane;
 	private JTextField textFieldOrderNumber;
-	private DefaultTable table;
-	private JScrollPane scrollPane;
 	private JLabel lblStatus;
-	private OrderController orderController;
 	private DialogDate dateCreated;
 	private DialogDate datePickup;
 	private JComboBox comboBoxStatus;
@@ -62,32 +60,25 @@ public class OrderOverview extends JFrame {
 	private JButton btnDateFilterCreated;
 	private JButton btnDateFilterPickup;
 	private String[] comboBoksDefaultText = new String[] {"Status"};
-	private Date parseDateTo;
-	private Date parseDateFrom;
 	private JCheckBox chckbxBusinessCustomer;
 	private JCheckBox chckbxPrivateCustomer;
 	private JTextField textFieldPhoneNumber;
 	private JLabel lblOrders;
 	private Component verticalStrut;
+	
+	//Table
+	private DefaultTable table;
+	private JScrollPane scrollPane;
+	
+	//Date
+	private Date parseDateTo;
+	private Date parseDateFrom;
+	
+	//Controller
+	private OrderController orderController;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					OrderOverview frame = new OrderOverview();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
+	 * Initializes Orderoverview
 	 */
 	public OrderOverview() {
 		setTitle("Ordreoversigt");
@@ -382,6 +373,10 @@ public class OrderOverview extends JFrame {
 		grayoutCheck();
 	}
 	
+	/**
+	 * The Button ShowOrder was Pressed
+	 * Shows detail window for order
+	 */
 	private void buttonShowOrderPressed() {
 	if(table.getSelectedRowCount() > 0) {
 			String selectedOrderNumber = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
@@ -400,11 +395,18 @@ public class OrderOverview extends JFrame {
 		}
 	}
 	
+	/**
+	 * Grayout Check
+	 */
 	private void grayoutCheck() {
 		checkButtonGrayout(chckbxOrderCreated, btnDateFilterCreated);
 		checkButtonGrayout(chckbxOrderPickup, btnDateFilterPickup);
 	}
 	
+	/**
+	 * The Button CreateOrder was Pressed
+	 * Opens a order creation Frame
+	 */
 	private void buttonCreateOrderPressed() {
 		SalesOrder salesOrder = new SalesOrder(null,true, this);
 		salesOrder.setVisible(true);
@@ -417,15 +419,27 @@ public class OrderOverview extends JFrame {
 		}
 	}
 	
+	/**
+	 * The Button DeleteOrder was Pressed
+	 * Updates Table
+	 */
 	private void buttonDeleteOrderPressed() {
 		deleteData();
 		updateTable();
 	}
 	
+	/**
+	 * The Button Close was pressed 
+	 * Dispose of Frame
+	 */
 	private void buttonClosePressed() {
 		dispose();
 	}
 	
+	/**
+	 * The Button search was Pressed
+	 * Updates table with Orders matching search
+	 */
 	private void buttonSearchPressed() {
 		if(checkAllFilterDeselected()) {
 			insertBlancFilterSearch();
@@ -437,11 +451,18 @@ public class OrderOverview extends JFrame {
 		}
 	}
 	
+	/**
+	 * Reset Dates
+	 */
 	private void resetParseDates() {
 		parseDateFrom = null;
 		parseDateTo = null;
 	}
 	
+	/**
+	 * The Button DateCreated Was pressed
+	 * Set date fields
+	 */
 	private void buttonDateCreatedPressed() {
 		if(dateCreated != null) {
 			if(dateCreated.getDateFrom() != null && dateCreated.getDateTo() != null) {
@@ -461,6 +482,10 @@ public class OrderOverview extends JFrame {
 		}
 	}
 	
+	/**
+	 * The button DatePickup Was pressed
+	 * Pickup updates
+	 */
 	private void buttonDatePickupPressed() {
 		if(datePickup != null) {
 			if(datePickup.getDateFrom() != null && datePickup.getDateTo() != null) {
@@ -480,6 +505,10 @@ public class OrderOverview extends JFrame {
 		}
 	}
 	
+	/**
+	 * Button ResetFilters was pressed
+	 * Filters are reset
+	 */
 	private void buttonResetFiltersPressed() {
 		chckbxOrderCreated.setSelected(false);
 		chckbxOrderPickup.setSelected(false);
@@ -503,7 +532,10 @@ public class OrderOverview extends JFrame {
 		makeStatusMessage("Filtre nulstillet", false);
 	}
 	
-	//returns true if all filters are deselected
+	/**
+	 * Checks if filters are selected
+	 * @return True if all filters are deselected
+	 */
 	private boolean checkAllFilterDeselected() {
 		boolean allDeselected = true;
 		if(!textFieldOrderNumber.getText().equals("Ordernummer") && textFieldOrderNumber.getText().equals("")) {
@@ -524,6 +556,9 @@ public class OrderOverview extends JFrame {
 		return allDeselected;
 	}
 	
+	/**
+	 * Set Ordercontroller
+	 */
 	private void initWindow() {
 		this.orderController = new OrderController();
 	}
@@ -538,6 +573,9 @@ public class OrderOverview extends JFrame {
 		}
 	}
 	
+	/**
+	 * Sets the table, With Columns and data
+	 */
 	private void initTable() {
 		String[] columns = { "Ordernummer", "Status", "Kundetype", "Telefon", "Dato oprettet", "Opsamlingsdato", "Størrelse"};
 //		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
@@ -556,6 +594,9 @@ public class OrderOverview extends JFrame {
 //		table.getColumnModel().getColumn(4).setCellRenderer(cellRenderer);
 	}
 	
+	/**
+	 * Delete data from the table, requires confirmation from user
+	 */
 	private void deleteData() {
 		int[] columnsToShow = new int[]{0, 1};
 		ArrayList<String> dataToDelete = table.deleteData("Ordernummer", columnsToShow);
@@ -567,6 +608,9 @@ public class OrderOverview extends JFrame {
 		makeStatusMessage(dataToDelete.size() + "Ordre slettet", false);
 	}
 	
+	/**
+	 * Update the table with new data
+	 */
 	private void updateTable() {
 		int orderSize = 0;
 		table.clear();
@@ -590,6 +634,12 @@ public class OrderOverview extends JFrame {
 //		updateTotal();
 	}
 	
+	/**
+	 * Set the Date selector buttons
+	 * @param dateFrom DateFrom
+	 * @param dateTo DateTo
+	 * @return Formatted date
+	 */
 	private String setDateSelecterButtonFormat(Date dateFrom, Date dateTo) {
 		String pattern = "DD/MM/YYYY";
 		DateFormat df = new SimpleDateFormat(pattern);
@@ -597,6 +647,11 @@ public class OrderOverview extends JFrame {
 		return output;
 	}
 	
+	/**
+	 * Set a Status Message
+	 * @param message The Message
+	 * @param isCorrelatedWithError 
+	 */
 	private void makeStatusMessage(String message, boolean isCorrelatedWithError) {
 		lblStatus.setText(message);
 		if(isCorrelatedWithError) {
@@ -620,7 +675,9 @@ public class OrderOverview extends JFrame {
 		return returnString;
 	}
 	
-	//opens new window with same dimensions and location as old one
+	/**
+	 * Resets the frame, disposes and opens a new
+	 */
 	private void resetFrame() {
 		dispose();
 		OrderOverview orderOverview = new OrderOverview();
@@ -628,6 +685,9 @@ public class OrderOverview extends JFrame {
 		orderOverview.setBounds(this.getBounds());
 	}
 	
+	/**
+	 * Inserts all orders
+	 */
 	private void insertBlancFilterSearch() {
 		ArrayList<Order> orders = orderController.getAllOrders();
 		ArrayList<Order> orderResult = new ArrayList<>();
@@ -635,6 +695,9 @@ public class OrderOverview extends JFrame {
 		table.setNewData(convertToStringArray(orderResult));
 	}
 	
+	/**
+	 * Resets table and shows only Orders matching search criteria
+	 */
 	private void search() {
 		ArrayList<Order> orders = orderController.getAllOrders();
 		ArrayList<Order> orderResult = new ArrayList<>();
@@ -683,8 +746,12 @@ public class OrderOverview extends JFrame {
 		table.setNewData(convertToStringArray(orderResult));
 	}
 	
-	
-	private void checkButtonGrayout(JCheckBox box, JButton btn) {
+		/**
+		 * Checks the buttons
+		 * @param box
+		 * @param btn
+		 */
+		private void checkButtonGrayout(JCheckBox box, JButton btn) {
 		if(box.isSelected() == false) {
 			btn.setEnabled(false);
 		}
@@ -707,8 +774,13 @@ public class OrderOverview extends JFrame {
 		ZoneId deafaultZoneId = ZoneId.systemDefault();
 		Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
 		return returnDate;
-}
+	}
 
+	/**
+	 * Convert Order List to Table Data
+	 * @param dataArrayList The Orders to convert
+	 * @return the converted Data
+	 */
 	private String[][] convertToStringArray(ArrayList<Order> dataArrayList) {
 		int size = dataArrayList.size();
 		String[][] data = new String[size][12];

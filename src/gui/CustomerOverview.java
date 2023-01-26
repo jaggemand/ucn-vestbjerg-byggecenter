@@ -1,47 +1,37 @@
 package gui;
 
-import java.awt.EventQueue;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import controller.CustomerController;
-import controller.ProductController;
 import model.Customer;
 import model.Customer.customerType;
 import model.CustomerContainer;
-import model.Product;
-import model.ProductContainer;
-
-import java.awt.BorderLayout;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.awt.event.ActionEvent;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class CustomerOverview extends JFrame {
 
+	//Windowbuilder Elements
 	private JPanel contentPane;
 	private JTextField txtPhone;
-	private String[] columns;
-	private boolean[] activeColumns;
 	private JLabel lblRowCounter;
 	private JButton btnSearch;
 	private JButton btnReset;
@@ -51,27 +41,15 @@ public class CustomerOverview extends JFrame {
 	private JButton btnDelete;
 	private JCheckBox chckBoxPrivate;
 	private JCheckBox chckBoxBusiness;
-	private JScrollPane scrollPane;
+	
+	//Table
 	private DefaultTable table;
+	private JScrollPane scrollPane;
+	private String[] columns;
+	private boolean[] activeColumns;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CustomerOverview frame = new CustomerOverview();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
+	 * Constructor initializes the frame
 	 */
 	public CustomerOverview() {
 		setTitle("Kundeoversigt");
@@ -266,12 +244,19 @@ public class CustomerOverview extends JFrame {
 		rowCounter();
 	}
 
+	/**
+	 * Disables Edit, Details and delete buttons
+	 * Enabled again on user row selection
+	 */
 	private void init() {
 		btnEdit.setEnabled(false);
 		btnDetails.setEnabled(false);
 		btnDelete.setEnabled(false);
 	}
 
+	/**
+	 * Opens CustomerInformationDialog from selected customer
+	 */
 	private void editCustomerDetails() {
 		Customer customer = getIndexValueInTable();
 		if (customer != null) {
@@ -280,6 +265,9 @@ public class CustomerOverview extends JFrame {
 		}
 	}
 
+	/**
+	 * Search for customer based on filters
+	 */
 	private void search() {
 		CustomerController customerController = new CustomerController();
 		ArrayList<Customer> list = new ArrayList<>();
@@ -332,6 +320,9 @@ public class CustomerOverview extends JFrame {
 		// TODO Få Marcus til at fikse det her med opdatering af Data
 	}
 
+	/**
+	 * Reset the search filters
+	 */
 	private void resetFilters() {
 		activeColumns = new boolean[] { true, true, false, false, true, true, false, true, false };
 		table.setVisibleColumns(activeColumns);
@@ -342,11 +333,18 @@ public class CustomerOverview extends JFrame {
 		chckBoxPrivate.setSelected(true);
 	}
 
+	/**
+	 * Opens CustomerInformationDialog with empty fields
+	 * Used for creating new customers
+	 */
 	private void addCustomer() {
 		CustomerInformationDialog customerInformationDialog = new CustomerInformationDialog(null, true);
 		customerInformationDialog.setVisible(true);
 	}
 
+	/**
+	 * Delete a customer from the table and database
+	 */
 	private void deleteCustomer() {
 		int[] columnsToShow = new int[] { 0, 1 };
 		ArrayList<String> dataToDelete = table.deleteData("Telefonnummer", columnsToShow);
@@ -358,6 +356,10 @@ public class CustomerOverview extends JFrame {
 		}
 	}
 
+	/**
+	 * View the details of a customer
+	 * Viewed in CustomerInformationDialog, dosen't allow for edits
+	 */
 	private void viewCustomerDetails() {
 		Customer customer = getIndexValueInTable();
 		if (customer != null) {
@@ -366,6 +368,10 @@ public class CustomerOverview extends JFrame {
 		}
 	}
 
+	/**
+	 * Gets the customer by index
+	 * @return The customer
+	 */
 	private Customer getIndexValueInTable() {
 		int index = table.findElement();
 		Customer customer = null;
@@ -379,8 +385,12 @@ public class CustomerOverview extends JFrame {
 		return customer;
 	}
 
+	/**
+	 * Convert ArrayList of customers to a Multidimensional String array of their data
+	 * @param dataArrayList Customer List
+	 * @return Customers as String Array
+	 */
 	private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
-
 		int size = dataArrayList.size();
 		String[][] data = new String[size][10];
 		for (int i = 0; i < size; i++) {
@@ -413,10 +423,16 @@ public class CustomerOverview extends JFrame {
 		return data;
 	}
 
+	/**
+	 * Sets the Current Row Count
+	 */
 	private void rowCounter() {
 		lblRowCounter.setText("Antal: " + table.getRowCount());
 	}
 
+	/**
+	 * Sets the table, with data, columns and visble columns
+	 */
 	public void setTable() {
 		activeColumns = new boolean[] { true, true, false, false, true, true, false, true, false };
 		columns = new String[] { "Kundetype", "Telefonnummer", "Navn", "Leveringsadresse", "Faktureringsadresse",
@@ -445,6 +461,9 @@ public class CustomerOverview extends JFrame {
 		scrollPane.setViewportView(table);
 	}
 
+	/**
+	 * Dispose and close the window
+	 */
 	private void closeWindow() {
 		this.dispose();
 		this.setVisible(false);

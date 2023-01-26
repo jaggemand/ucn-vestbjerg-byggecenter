@@ -21,7 +21,7 @@ import javax.swing.table.TableColumnModel;
 
 
 public class CustomTableColumnManager 
-	implements MouseListener, ActionListener, TableColumnModelListener, PropertyChangeListener{
+	implements MouseListener, ActionListener, TableColumnModelListener{
 	
 	private JTable table;
 	private TableColumnModel tcm;
@@ -30,13 +30,20 @@ public class CustomTableColumnManager
 	private ArrayList<String> columnNames;
 	private List<TableColumn> allColumns;
 	
+	/**
+	 * Constructor for ColumnManager
+	 * @param table The table to Manage
+	 */
 	public CustomTableColumnManager(JTable table) {
 		this.table = table;
 		table.getTableHeader().addMouseListener(this);
-		table.addPropertyChangeListener(this);
 		reset();
 	}
-	public void reset() {
+	
+	/**
+	 * Reset the Manager, resets listener and adds Columns anew
+	 */
+	private void reset() {
 		table.getColumnModel().removeColumnModelListener(this);
 		tcm = table.getColumnModel();
 		tcm.addColumnModelListener(this);
@@ -47,7 +54,14 @@ public class CustomTableColumnManager
 			allColumns.add(tcm.getColumn(i));
 		}
 	}
+	
+	/**
+	 * Get a specific column from its Header
+	 * @param name The header of the column to get
+	 * @return The header, null if none found
+	 */
 	public TableColumn getColumn(String name) {
+
 		TableColumn column = null;
 		for(TableColumn c : allColumns) {
 			if(c.getHeaderValue().equals(name)) {
@@ -57,6 +71,12 @@ public class CustomTableColumnManager
 		}
 		return column;
 	}
+	
+	/**
+	 * Hide a column from the table view
+	 * If Column count is 0 The column on index 0 is displayed
+	 * @param columnName The column to be hidden
+	 */
 	public void hideColumn(Object columnName) {
 		if(columnName == null) return;
 		
@@ -72,6 +92,11 @@ public class CustomTableColumnManager
 			}
 		}
 	}
+	
+	/**
+	 * Show a column in the table
+	 * @param columnName The Header of the column to be shown
+	 */
 	public void showColumn(Object columnName) {
 		for(TableColumn column : allColumns) {
 			if(column.getHeaderValue().equals(columnName)) {
@@ -80,6 +105,11 @@ public class CustomTableColumnManager
 			}
 		}
 	}
+	
+	/**
+	 * Adds a column to the table and resets column listener
+	 * @param column The column to be shown
+	 */
 	private void showColumn(TableColumn column)
 	{
 		tcm.removeColumnModelListener(this);
@@ -102,6 +132,11 @@ public class CustomTableColumnManager
 
 		tcm.addColumnModelListener(this);
 	}
+	
+	/**
+	 *	Called if a Column was added to the table
+	 *	If it doesn't already exist 
+	 */
 	public void columnAdded(TableColumnModelEvent e) {
 		TableColumn toBeAdded = tcm.getColumn(e.getToIndex());
 		if (!allColumns.contains(toBeAdded)){
@@ -109,6 +144,11 @@ public class CustomTableColumnManager
 		}
 			
 	}
+	
+	/**
+	 *	Called if a column was moved
+	 *	Adds column to List of columns, and sets its place in list
+	 */
 	public void columnMoved(TableColumnModelEvent e) {
 		if (e.getFromIndex() == e.getToIndex()) return;
 		
@@ -129,13 +169,10 @@ public class CustomTableColumnManager
 		}
 		
 	}
-	public void propertyChange(PropertyChangeEvent e) {
-		if ("model".equals(e.getPropertyName()))
-		{
-			if (table.getAutoCreateColumnsFromModel())
-				reset();
-		}
-	}
+	
+	/**
+	 *	Creates a Popup menu for the table header to open a Dialog
+	 */
 	private void createPopup(MouseEvent e) {
 		popUp = new JPopupMenu();
 		JMenuItem addColumn = new JMenuItem("Tilføj kolonne");
@@ -162,19 +199,28 @@ public class CustomTableColumnManager
 		popUp.show(e.getComponent(),e.getX(), e.getY());
 		
 	}
+	
+	/**
+	 *	Mouselistener pressed
+	 */
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == 3 && e.isPopupTrigger()) {
 			createPopup(e);
 		}
 	}
 
-	
+	/**
+	 *	Mouselistener released
+	 */
 	public void mouseReleased(MouseEvent e) {
 		if (e.getButton() == 3 && e.isPopupTrigger()) {
 			createPopup(e);
 		}
 	}
 	
+	/**
+	 *	Create Dialog for hiding and showing columns
+	 */
 	public void actionPerformed(ActionEvent e) {
 		ColumnSelecter cs = new ColumnSelecter(this);
 		cs.newWindow(isVisible, columnNames);
@@ -182,10 +228,10 @@ public class CustomTableColumnManager
 		
 	}
 
+	//Extra interface methods
 	public void columnRemoved(TableColumnModelEvent e) {}
 	public void columnMarginChanged(ChangeEvent e) {}
 	public void columnSelectionChanged(ListSelectionEvent e) {}
-
 	public void mouseClicked(MouseEvent e) {}
 	public void mouseEntered(MouseEvent e) {}
 	public void mouseExited(MouseEvent e) {}

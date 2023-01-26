@@ -23,31 +23,23 @@ import javax.swing.border.EmptyBorder;
 import controller.ProductController;
 
 public class DialogCategoryAdd extends JDialog {
-
+	//Windowbuilder Elements
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtNewCategory;
 	private JButton btnAddCategory;
 	private JComboBox comboBox;
-	private ArrayList<String> categoriesToAdd = new ArrayList<>();
+	
+	//Categories
+	private ArrayList<String> categoriesToAdd;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogCategoryAdd dialog = new DialogCategoryAdd(null, null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
+	 * Constructor, initializes the Dialog
+	 * @param frame The Frame that called the constructor
+	 * @param categoryList Existing Categories
 	 */
 	public DialogCategoryAdd(JFrame frame,ArrayList<String> categoryList) {
 		super(frame);
+		categoriesToAdd = new ArrayList<>();
 		setResizable(false);
 		setTitle("Tilføj kategorier");
 		setModal(true);
@@ -142,6 +134,9 @@ public class DialogCategoryAdd extends JDialog {
 		}
 	}
 
+	/**
+	 * Initialize Dialog data, sets Categories
+	 */
 	public void init() {
 		ProductController productController = new ProductController();
 		List<String> categories = productController.getCategoies();
@@ -150,6 +145,9 @@ public class DialogCategoryAdd extends JDialog {
 		}
 	}
 
+	/**
+	 * Adds a category to the product
+	 */
 	public void addCategory() {
 		String selectedCategory = comboBox.getSelectedItem().toString();
 		String newEnteredCategory = txtNewCategory.getText().toString();
@@ -169,9 +167,11 @@ public class DialogCategoryAdd extends JDialog {
 		}
 	}
 
+	/**
+	 * Dispose and closes the window
+	 */
 	public void closeWindow() {
 		this.dispose();
 		this.setVisible(false);
 	}
-
 }

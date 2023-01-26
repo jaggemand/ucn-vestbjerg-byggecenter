@@ -21,30 +21,23 @@ import javax.swing.border.EmptyBorder;
 
 public class DialogDate extends JDialog {
 
+	//Windowbuilder Elements
 	private final JPanel contentPanel = new JPanel();
 	private JSpinner spnDateFrom;
 	private JSpinner spnDateTo;
 	
+	//Data Fields
 	private Date dateFrom;
 	private Date dateTo;
 	
+	//Boolean
 	private boolean okPressed = true;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogDate dialog = new DialogDate(null, new Date(), new Date());
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
+	 * Constructor, Initializes the dialog
+	 * @param frame The Frame that called the constructor
+	 * @param presetDateFrom DataFrom on Initialization
+	 * @param presetDateTo DataTo On Initialization
 	 */
 	public DialogDate(JFrame frame, Date presetDateFrom, Date presetDateTo) {
 		super(frame);
@@ -155,11 +148,19 @@ public class DialogDate extends JDialog {
 		initialize();
 	}
 	
+	/**
+	 * The Button Cancel was pressed
+	 * Dialog is disposed
+	 */
 	private void buttonCancelPressed() {
 		okPressed = false;
 		this.dispose();
 	}
 	
+	/**
+	 * The Button OK was pressed
+	 * Checks dates and disposes Dialog
+	 */
 	private void buttonOKPressed() {
 		Date dummyFrom = (Date) spnDateFrom.getValue();
 		Date dummyTo = (Date) spnDateTo.getValue();
@@ -175,31 +176,53 @@ public class DialogDate extends JDialog {
 		this.dispose();
 	}
 
+	/**
+	 * Sets Date Editors
+	 */
 	private void initialize() {
-		// TODO Auto-generated method stub
 		JSpinner.DateEditor editor = new JSpinner.DateEditor(spnDateFrom, "dd-MM-yyyy");
 		spnDateFrom.setEditor(editor);
 		JSpinner.DateEditor editor2 = new JSpinner.DateEditor(spnDateTo, "dd-MM-yyyy");
 		spnDateTo.setEditor(editor2);
 	}
 
+	/**
+	 * Get the dataFrom field
+	 * @return DateFrom
+	 */
 	public Date getDateFrom() {
 		return dateFrom;
 	}
 
+	/**
+	 * Get the dataTo field
+	 * @return DateTo
+	 */
 	public Date getDateTo() {
 		return dateTo;
 	}
 	
+	/**
+	 * The Button OK is Pressed
+	 * @return boolean if button is pressed
+	 */
 	public boolean isOkPressed() {
 		return okPressed;
 	}
-	
+		
+	/**
+	 * Set a new Date From
+	 * @param date new Date
+	 */
 	public void setDateFrom(Date date) {
 		dateFrom = new Date();
 		dateFrom = date;
 	}
 	
+	/**
+	 * Sets a new DateTo
+	 * @param date new Date
+	 */
 	public void setDateTo(Date date) {
 		dateTo = new Date();
 		dateTo = date;

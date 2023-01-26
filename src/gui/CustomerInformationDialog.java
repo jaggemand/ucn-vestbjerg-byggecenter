@@ -373,7 +373,7 @@ public class CustomerInformationDialog extends JDialog {
 	}
 
 	/**
-	 * 
+	 * Initialize the window for the required mode, Edit, View, Create
 	 */
 	private void initializeWindow() {
 		btnCancel.setText("Tilbage");
@@ -438,6 +438,9 @@ public class CustomerInformationDialog extends JDialog {
 		}
 	}
 
+	/**
+	 * Add a new Customer from user Dialog 
+	 */
 	private void addCustomer() {
 		CustomerController customerController = new CustomerController();
 		boolean success = false;
@@ -501,6 +504,10 @@ public class CustomerInformationDialog extends JDialog {
 		}
 	}
 
+	/**
+	 * Set enable elements from customer type
+	 * @param customerType True if private, false if Business
+	 */
 	private void handleSelectionChange(boolean customerType) {
 		if (customerType) {
 			chckBoxBusiness.setSelected(false);
@@ -524,6 +531,9 @@ public class CustomerInformationDialog extends JDialog {
 		txtEmail.setEnabled(true);
 	}
 
+	/**
+	 * Dispose and close the window
+	 */
 	private void closeWindow() {
 		this.dispose();
 		this.setVisible(false);

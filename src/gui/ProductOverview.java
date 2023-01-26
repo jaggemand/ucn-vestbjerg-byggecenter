@@ -38,48 +38,63 @@ import controller.ProductController;
 import model.Product;
 import model.ProductContainer;
 
+/**
+ * @author marus
+ *
+ */
 public class ProductOverview extends JFrame {
 
+	//Swing elements
 	private JPanel contentPane;
-	private DefaultTable table;
-	private String firstElement;
+	private String firstElement; // First element in category dropdown
 	private JLabel lblRowCounter;
 	private JPopupMenu popUp;
-	private String[] columns;
-	private boolean[] activeColumns;
-
 	private JTextField txtProductName;
 	private JTextField txtMaxPrice;
 	private JTextField txtMinPrice;
 	private JComboBox<String> jcbCategories;
 	private JCheckBox jrbStoreLocation;
 	private JCheckBox jrbWarehouseLocation;
+	
+	//Product Controller
 	private ProductController pc;
-	/**
-	 * Create the frame.
-	 */
+	
+	//table
+	private DefaultTable table;
+	private String[] columns;
+	private boolean[] activeColumns;
 
+	/**
+	 * Constructor for ProductOverview
+	 * Initializes everything thats needed and displays itself
+	 */
 	public ProductOverview() {
 		setTitle("Produktoversigt");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //Only dispose this frame
 		setBounds(100, 100, 923, 644);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		setTable();
-		setPopUpMenu();
-		setButtons();
-		// Initialize window
-		initializeWindow();
+		setTable(); //sets up the table
+		setPopUpMenu(); //Sets the popup menu
+		setButtons();	//Sets buttons for frame
+		initializeWindow(); // Initialize window
 	}
 
+	/**
+	 * Dispose and close the frame
+	 */
 	private void closeWindow() {
 		this.dispose();
 		this.setVisible(false);
 	}
 
+	/**
+	 * Initializes the window
+	 * 	Sets the categories to be shown
+	 */
 	private void initializeWindow() {
 		pc = new ProductController();
 		ArrayList<Product> products = pc.getAllProducts();
@@ -98,6 +113,11 @@ public class ProductOverview extends JFrame {
 			}
 		}
 	}
+	
+	/**
+	 * Open the details menu for a product
+	 * @param edit True if you want to edit product, false if only to view
+	 */
 	private void showProduct(boolean edit) {
 		int index = table.findElement();
 
@@ -111,8 +131,10 @@ public class ProductOverview extends JFrame {
 		}
 	}
 
+	/**
+	 * Searches the product list for products matching search
+	 */
 	private void search() {
-
 		ArrayList<Product> products = ProductContainer.getInstance().getProducts();
 		ArrayList<Product> productResult = new ArrayList<>();
 		double minPrice = -1;
@@ -176,8 +198,12 @@ public class ProductOverview extends JFrame {
 		rowCounter();
 	}
 	
+	/**
+	 * Convert a ArrayList of products to Multidimensional String array for the table
+	 * @param dataArrayList ArrayList of data to be converted
+	 * @return The Data in Multidimensional String array
+	 */
 	private String[][] convertToStringArray(ArrayList<Product> dataArrayList) {
-
 		int size = dataArrayList.size();
 		String[][] data = new String[size][12];
 		for (int i = 0; i < size; i++) {
@@ -198,17 +224,27 @@ public class ProductOverview extends JFrame {
 		return data;
 	}
 
+	/**
+	 * Used to update the Row counter
+	 */
 	private void rowCounter() {
 		lblRowCounter.setText("Antal: " + table.getRowCount());
 	}
 
+	/**
+	 * Show popup menu on mouse position
+	 */
 	private void showPopUp(MouseEvent e) {
 		if (e.isPopupTrigger()) {
 			popUp.show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
 
-	private void popUpMenuAction(boolean header, ActionEvent e) {
+	/**
+	 * Checks which menu was pressed in popupmenu
+	 * @param e The ActionEvent of the popup menu that called this method
+	 */
+	private void popUpMenuAction(ActionEvent e) {
 		String s = e.getActionCommand();
 
 		if (s.equals("Vis detaljer")) {
@@ -221,6 +257,10 @@ public class ProductOverview extends JFrame {
 		}
 	}
 
+	/**
+	 * Delete Data from the table
+	 * Asks user for permission to continue
+	 */
 	private void deleteData() {
 		int[] columnsToShow = new int[]{0, 1};
 		ArrayList<String> dataToDelete = table.deleteData("ProduktID", columnsToShow);
@@ -232,6 +272,10 @@ public class ProductOverview extends JFrame {
 		}
 	}
 	
+	/**
+	 * Initializes a new JTable for Product Overview
+	 * Sets headers, data and visible columns
+	 */
 	private void setTable() {
 		activeColumns = new boolean[] { true, true, true, true, true, true, false, false, false, false, false, false };
 		columns = new String[] { "ProduktID", "Navn", "Butiksbeholdning", "Butikslokation", "Lagerbeholdning",
@@ -248,6 +292,9 @@ public class ProductOverview extends JFrame {
 		scrollPane.setViewportView(table);
 	}
 
+	/**
+	 * Sets the popup menu adds MouseListener to called it
+	 */
 	private void setPopUpMenu() {
 		popUp = new JPopupMenu();
 		JMenuItem details = new JMenuItem("Vis detaljer");
@@ -262,7 +309,7 @@ public class ProductOverview extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				popUpMenuAction(false, e);
+				popUpMenuAction(e);
 			}
 		};
 
@@ -279,6 +326,10 @@ public class ProductOverview extends JFrame {
 		};
 		table.addMouseListener(ma);
 	}
+	
+	/**
+	 * Reset the search filters
+	 */
 	private void resetFilter() {
 		txtProductName.setText(null);
 		txtMaxPrice.setText(null);
@@ -289,6 +340,10 @@ public class ProductOverview extends JFrame {
 		rowCounter();
 	}
 
+	/**
+	 * Sets all the buttons for the frame
+	 * Sets Mouselisteners
+	 */
 	private void setButtons() {
 		JPanel panel = new JPanel();
 		panel.setLayout(getLayout());

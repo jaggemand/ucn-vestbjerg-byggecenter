@@ -33,15 +33,20 @@ import java.awt.event.KeyEvent;
 
 public class DialogAmount extends JDialog {
 
+	//Windowbuilder elements
 	private final JPanel contentPanel = new JPanel();
-	private String newAmountString;
-	private int newAmount;
 	private JSpinner spinner;
 	private JTextField txtProductName;
+	
+	//Data and elements
 	private OrderLine orderLine;
+	private String newAmountString;
+	private int newAmount;
 
 	/**
-	 * Create the dialog.
+	 * Initializes the Dialog
+	 * @param frame The Frame that called the constructor
+	 * @param orderLine The specific orderline
 	 */
 	public DialogAmount(JFrame frame, OrderLine orderLine) {
 		super(frame);
@@ -135,15 +140,17 @@ public class DialogAmount extends JDialog {
 		initialize();
 	}
 	
+	/**
+	 * Sets the Spinner model
+	 */
 	private void initialize() {
-
 		spinner.setModel(new SpinnerNumberModel(orderLine.getQuantity(), Integer.valueOf(1), null, Integer.valueOf(1)));
-		
 	}
 
-	//TODO: Docs
-	//Stores the value in the spinnerbox
-	
+	/**
+	 * The Button OK was pressed
+	 * Checks if Spinner input was a number
+	 */
 	private void buttonOKPressed() {
 		try {
 			newAmountString = spinner.getValue() + "";
@@ -158,11 +165,19 @@ public class DialogAmount extends JDialog {
 		
 		
 	}
+	
+	/**
+	 * The button cancel was pressed, disposes of Dialog
+	 */
 	private void buttonCancelPressed() {
 		newAmount = -1;
 		this.dispose();
 	}
 	
+	/**
+	 * Returns the amount in Spinner
+	 * @return The User input amount
+	 */
 	public int getNewAmount() {
 		return newAmount;
 	}

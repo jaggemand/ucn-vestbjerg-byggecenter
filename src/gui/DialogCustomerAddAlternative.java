@@ -23,33 +23,25 @@ import model.Customer;
 import model.Customer.customerType;
 
 public class DialogCustomerAddAlternative extends JDialog {
-	private Customer newCustomer;
-	private CustomerController cController;
-	private DefaultTable table;
+	
+	//Windowbuilder Elements
 	private JTextField textFieldSearch;
-	private boolean[] activeColumns;
-	private JLabel lblRowCounter;
-	private JScrollPane scrollPane;
+	
 	private JButton btnAdd;
 
+	//Customer Fields
+	private Customer newCustomer;
+	private CustomerController cController;
+	
+	//Table
+	private DefaultTable table;
+	private JScrollPane scrollPane;
 	private ArrayList<Customer> list;
 	private String[] columns = { "Telefon", "Navn", "Adresse", "Email"};
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogCustomerAddAlternative dialog = new DialogCustomerAddAlternative(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
+	 * Constructor, initializes the Dialog
+	 * @param frame The Frame that called the constructor
 	 */
 	public DialogCustomerAddAlternative(JFrame frame) {
 		super(frame);
@@ -118,42 +110,17 @@ public class DialogCustomerAddAlternative extends JDialog {
 		initWindow();
 	}
 	
-//	private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
-//
-//		int size = dataArrayList.size();
-//		String[][] data = new String[size][10];
-//		for (int i = 0; i < size; i++) {
-//			Customer current = dataArrayList.get(i);
-//			customerType type = current.getCustomerType();
-//			String typeName = "";
-//
-//			switch (type) {
-//			case BUSINESS:
-//				typeName = "Erhverv";
-//				break;
-//
-//			case PRIVATE:
-//				typeName = "Privat";
-//				break;
-//			default:
-//				typeName = "";
-//			}
-//			data[i][0] = typeName;
-//			data[i][1] = current.getPhone();
-//			data[i][2] = current.getName();
-//			data[i][3] = current.getDeliveryAddress();
-//			data[i][4] = current.getPaymentAddress();
-//			data[i][5] = current.getPostcode();
-//			data[i][6] = current.getCompanyName();
-//			data[i][7] = current.getEmail();
-//			data[i][8] = current.getCredit() + "";
-//		}
-//		return data;
-//	}
+
+	/**
+	 * Sets btnAdd to Disabled
+	 */
 	private void initWindow() {
 		btnAdd.setEnabled(false);
 	}
 	
+	/**
+	 * Initializes the table with data
+	 */
 	private void initTable() {
 		list = cController.getAllCustomers();
 		String[][] data = null;
@@ -181,8 +148,10 @@ public class DialogCustomerAddAlternative extends JDialog {
 		updateTable();
 	}
 	
+	/**
+	 * Update the table with new Data
+	 */
 	private void updateTable() {
-//		private String[] columns = { "Telefon", "Navn", "Adresse", "Email"};
 		table.clear();
 		for(Customer c : list) {
 			String[] metaData = new String[4];
@@ -200,6 +169,10 @@ public class DialogCustomerAddAlternative extends JDialog {
 		}
 	}
 	
+	/**
+	 * The button Search was pressed
+	 * Updates table with customers matching search
+	 */
 	private void buttonSearchPressed() {
 		String search = textFieldSearch.getText().toLowerCase();
 		if(search.isBlank()){
@@ -233,6 +206,9 @@ public class DialogCustomerAddAlternative extends JDialog {
 		updateTable();
 	}
 	
+	/**
+	 * The Button add was pressed
+	 */
 	private void buttonAddPressed() {
 		int row = table.getSelectedRow();
 		if(row != -1) {
@@ -244,12 +220,51 @@ public class DialogCustomerAddAlternative extends JDialog {
 		}
 	}
 	
+	/**
+	 * The Button Cancel was pressed
+	 * Window is disposed
+	 */
 	private void buttonCancelPressed() {
 		this.dispose();
 	}
 
+	/**
+	 * Get the new Customer
+	 * @return The Customer
+	 */
 	public Customer getNewCustomer() {
 		return newCustomer;
-	}
-	
+	}	
+	/*private String[][] convertToStringArray(ArrayList<Customer> dataArrayList) {
+
+		int size = dataArrayList.size();
+		String[][] data = new String[size][10];
+		for (int i = 0; i < size; i++) {
+		Customer current = dataArrayList.get(i);
+			customerType type = current.getCustomerType();
+			String typeName = "";
+
+			switch (type) {
+			case BUSINESS:
+				typeName = "Erhverv";
+				break;
+
+			case PRIVATE:
+				typeName = "Privat";
+				break;
+			default:
+				typeName = "";
+			}
+			data[i][0] = typeName;
+			data[i][1] = current.getPhone();
+			data[i][2] = current.getName();
+			data[i][3] = current.getDeliveryAddress();
+			data[i][4] = current.getPaymentAddress();
+			data[i][5] = current.getPostcode();
+			data[i][6] = current.getCompanyName();
+			data[i][7] = current.getEmail();
+			data[i][8] = current.getCredit() + "";
+		}
+		return data;
+	}*/
 }

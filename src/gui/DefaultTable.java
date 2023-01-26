@@ -22,18 +22,23 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 public class DefaultTable extends JTable {
+	
+	//Table Fields
 	private DefaultTableModel tabelModel;
 	private int[] rows;
-	private String[][] data;
+	private CustomTableColumnManager tcm;
+	
+	//Data
 	private String[] columns;
 	private boolean[] visibleColumns;
-	private CustomTableColumnManager tcm;
-	private JPopupMenu popUp;
+	
+	
 	/**
-	 * Create the panel.
+	 * Basic Table constructor, Data and column names
+	 * @param data The Data to be displayed
+	 * @param columns The column headers
 	 */
 	public DefaultTable(String[][] data, String[] columns) {
-		this.data = data;
 		this.columns = columns;
 		boolean[] visibleColumns = new boolean[columns.length];
 		for(int i = 0; i<columns.length;i++) {
@@ -43,13 +48,24 @@ public class DefaultTable extends JTable {
 		initializeTable(data, columns, visibleColumns);
 	}
 	
+	/**
+	 * Basic Table constructor with specefications for visibleColumns on initialization
+	 * @param data The Data to be displayed
+	 * @param columns The column headers
+	 * @param visibleColumns The column you want visible set to true and false to be hidden
+	 */
 	public DefaultTable(String[][] data, String[] columns, boolean[] visibleColumns) {
-		this.data = data;
 		this.columns = columns;
 		this.visibleColumns = visibleColumns;
 		initializeTable(data, columns, visibleColumns);
 	}
 	
+	/**
+	 * Initializes the class
+	 * @param data The Data to be displayed
+	 * @param columns The column headers
+	 * @param visibleColumns The column you want visible set to true and false to be hidden
+	 */
 	private void initializeTable(String[][] data, String[] columns, boolean[] visibleColumns) {
 		tabelModel = new DefaultTableModel(data, columns);
 		tcm = new CustomTableColumnManager(this);
@@ -71,6 +87,9 @@ public class DefaultTable extends JTable {
 		}
 	}
 	
+	/**
+	 *	Renderer for table, changes every other rows color
+	 */
 	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 		Component c = super.prepareRenderer(renderer, row, column);
 		if (!isRowSelected(row))
@@ -78,7 +97,11 @@ public class DefaultTable extends JTable {
 		return c;
 	}
 	
-	public void setNewData(String[][] data) {
+	/**
+	 * Insert new data into the existing array using a Multidimensional array
+	 * @param data Data to be displayed
+	 */
+	public void setNewData(Object[][] data) {
 		tabelModel.setRowCount(0);
 		if(data == null) {
 			tabelModel.addRow(new Object[] {null});
@@ -88,6 +111,39 @@ public class DefaultTable extends JTable {
 			tabelModel.addRow(data[i]);
 		}
 	}
+	/**
+	 * Get index from selected row 0
+	 * @return The first row that was selected
+	 */
+	public int findElement() {
+		if(rows.length != 0) {
+			return this.getSelectedRows()[0];
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	/**
+	 * Add just one row to the table
+	 * @param data Data for the row to be added in 
+	 */
+	public void addRow(Object[] data) {
+		tabelModel.addRow(data);
+	}
+	
+	/**
+	 * Clear the table columns
+	 */
+	public void clear() {
+		tabelModel.setRowCount(0);
+	}
+	/**
+	 * Delete selected items from the table, requires confirmation from user
+	 * @param column The column data you wish to receive
+	 * @param columnsConfirm Columns to show the user during confirmation
+	 * @return The data that was delete as a ArrayList string array
+	 */
 	public ArrayList<String> deleteData(String column, int[] columnsConfirm) {
 		ArrayList<String> dataToDelete = new ArrayList<>();
 		if(rows.length != 0) {			
@@ -104,8 +160,13 @@ public class DefaultTable extends JTable {
 		}
 		return dataToDelete;
 	}
-	
-	
+		
+	/**
+	 * Confirmation for deleting elements
+	 * @param amountQty Amount to delete
+	 * @param columns Used to display for the user items being deleted
+	 * @return returns true if the user wishes to delete, false if not
+	 */
 	private boolean deleteItems(int amountQty, int[] columns) {
 		
 		StringBuilder products = new StringBuilder();
@@ -141,23 +202,12 @@ public class DefaultTable extends JTable {
 					
 		return input == 1;
 	}
-	public int findElement() {
-		if(rows.length != 0) {
-			return this.getSelectedRows()[0];
-		}
-		else {
-			return -1;
-		}
-	}
 	
-	public void addRow(String[] data) {
-		tabelModel.addRow(data);
-	}
 	
-	public void clear() {
-		tabelModel.setRowCount(0);
-	}
-	
+	/**
+	 * Sets which Columns should be visible to the user
+	 * @param newColumn Index of columns to be shown or hidden from the user
+	 */
 	public void setVisibleColumns(boolean[] newColumn) {
 		
 		for(int i = 0; i < newColumn.length; i++) {

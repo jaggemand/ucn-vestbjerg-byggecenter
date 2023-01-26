@@ -24,29 +24,21 @@ import controller.ProductController;
 import model.Product;
 
 public class DialogItemAdd extends JDialog {
+	
+	//WindowBuilder Elements
 	private JTextField textFieldBarcode;
 	private JTextField textFieldProductName;
 	private JButton btnOK;
+	private JSpinner spinner;
+	
+	//Product Fields
 	private Product newProduct;
 	private int amount;
 	private ProductController pController;
-	private JSpinner spinner;
-
+	
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogItemAdd dialog = new DialogItemAdd(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
+	 * Constructor, Initializes the Dialog
+	 * @param frame The Frame that called the constructor
 	 */
 	public DialogItemAdd(JFrame frame) {
 		super(frame);
@@ -178,6 +170,11 @@ public class DialogItemAdd extends JDialog {
 			}
 		}
 	}
+	
+	/**
+	 * The Button Search was pressed
+	 * Searches for Products matching search Criteria 
+	 */
 	private void buttonSearchPressed() {
 		newProduct = pController.findProduct(textFieldBarcode.getText());
 		if(newProduct != null) {
@@ -190,18 +187,39 @@ public class DialogItemAdd extends JDialog {
 			textFieldProductName.setText("Stregkode ugyldig");
 		}
 	}
+	
+	/**
+	 * The Button Add was pressed
+	 * Sets amount
+	 * Disposes of Dialog
+	 */
 	private void buttonAddPressed() {
 		amount = (int) spinner.getModel().getValue();
 		this.dispose();
 	}
+	
+	/**
+	 * The Button Cancel was pressed
+	 * Product is set to null
+	 * Dialog is disposed
+	 */
 	private void buttonCancelPressed() {
 		newProduct = null;
 		this.dispose();
 	}
 	
+	/**
+	 * Get the product
+	 * @return new Product
+	 */
 	public Product getNewProduct() {
 		return newProduct;
 	}
+	
+	/**
+	 * Get the Amount
+	 * @return amount
+	 */
 	public int getAmount() {
 		return amount;
 	}

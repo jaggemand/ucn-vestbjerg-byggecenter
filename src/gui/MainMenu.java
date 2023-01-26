@@ -34,10 +34,14 @@ import model.Order.OrderStatus;
 
 public class MainMenu extends JFrame {
 
+	//WindowBuilder JPanel
 	private JPanel contentPane;
+	
+	//This frame
 	private static MainMenu frame;
+	
+	//Controller
 	private ProductController pController;
-	private OrderController oController;
 
 	/**
 	 * Launch the application.
@@ -57,30 +61,13 @@ public class MainMenu extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
-	 * @throws IOException 
-	 * @throws ClassNotFoundException 
+	 * MainMenu Constructor, is the main menu from the program
+	 * @throws IOException
 	 */
 	public MainMenu() throws IOException {
-		
-		
-		
 		setTitle("Hoved menu");
 		pController = new ProductController();
-		oController = new OrderController();
-		
-		pController.loadFile();
-		
-		//TODO: Remove
-		if(pController.getAllProducts().size() == 0) {
-			Product prod1 = pController.createProduct("Søm", "", "En pakke søm", new String[] { "one", "two" },
-					"29:12", "42:13", 10, 50);
-		}
-				tempOrders(pController.getAllProducts().get(0));
-				tempCustomers();
-		//-------------------------------------------------------------------------------
-				
-		
+		pController.loadFile();		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //TODO JFrame.DO_NOTHING_ON_CLOSE
 		this.addWindowListener(new WindowAdapter() {
@@ -232,16 +219,13 @@ public class MainMenu extends JFrame {
 			}
 		});
 		panel_1.add(btnClose);
+		tempCustomers();
 	}
-
-	private void tempOrders(Product prod1) {
-		Order order1 = new Order(false);
-		order1.addProduct(prod1, 1);
-		order1.setDate(5); // subtracts date
-		order1.setStatus(OrderStatus.DELIVERED);
-		order1.setCustomer(new Customer("Erik", "Gåsevangen60", "Gåsevangen 60", "95734901", "eriksoerensen@gmail.com", 0.0, "7540", "", customerType.PRIVATE));
-		OrderContainer.getInstance().addOrder(order1);
-	}
+	
+	/**
+	 * Closes the program
+	 * @throws IOException When Saving Products
+	 */
 	private void closeWindow() throws IOException {
 		int input = JOptionPane.showOptionDialog(this, "Er du sikkert på at du vil lukke programmet?", "Afslut program",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -253,11 +237,18 @@ public class MainMenu extends JFrame {
 			System.exit(0);
 		}
 	}
+	
+	/**
+	 * Open Customer overview
+	 */
 	private void openCustomerOverview() {
 		CustomerOverview customerOverview = new CustomerOverview();
 		customerOverview.setVisible(true);
 	}
 	
+	/**
+	 * Adds Customer data
+	 */
 	private void tempCustomers() {
 		CustomerController cc = new CustomerController();
 

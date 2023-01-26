@@ -22,27 +22,19 @@ import controller.CustomerController;
 import model.Customer;
 
 public class DialogCustomerAdd extends JDialog {
+	
+	//WindowBuilder Elements
 	private JTextField textFieldPhone;
 	private JTextField textFieldCustomerName;
 	private JButton btnOK;
+	
+	//Customer Field and Controller
 	private Customer newCustomer;
 	private CustomerController cController;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			DialogCustomerAdd dialog = new DialogCustomerAdd(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
+	 * Constructor, initializes the Dialog
+	 * @param frame The Frame that called the constructor
 	 */
 	public DialogCustomerAdd(JFrame frame) {
 		super(frame);
@@ -155,6 +147,9 @@ public class DialogCustomerAdd extends JDialog {
 		}
 	}
 	
+	/**
+	 * The Button Search was Pressed, checks if customer exists
+	 */
 	private void buttonSearchPressed() {
 		String phone = textFieldPhone.getText();
 		newCustomer = cController.findCustomerByInformation(phone);
@@ -171,15 +166,26 @@ public class DialogCustomerAdd extends JDialog {
 		}
 	}
 	
+	/**
+	 * Button Add was pressed and the Window is disposed
+	 */
 	private void buttonAddPressed() {
 		this.dispose();
 	}
 	
+	/**
+	 * The Button Cancel was pressed and the customer is set to null
+	 * Dialog is disposed
+	 */
 	private void buttonCancelPressed() {
 		newCustomer = null;
 		this.dispose();
 	}
 
+	/**
+	 * Get the customer that was found
+	 * @return The customer that was found
+	 */
 	public Customer getNewCustomer() {
 		return newCustomer;
 	}
