@@ -425,11 +425,11 @@ public class SalesOrder extends JDialog {
 		
 		DialogCustomerAddAlternative dca = new DialogCustomerAddAlternative(frame);
 		dca.setVisible(true);
-		customer = dca.getNewCustomer();
+		orderController.getCurrentOrder().setCustomer(dca.getNewCustomer());
 		
-		if(customer != null) {
+		if(orderController.getCurrentOrder().getCustomer() != null) {
 			//Customer is found
-			txtCustomerID.setText(customer.getPhone());
+			txtCustomerID.setText(orderController.getCurrentOrder().getCustomer().getPhone());
 		}
 		else {
 			//Customer not found
@@ -438,18 +438,18 @@ public class SalesOrder extends JDialog {
 	}
 	
 	private void buttonSavePressed() {
-		if(customer != null) {
+		if(orderController.getCurrentOrder().getCustomer() != null) {
 			//Customer is found
 			int result = JOptionPane.showOptionDialog(new JFrame().getContentPane(), "Vil du gemme ændringerne", "Bekræft gem", 0, JOptionPane.INFORMATION_MESSAGE, null, new String[] {"Ja","Nej"}, null);
 			if(result == 0) {
 				//Save the changes
 				orderController.getCurrentOrder().setStatus((OrderStatus) jcbStatus.getSelectedItem());
 				orderController.getCurrentOrder().setPickupDate((Date) spnPickupDate.getModel().getValue());
-				orderController.getCurrentOrder().setCustomer(customer);
+//				orderController.getCurrentOrder().setCustomer(customer);
 				changesSaved = true;
 				
 				if(newOrder) {
-					orderController.addOrder(customer.getPhone());
+					orderController.addOrder(orderController.getCurrentOrder().getCustomer().getPhone());
 				}
 				else {
 					orderController.updateOrder();
