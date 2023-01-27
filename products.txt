@@ -1,40 +1,6 @@
 //NAME;BARCODE;DESCRIPTION;CATEGORY(,);STORAGELOCATION;WAREHOUSELOCATION;STORAGEAMOUNT;WAREHOUSEAMOUNT;SALESPRICE;COSTPRICE;SUGGESTEDSALESPRICE
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;bc-2000-0;En pakke søm;one,two;29:12;42:13;10;50;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Søm;13E;45B;1000;600;45.0;26.3;45.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
 Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
-Stor søm;1234;7";test,test 3,Plastik,Lister;testLoc;testLoc2;0;0;10.0;0.0;0.0
-4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
-4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
-4444;4444;testProduct;test,test 3;testLoc;testLoc2;1;1;10.0;0.0;0.0
-test;bc-2000-41;testtaadsadaasdsadasddsadasdasdsadsadsadasdsadsadsdassad	;Plastik;1;2;3;4;0.0;0.0;0.0
-navn;bc-2000-43;asdsadasdsadsadadassadsadsadasdadsadadas;;1;2;3;4;0.0;0.0;0.0
-test;bc-2000-46;testtesttest	;;1;2;3;4;0.0;0.0;0.0
-test;bc-2000-50;testtesttesttest;;1;2;3;4;0.0;0.0;0.0
-test;bc-2000-52;test test test test;;1;2;3;4;0.0;0.0;0.0
 Firestarter;1;Burner Firestarter Combi pakke med 500 stk. optændingsposer;Grill;1A;2A;100;500;120.0;45.0;100.0
 Bruseamatur;bc-2000-57;Damixa TMC Bruseamatur;Bad,VVS;2A;2B;20;150;0.0;0.0;0.0
 Træbeton 25 mm;bc-2000-58;Træbeton loftplade 25 mm natur;Trælast,Byggeplader,Loft,Bolig;2A;3A;50;500;0.0;0.0;0.0
