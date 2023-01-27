@@ -331,6 +331,7 @@ public class SalesOrder extends JDialog {
 	
 		initTable();
 		initialize();
+		updateTable();
 	}
 	
 	private void initialize() {
@@ -344,7 +345,13 @@ public class SalesOrder extends JDialog {
 		spnPickupDate.setModel(new SpinnerDateModel(orderController.getCurrentOrder().getPickupDateAsDateType(), orderController.getCurrentOrder().getDateAsDateType(), null, Calendar.DAY_OF_YEAR));
 		
 		txtOrderNumber.setText(orderController.getCurrentOrder().getOrderNumber());
-		txtCustomerID.setText("Tilføj Kunde");
+		if(orderController.getCurrentOrder().getCustomer() == null) {
+			txtCustomerID.setText("Tilføj Kunde");
+		}
+		else {
+			txtCustomerID.setText(orderController.getCurrentOrder().getCustomer().getPhone());
+		}
+		
 		jcbStatus.setSelectedItem(orderController.getCurrentOrder().getStatus());
 		
 		btnSave.setEnabled(false);
