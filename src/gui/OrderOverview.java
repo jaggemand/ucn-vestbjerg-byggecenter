@@ -76,11 +76,18 @@ public class OrderOverview extends JFrame {
 	
 	//Controller
 	private OrderController orderController;
+	private JButton btnSearch;
 
 	/**
 	 * Initializes Orderoverview
 	 */
 	public OrderOverview() {
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				resetFilterTextFields();
+			}
+		});
 		setTitle("Ordreoversigt");
 		initWindow();
 		
@@ -197,13 +204,13 @@ public class OrderOverview extends JFrame {
 		textFieldOrderNumber.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(textFieldOrderNumber.getText().equals("Ordernummer")) {
+				if(textFieldOrderNumber.getText().equals("Ordrenummer")) {
 					textFieldOrderNumber.setText("");
 				}
 			}
 		});
 		textFieldOrderNumber.setToolTipText("Indsæt et Ordrenummer systemet skal søge efter");
-		textFieldOrderNumber.setText("Ordernummer");
+		textFieldOrderNumber.setText("Ordrenummer");
 		GridBagConstraints gbc_textFieldOrderNumber = new GridBagConstraints();
 		gbc_textFieldOrderNumber.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldOrderNumber.fill = GridBagConstraints.HORIZONTAL;
@@ -212,7 +219,7 @@ public class OrderOverview extends JFrame {
 		panel_North.add(textFieldOrderNumber, gbc_textFieldOrderNumber);
 		textFieldOrderNumber.setColumns(10);
 		
-		JButton btnSearch = new JButton("Søg");
+		btnSearch = new JButton("Søg");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonSearchPressed();
@@ -514,7 +521,7 @@ public class OrderOverview extends JFrame {
 		chckbxOrderPickup.setSelected(false);
 		chckbxPrivateCustomer.setSelected(false);
 		chckbxBusinessCustomer.setSelected(false);
-		textFieldOrderNumber.setText("Ordernummer");
+		textFieldOrderNumber.setText("Ordrenummer");
 		textFieldPhoneNumber.setText("Telefonnummer");
 		if(dateCreated != null) {
 			btnDateFilterCreated.setText("Vælg periode");
@@ -532,13 +539,26 @@ public class OrderOverview extends JFrame {
 		makeStatusMessage("Filtre nulstillet", false);
 	}
 	
+	/*
+	 * When window frame is pressed, empty textfields will be reset to their default textfield text
+	 */
+	private void resetFilterTextFields() {
+		if(textFieldOrderNumber.getText().isBlank()) {
+			textFieldOrderNumber.setText("Ordrenummer");
+		}
+		if(textFieldPhoneNumber.getText().isBlank()) {
+			textFieldPhoneNumber.setText("Telefonnummer");
+		}
+		//btnSearch.requestFocus();
+	}
+	
 	/**
 	 * Checks if filters are selected
 	 * @return True if all filters are deselected
 	 */
 	private boolean checkAllFilterDeselected() {
 		boolean allDeselected = true;
-		if(!textFieldOrderNumber.getText().equals("Ordernummer") && textFieldOrderNumber.getText().equals("")) {
+		if(!textFieldOrderNumber.getText().equals("Ordrenummer") && textFieldOrderNumber.getText().equals("")) {
 			allDeselected = false;
 		}
 		if(!textFieldPhoneNumber.getText().equals("Telefonnummer") && !textFieldPhoneNumber.getText().equals("")) {
@@ -577,7 +597,7 @@ public class OrderOverview extends JFrame {
 	 * Sets the table, With Columns and data
 	 */
 	private void initTable() {
-		String[] columns = { "Ordernummer", "Status", "Kundetype", "Telefon", "Dato oprettet", "Opsamlingsdato", "Størrelse"};
+		String[] columns = { "Ordrenummer", "Status", "Kundetype", "Telefon", "Dato oprettet", "Opsamlingsdato", "Størrelse"};
 //		ArrayList<Product> dataArrayList = ProductContainer.getInstance().getProducts();
 		String[][] data = null;
 		table = new DefaultTable(data, columns);
@@ -599,7 +619,7 @@ public class OrderOverview extends JFrame {
 	 */
 	private void deleteData() {
 		int[] columnsToShow = new int[]{0, 1};
-		ArrayList<String> dataToDelete = table.deleteData("Ordernummer", columnsToShow);
+		ArrayList<String> dataToDelete = table.deleteData("Ordrenummer", columnsToShow);
 		if(dataToDelete.size() != 0) {
 			for(int i = dataToDelete.size()-1; i >= 0; i--) {
 				orderController.removeOrder(dataToDelete.get(i));
@@ -717,7 +737,7 @@ public class OrderOverview extends JFrame {
 		while(it.hasNext()) {
 			Order o = it.next();
 //		List<OrderStatus> status = Arrays.asList(o.getStatus());
-			if(o.getOrderNumber().toLowerCase().contains(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().isBlank() || textFieldOrderNumber.getText().equals("Ordernummer")) {
+			if(o.getOrderNumber().toLowerCase().contains(textFieldOrderNumber.getText().toLowerCase()) || textFieldOrderNumber.getText().isBlank() || textFieldOrderNumber.getText().equals("Ordrenummer")) {
 				System.out.println("if1");
 				if((chckbxOrderCreated.isSelected() && isOrderDateBetweenDates(o.getDateAsDateType(), dateCreatedFrom, dateCreatedTo)) || chckbxOrderPickup.isSelected() && isOrderDateBetweenDates(o.getPickupDateAsDateType(), pickupFrom, pickupTo) || (!chckbxOrderCreated.isSelected() && !chckbxOrderPickup.isSelected())) {
 					System.out.println("if2");
@@ -725,9 +745,9 @@ public class OrderOverview extends JFrame {
 						System.out.println("if3");
 						if(o.getCustomer().getPhone().contains(textFieldPhoneNumber.getText().toLowerCase()) || textFieldPhoneNumber.getText().isBlank() || textFieldPhoneNumber.getText().equals("Telefonnummer")) {
 							System.out.println("if4");
-							if((chckbxBusinessCustomer.isSelected() && o.getCustomer().getCustomerType().equals(customerType.BUSINESS)) || !chckbxBusinessCustomer.isSelected()) {
+							if((chckbxBusinessCustomer.isSelected() && o.getCustomer().getCustomerType().equals(customerType.BUSINESS)) || !chckbxBusinessCustomer.isSelected() || isBothCustomerTypesSelected()) {
 								System.out.println("if5");
-								if((chckbxPrivateCustomer.isSelected() && o.getCustomer().getCustomerType().equals(customerType.PRIVATE)) || !chckbxPrivateCustomer.isSelected()) {
+								if((chckbxPrivateCustomer.isSelected() && o.getCustomer().getCustomerType().equals(customerType.PRIVATE)) || !chckbxPrivateCustomer.isSelected() || isBothCustomerTypesSelected()) {
 									System.out.println("if6");
 									orderResult.add(o);
 								}
@@ -774,6 +794,17 @@ public class OrderOverview extends JFrame {
 		ZoneId deafaultZoneId = ZoneId.systemDefault();
 		Date returnDate = Date.from(ld.atStartOfDay(deafaultZoneId).toInstant());
 		return returnDate;
+	}
+	
+	/**
+	 * @return true if both customerTypeFilters are selected
+	 */
+	private boolean isBothCustomerTypesSelected() {
+		boolean result = false;
+		if(chckbxBusinessCustomer.isSelected() && chckbxPrivateCustomer.isSelected()) {
+			result = true;
+		}
+		return result;
 	}
 
 	/**
