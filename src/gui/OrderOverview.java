@@ -227,6 +227,7 @@ public class OrderOverview extends JFrame {
 		});
 		
 		chckbxBusinessCustomer = new JCheckBox("Erhvervskunde");
+		chckbxBusinessCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxBusinessCustomer = new GridBagConstraints();
 		gbc_chckbxBusinessCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxBusinessCustomer.insets = new Insets(0, 0, 5, 5);
@@ -322,6 +323,7 @@ public class OrderOverview extends JFrame {
 		});
 		
 		chckbxPrivateCustomer = new JCheckBox("Privatkunde");
+		chckbxPrivateCustomer.setSelected(true);
 		GridBagConstraints gbc_chckbxPrivateCustomer = new GridBagConstraints();
 		gbc_chckbxPrivateCustomer.fill = GridBagConstraints.BOTH;
 		gbc_chckbxPrivateCustomer.insets = new Insets(0, 0, 5, 5);
@@ -618,14 +620,14 @@ public class OrderOverview extends JFrame {
 	 * Delete data from the table, requires confirmation from user
 	 */
 	private void deleteData() {
-		int[] columnsToShow = new int[]{0, 1};
+		int[] columnsToShow = new int[]{0, 3};
 		ArrayList<String> dataToDelete = table.deleteData("Ordrenummer", columnsToShow);
 		if(dataToDelete.size() != 0) {
 			for(int i = dataToDelete.size()-1; i >= 0; i--) {
 				orderController.removeOrder(dataToDelete.get(i));
 			}
 		}
-		makeStatusMessage(dataToDelete.size() + "Ordre slettet", false);
+		makeStatusMessage(dataToDelete.size() + " Ordre slettet", false);
 	}
 	
 	/**
