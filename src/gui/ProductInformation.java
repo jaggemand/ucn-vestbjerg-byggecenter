@@ -67,22 +67,6 @@ public class ProductInformation extends JFrame {
 	private JScrollPane scrollPaneStatusText;
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ProductInformation frame = new ProductInformation(null, false);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
 
