@@ -1,6 +1,6 @@
 //NAME;BARCODE;DESCRIPTION;CATEGORY(,);STORAGELOCATION;WAREHOUSELOCATION;STORAGEAMOUNT;WAREHOUSEAMOUNT;SALESPRICE;COSTPRICE;SUGGESTEDSALESPRICE
 Vasketøjskurv;bc-2000-1;En høj vasketøjskurv i plastik;Bad,Bryggers,Plastik;H35:E5;H42:24;16;10;0.0;0.0;0.0
-Søm;1234;Dette er en pakke søm;Trælast,Befæstelse,Søm;13E;45B;1000;600;45.0;26.3;45.0
+Skruer;1234;Dette er en pakke skruer;Trælast,Befæstelse;13E;45B;1000;600;45.0;26.3;45.0
 Firestarter;1;Burner Firestarter Combi pakke med 500 stk. optændingsposer;Grill;1A;2A;100;500;120.0;45.0;100.0
 Bruseamatur;bc-2000-57;Damixa TMC Bruseamatur;Bad,VVS;2A;2B;20;150;0.0;0.0;0.0
 Træbeton 25 mm;bc-2000-58;Træbeton loftplade 25 mm natur;Trælast,Byggeplader,Loft,Bolig;2A;3A;50;500;0.0;0.0;0.0
